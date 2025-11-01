@@ -32,3 +32,6 @@ deploy
 local
 
 .idea
+
+.claude
+panda-wiki-*

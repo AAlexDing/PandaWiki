@@ -139,6 +139,11 @@ func createApp() (*App, error) {
 		return nil, err
 	}
 	authV1Handler := v1.NewAuthV1Handler(echo, baseHandler, logger, authUsecase)
+	licenseHandler := v1.NewLicenseHandler(echo, baseHandler, logger, authMiddleware)
+	proMockHandler := v1.NewProMockHandler(echo, baseHandler, logger, authMiddleware)
+	promptHandler := v1.NewPromptHandler(echo, baseHandler, promptRepo, logger, authMiddleware)
+	blockWordHandler := v1.NewBlockWordHandler(echo, baseHandler, blockWordRepo, logger, authMiddleware)
+	apiTokenHandler := v1.NewAPITokenHandler(echo, baseHandler, apiTokenRepo, logger, authMiddleware)
 	apiHandlers := &v1.APIHandlers{
 		UserHandler:          userHandler,
 		KnowledgeBaseHandler: knowledgeBaseHandler,
@@ -152,6 +157,11 @@ func createApp() (*App, error) {
 		StatHandler:          statHandler,
 		CommentHandler:       commentHandler,
 		AuthV1Handler:        authV1Handler,
+		LicenseHandler:       licenseHandler,
+		ProMockHandler:       proMockHandler,
+		PromptHandler:        promptHandler,
+		BlockWordHandler:     blockWordHandler,
+		APITokenHandler:      apiTokenHandler,
 	}
 	shareNodeHandler := share.NewShareNodeHandler(baseHandler, echo, nodeUsecase, logger)
 	shareAppHandler := share.NewShareAppHandler(echo, baseHandler, logger, appUsecase)
@@ -170,6 +180,7 @@ func createApp() (*App, error) {
 	shareCaptchaHandler := share.NewShareCaptchaHandler(baseHandler, echo, logger)
 	openapiV1Handler := share.NewOpenapiV1Handler(echo, baseHandler, logger, authUsecase, appUsecase)
 	shareCommonHandler := share.NewShareCommonHandler(echo, baseHandler, logger, fileUsecase)
+	shareAuthProHandler := share.NewShareAuthProHandler(echo, baseHandler, logger)
 	shareHandler := &share.ShareHandler{
 		ShareNodeHandler:         shareNodeHandler,
 		ShareAppHandler:          shareAppHandler,
@@ -183,6 +194,7 @@ func createApp() (*App, error) {
 		ShareCaptchaHandler:      shareCaptchaHandler,
 		OpenapiV1Handler:         openapiV1Handler,
 		ShareCommonHandler:       shareCommonHandler,
+		ShareAuthProHandler:      shareAuthProHandler,
 	}
 	client, err := telemetry.NewClient(logger, knowledgeBaseRepository)
 	if err != nil {

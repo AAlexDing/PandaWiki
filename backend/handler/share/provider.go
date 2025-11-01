@@ -19,6 +19,7 @@ type ShareHandler struct {
 	ShareCaptchaHandler      *ShareCaptchaHandler
 	OpenapiV1Handler         *OpenapiV1Handler
 	ShareCommonHandler       *ShareCommonHandler
+	ShareAuthProHandler      *ShareAuthProHandler
 }
 
 var ProviderSet = wire.NewSet(
@@ -36,6 +37,7 @@ var ProviderSet = wire.NewSet(
 	NewShareCaptchaHandler,
 	NewShareCommonHandler,
 	NewOpenapiV1Handler,
+	NewShareAuthProHandler,
 
 	wire.Struct(new(ShareHandler), "*"),
 )

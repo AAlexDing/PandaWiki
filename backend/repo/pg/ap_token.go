@@ -56,3 +56,29 @@ func (r *APITokenRepo) GetByTokenWithCache(ctx context.Context, token string) (*
 
 	return &apiToken, nil
 }
+
+func (r *APITokenRepo) GetListByKBID(ctx context.Context, kbID string) ([]*domain.APIToken, error) {
+	var tokens []*domain.APIToken
+	if err := r.db.WithContext(ctx).Where("kb_id = ?", kbID).Order("created_at DESC").Find(&tokens).Error; err != nil {
+		return nil, fmt.Errorf("get api token list by kb_id failed: %w", err)
+	}
+	return tokens, nil
+}
+
+func (r *APITokenRepo) Create(ctx context.Context, token *domain.APIToken) error {
+	if err := r.db.WithContext(ctx).Create(token).Error; err != nil {
+		return fmt.Errorf("create api token failed: %w", err)
+	}
+	return nil
+}
+
+func (r *APITokenRepo) Delete(ctx context.Context, id, kbID string) error {
+	result := r.db.WithContext(ctx).Where("id = ? AND kb_id = ?", id, kbID).Delete(&domain.APIToken{})
+	if result.Error != nil {
+		return fmt.Errorf("delete api token failed: %w", result.Error)
+	}
+	if result.RowsAffected == 0 {
+		return fmt.Errorf("api token not found")
+	}
+	return nil
+}

@@ -21,6 +21,11 @@ type APIHandlers struct {
 	StatHandler          *StatHandler
 	CommentHandler       *CommentHandler
 	AuthV1Handler        *AuthV1Handler
+	LicenseHandler       *LicenseHandler
+	ProMockHandler       *ProMockHandler
+	PromptHandler        *PromptHandler
+	BlockWordHandler     *BlockWordHandler
+	APITokenHandler      *APITokenHandler
 }
 
 var ProviderSet = wire.NewSet(
@@ -40,6 +45,11 @@ var ProviderSet = wire.NewSet(
 	NewStatHandler,
 	NewCommentHandler,
 	NewAuthV1Handler,
+	NewLicenseHandler,
+	NewProMockHandler,
+	NewPromptHandler,
+	NewBlockWordHandler,
+	NewAPITokenHandler,
 
 	wire.Struct(new(APIHandlers), "*"),
 )
