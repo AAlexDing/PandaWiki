@@ -144,6 +144,8 @@ func createApp() (*App, error) {
 	promptHandler := v1.NewPromptHandler(echo, baseHandler, promptRepo, logger, authMiddleware)
 	blockWordHandler := v1.NewBlockWordHandler(echo, baseHandler, blockWordRepo, logger, authMiddleware)
 	apiTokenHandler := v1.NewAPITokenHandler(echo, baseHandler, apiTokenRepo, logger, authMiddleware)
+	contributeRepo := pg2.NewContributeRepo(db, logger)
+	contributeHandler := v1.NewContributeHandler(echo, baseHandler, contributeRepo, logger, authMiddleware)
 	apiHandlers := &v1.APIHandlers{
 		UserHandler:          userHandler,
 		KnowledgeBaseHandler: knowledgeBaseHandler,
@@ -162,6 +164,7 @@ func createApp() (*App, error) {
 		PromptHandler:        promptHandler,
 		BlockWordHandler:     blockWordHandler,
 		APITokenHandler:      apiTokenHandler,
+		ContributeHandler:    contributeHandler,
 	}
 	shareNodeHandler := share.NewShareNodeHandler(baseHandler, echo, nodeUsecase, logger)
 	shareAppHandler := share.NewShareAppHandler(echo, baseHandler, logger, appUsecase)
@@ -181,6 +184,8 @@ func createApp() (*App, error) {
 	openapiV1Handler := share.NewOpenapiV1Handler(echo, baseHandler, logger, authUsecase, appUsecase)
 	shareCommonHandler := share.NewShareCommonHandler(echo, baseHandler, logger, fileUsecase)
 	shareAuthProHandler := share.NewShareAuthProHandler(echo, baseHandler, logger)
+	shareContributeHandler := share.NewShareContributeHandler(echo, baseHandler, contributeRepo, logger)
+	shareFileHandler := share.NewShareFileHandler(echo, baseHandler, fileUsecase, minioClient, configConfig, logger)
 	shareHandler := &share.ShareHandler{
 		ShareNodeHandler:         shareNodeHandler,
 		ShareAppHandler:          shareAppHandler,
@@ -195,6 +200,8 @@ func createApp() (*App, error) {
 		OpenapiV1Handler:         openapiV1Handler,
 		ShareCommonHandler:       shareCommonHandler,
 		ShareAuthProHandler:      shareAuthProHandler,
+		ShareContributeHandler:   shareContributeHandler,
+		ShareFileHandler:         shareFileHandler,
 	}
 	client, err := telemetry.NewClient(logger, knowledgeBaseRepository)
 	if err != nil {

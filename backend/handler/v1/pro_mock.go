@@ -21,29 +21,7 @@ func NewProMockHandler(e *echo.Echo, baseHandler *handler.BaseHandler, logger *l
 		logger:      logger.WithModule("handler.pro.mock"),
 	}
 
-	// 注册所有商业版 API 路由，统一返回空数据
-	e.GET("/api/pro/v1/contribute/list", h.GetContributeList, auth.Authorize)
+	// 所有商业版 API 已迁移到独立 Handler，这里保留作为占位符
 
 	return h
-}
-
-// GetContributeList 获取贡献列表（空实现）
-//
-//	@Summary		Get contribute list (Mock)
-//	@Description	Mock API for pro contribute list
-//	@Tags			pro
-//	@Accept			json
-//	@Produce		json
-//	@Param			page		query		int		false	"Page"
-//	@Param			per_page	query		int		false	"Per page"
-//	@Param			kb_id		query		string	true	"Knowledge Base ID"
-//	@Success		200			{object}	domain.PWResponse
-//	@Router			/api/pro/v1/contribute/list [get]
-//	@Security		bearerAuth
-func (h *ProMockHandler) GetContributeList(c echo.Context) error {
-	// 返回空列表，前端会显示"暂无数据"
-	return h.NewResponseWithData(c, map[string]interface{}{
-		"list":  []interface{}{},
-		"total": 0,
-	})
 }
