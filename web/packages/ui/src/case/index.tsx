@@ -3,7 +3,10 @@
 import React from 'react';
 import { styled, Grid, alpha, Stack } from '@mui/material';
 import { StyledTopicBox, StyledTopicTitle } from '../component/styledCommon';
-import { useFadeInText, useCardAnimation } from '../hooks/useGsapAnimation';
+import {
+  useFadeInText,
+  useCardScaleAnimation,
+} from '../hooks/useGsapAnimation';
 
 interface CaseProps {
   mobile?: boolean;
@@ -27,6 +30,8 @@ const StyledCaseItem = styled('a')(({ theme }) => ({
     boxShadow: `0px 10px 20px 0px ${alpha(theme.palette.text.primary, 0.1)}`,
   },
   cursor: 'pointer',
+  opacity: 0,
+  scale: 0,
 }));
 
 const StyledCaseItemTitle = styled('span')(({ theme }) => ({
@@ -40,7 +45,10 @@ const CaseItem: React.FC<{
   item: any;
   index: number;
 }> = React.memo(({ item, index }) => {
-  const cardRef = useCardAnimation(0.2 + index * 0.1, 0.1);
+  const rand = Math.random();
+  const cardRef = useCardScaleAnimation({
+    duration: rand < 0.5 ? rand + 0.5 : rand,
+  });
   return (
     <StyledCaseItem
       ref={cardRef as React.Ref<HTMLAnchorElement>}

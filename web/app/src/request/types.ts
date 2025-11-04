@@ -134,6 +134,25 @@ export enum ConstsSourceType {
   SourceTypeOpenAIAPI = "openai_api",
 }
 
+export enum ConstsNodeRagInfoStatus {
+  /** 等待基础处理 */
+  NodeRagStatusBasicPending = "BASIC_PENDING",
+  /** 正在进行基础处理（文本分割、向量化等） */
+  NodeRagStatusBasicRunning = "BASIC_RUNNING",
+  /** 基础处理失败 */
+  NodeRagStatusBasicFailed = "BASIC_FAILED",
+  /** 基础处理成功 */
+  NodeRagStatusBasicSucceeded = "BASIC_SUCCEEDED",
+  /** 基础处理完成，等待增强处理 */
+  NodeRagStatusEnhancePending = "ENHANCE_PENDING",
+  /** 正在进行增强处理（关键词提取等） */
+  NodeRagStatusEnhanceRunning = "ENHANCE_RUNNING",
+  /** 增强处理失败 */
+  NodeRagStatusEnhanceFailed = "ENHANCE_FAILED",
+  /** 增强处理成功 */
+  NodeRagStatusEnhanceSucceeded = "ENHANCE_SUCCEEDED",
+}
+
 export enum ConstsNodePermName {
   /** 导航内可见 */
   NodePermNameVisible = "visible",
@@ -474,6 +493,16 @@ export interface DomainBatchMoveReq {
   parent_id?: string;
 }
 
+export interface DomainBlockGridConfig {
+  list?: {
+    id?: string;
+    name?: string;
+    url?: string;
+  }[];
+  title?: string;
+  type?: string;
+}
+
 export interface DomainBrandGroup {
   links?: DomainLink[];
   name?: string;
@@ -493,6 +522,16 @@ export interface DomainCarouselConfig {
     url?: string;
   }[];
   title?: string;
+}
+
+export interface DomainCaseConfig {
+  list?: {
+    id?: string;
+    link?: string;
+    name?: string;
+  }[];
+  title?: string;
+  type?: string;
 }
 
 export interface DomainCatalogSettings {
@@ -519,6 +558,18 @@ export interface DomainChatSearchReq {
 
 export interface DomainChatSearchResp {
   node_result?: DomainNodeContentChunkSSE[];
+}
+
+export interface DomainCommentConfig {
+  list?: {
+    avatar?: string;
+    comment?: string;
+    id?: string;
+    profession?: string;
+    user_name?: string;
+  }[];
+  title?: string;
+  type?: string;
 }
 
 export interface DomainCommentInfo {
@@ -713,6 +764,16 @@ export interface DomainFaqConfig {
   title_color?: string;
 }
 
+export interface DomainFeatureConfig {
+  list?: {
+    desc?: string;
+    id?: string;
+    name?: string;
+  }[];
+  title?: string;
+  type?: string;
+}
+
 export interface DomainFeedBackInfo {
   feedback_content?: string;
   feedback_type?: string;
@@ -784,6 +845,16 @@ export interface DomainIPAddress {
   province?: string;
 }
 
+export interface DomainImgTextConfig {
+  item?: {
+    desc?: string;
+    name?: string;
+    url?: string;
+  };
+  title?: string;
+  type?: string;
+}
+
 export interface DomainInstantCountResp {
   count?: number;
   time?: string;
@@ -841,6 +912,16 @@ export interface DomainLink {
   url?: string;
 }
 
+export interface DomainMetricsConfig {
+  list?: {
+    id?: string;
+    name?: string;
+    number?: string;
+  }[];
+  title?: string;
+  type?: string;
+}
+
 export interface DomainMoveNodeReq {
   id: string;
   kb_id: string;
@@ -885,6 +966,7 @@ export interface DomainNodeListItemResp {
   parent_id?: string;
   permissions?: DomainNodePermissions;
   position?: number;
+  rag_info?: DomainRagInfo;
   status?: DomainNodeStatus;
   summary?: string;
   type?: DomainNodeType;
@@ -1030,6 +1112,20 @@ export interface DomainProviderModelListItem {
   model?: string;
 }
 
+export interface DomainQuestionConfig {
+  list?: {
+    id?: string;
+    question?: string;
+  }[];
+  title?: string;
+  type?: string;
+}
+
+export interface DomainRagInfo {
+  message?: string;
+  status?: ConstsNodeRagInfoStatus;
+}
+
 export interface DomainRecommendNodeListResp {
   emoji?: string;
   id?: string;
@@ -1099,6 +1195,21 @@ export interface DomainStatPageReq {
   scene: 1 | 2 | 3 | 4;
 }
 
+export interface DomainTextConfig {
+  title?: string;
+  type?: string;
+}
+
+export interface DomainTextImgConfig {
+  item?: {
+    desc?: string;
+    name?: string;
+    url?: string;
+  };
+  title?: string;
+  type?: string;
+}
+
 export interface DomainTextReq {
   /** action: improve, summary, extend, shorten, etc. */
   action?: string;
@@ -1138,6 +1249,7 @@ export interface DomainUpdateModelReq {
 
 export interface DomainUpdateNodeReq {
   content?: string;
+  content_type?: string;
   emoji?: string;
   id: string;
   kb_id: string;
@@ -1173,25 +1285,43 @@ export interface DomainWebAppCustomSettings {
 export interface DomainWebAppLandingConfig {
   banner_config?: DomainBannerConfig;
   basic_doc_config?: DomainBasicDocConfig;
+  block_grid_config?: DomainBlockGridConfig;
   carousel_config?: DomainCarouselConfig;
+  case_config?: DomainCaseConfig;
   com_config_order?: string[];
+  comment_config?: DomainCommentConfig;
   dir_doc_config?: DomainDirDocConfig;
   faq_config?: DomainFaqConfig;
+  feature_config?: DomainFeatureConfig;
+  img_text_config?: DomainImgTextConfig;
+  metrics_config?: DomainMetricsConfig;
   node_ids?: string[];
+  question_config?: DomainQuestionConfig;
   simple_doc_config?: DomainSimpleDocConfig;
+  text_config?: DomainTextConfig;
+  text_img_config?: DomainTextImgConfig;
   type?: string;
 }
 
 export interface DomainWebAppLandingConfigResp {
   banner_config?: DomainBannerConfig;
   basic_doc_config?: DomainBasicDocConfig;
+  block_grid_config?: DomainBlockGridConfig;
   carousel_config?: DomainCarouselConfig;
+  case_config?: DomainCaseConfig;
   com_config_order?: string[];
+  comment_config?: DomainCommentConfig;
   dir_doc_config?: DomainDirDocConfig;
   faq_config?: DomainFaqConfig;
+  feature_config?: DomainFeatureConfig;
+  img_text_config?: DomainImgTextConfig;
+  metrics_config?: DomainMetricsConfig;
   node_ids?: string[];
   nodes?: DomainRecommendNodeListResp[];
+  question_config?: DomainQuestionConfig;
   simple_doc_config?: DomainSimpleDocConfig;
+  text_config?: DomainTextConfig;
+  text_img_config?: DomainTextImgConfig;
   type?: string;
 }
 

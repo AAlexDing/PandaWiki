@@ -1,6 +1,3 @@
-import { DEFAULT_DATA, TYPE_TO_CONFIG_LABEL } from './constants';
-import Logo from '@/assets/images/footer-logo.png';
-
 const handleHeaderProps = (setting: any) => {
   return {
     title: setting.title,
@@ -129,6 +126,50 @@ const handleCaseProps = (config: any = {}) => {
   };
 };
 
+const handleFeatureProps = (config: any = {}) => {
+  return {
+    title: config.title || '产品特性',
+    items: config.list || [],
+  };
+};
+
+const handleImgTextProps = (config: any = {}) => {
+  return {
+    title: config.title || '左图右字',
+    item: config.item || {},
+    direction: 'row',
+  };
+};
+
+const handleTextImgProps = (config: any = {}) => {
+  return {
+    title: config.title || '右图左字',
+    item: config.item || {},
+    direction: 'row-reverse',
+  };
+};
+
+const handleCommentProps = (config: any = {}) => {
+  return {
+    title: config.title || '评论卡片',
+    items: config.list || [],
+  };
+};
+
+const handleBlockGridProps = (config: any = {}) => {
+  return {
+    title: config.title || '区块网格',
+    items: config.list || [],
+  };
+};
+
+const handleQuestionProps = (config: any = {}) => {
+  return {
+    title: config.title || '常见问题',
+    items: config.list || [],
+  };
+};
+
 export const handleComponentProps = (
   type: string,
   id: string,
@@ -162,6 +203,18 @@ export const handleComponentProps = (
         return handleMetricsProps(config);
       case 'case':
         return handleCaseProps(config);
+      case 'feature':
+        return handleFeatureProps(config);
+      case 'img_text':
+        return handleImgTextProps(config);
+      case 'text_img':
+        return handleTextImgProps(config);
+      case 'comment':
+        return handleCommentProps(config);
+      case 'block_grid':
+        return handleBlockGridProps(config);
+      case 'question':
+        return handleQuestionProps(config);
     }
   }
 };

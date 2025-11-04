@@ -1,4 +1,3 @@
-import { Box, Drawer, IconButton, Stack } from '@mui/material';
 import {
   H1Icon,
   H2Icon,
@@ -9,12 +8,15 @@ import {
   TocList,
 } from '@ctzhian/tiptap';
 import { Ellipsis, Icon } from '@ctzhian/ui';
+import { Box, Drawer, IconButton, Stack } from '@mui/material';
 import { useState } from 'react';
 
 interface TocProps {
   headings: TocList;
   fixed: boolean;
   setFixed: (fixed: boolean) => void;
+  isMarkdown: boolean;
+  scrollToHeading?: (headingText: string) => void;
 }
 
 const HeadingIcon = [
@@ -32,7 +34,13 @@ const HeadingSx = [
   { fontSize: 14, fontWeight: 400, color: 'text.disabled' },
 ];
 
-const Toc = ({ headings, fixed, setFixed }: TocProps) => {
+const Toc = ({
+  headings,
+  fixed,
+  setFixed,
+  scrollToHeading,
+  isMarkdown,
+}: TocProps) => {
   const [open, setOpen] = useState(false);
   const levels = Array.from(
     new Set(headings.map(it => it.level).sort((a, b) => a - b)),
@@ -164,15 +172,40 @@ const Toc = ({ headings, fixed, setFixed }: TocProps) => {
                   onClick={() => {
                     const element = document.getElementById(it.id);
                     if (element) {
-                      const offset = 100;
-                      const elementPosition =
-                        element.getBoundingClientRect().top;
-                      const offsetPosition =
-                        elementPosition + window.pageYOffset - offset;
-                      window.scrollTo({
-                        top: offsetPosition,
-                        behavior: 'smooth',
-                      });
+                      if (isMarkdown) {
+                        const container = document.getElementById(
+                          'markdown-preview-container',
+                        );
+                        if (container) {
+                          const containerRect =
+                            container.getBoundingClientRect();
+                          const elementRect = element.getBoundingClientRect();
+                          const offset = 20; // 顶部偏移
+                          const scrollTop =
+                            container.scrollTop +
+                            elementRect.top -
+                            containerRect.top -
+                            offset;
+                          container.scrollTo({
+                            top: scrollTop,
+                            behavior: 'smooth',
+                          });
+                        }
+                        // 同时滚动 AceEditor
+                        if (scrollToHeading) {
+                          scrollToHeading(it.textContent);
+                        }
+                      } else {
+                        const offset = 100;
+                        const elementPosition =
+                          element.getBoundingClientRect().top;
+                        const offsetPosition =
+                          elementPosition + window.pageYOffset - offset;
+                        window.scrollTo({
+                          top: offsetPosition,
+                          behavior: 'smooth',
+                        });
+                      }
                     }
                   }}
                 >

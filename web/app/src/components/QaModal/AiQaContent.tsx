@@ -11,6 +11,7 @@ import { message } from '@ctzhian/ui';
 import Feedback from '@/components/feedback';
 import { handleThinkingContent } from './utils';
 import { useSmartScroll } from '@/hooks';
+import { useTheme } from '@mui/material';
 
 import {
   IconCai,
@@ -107,7 +108,7 @@ const AiQaContent: React.FC<{
     content: string;
     chunk_result: ChunkResultItem;
   }> | null>(null);
-
+  const { palette } = useTheme();
   const messageIdRef = useRef('');
   const [fullAnswer, setFullAnswer] = useState<string>('');
   const [conversation, setConversation] = useState<ConversationItem[]>([]);
@@ -661,7 +662,7 @@ const AiQaContent: React.FC<{
   }, [conversation]);
 
   return (
-    <StyledMainContainer>
+    <StyledMainContainer className={palette.mode === 'dark' ? 'md-dark' : ''}>
       <StyledConversationContainer
         direction='column'
         gap={2}

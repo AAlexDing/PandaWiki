@@ -167,6 +167,44 @@ definitions:
     - NodePermNameVisible
     - NodePermNameVisitable
     - NodePermNameAnswerable
+  consts.NodeRagInfoStatus:
+    enum:
+    - BASIC_PENDING
+    - BASIC_RUNNING
+    - BASIC_FAILED
+    - BASIC_SUCCEEDED
+    - ENHANCE_PENDING
+    - ENHANCE_RUNNING
+    - ENHANCE_FAILED
+    - ENHANCE_SUCCEEDED
+    type: string
+    x-enum-comments:
+      NodeRagStatusBasicFailed: 基础处理失败
+      NodeRagStatusBasicPending: 等待基础处理
+      NodeRagStatusBasicRunning: 正在进行基础处理（文本分割、向量化等）
+      NodeRagStatusBasicSucceeded: 基础处理成功
+      NodeRagStatusEnhanceFailed: 增强处理失败
+      NodeRagStatusEnhancePending: 基础处理完成，等待增强处理
+      NodeRagStatusEnhanceRunning: 正在进行增强处理（关键词提取等）
+      NodeRagStatusEnhanceSucceeded: 增强处理成功
+    x-enum-descriptions:
+    - 等待基础处理
+    - 正在进行基础处理（文本分割、向量化等）
+    - 基础处理失败
+    - 基础处理成功
+    - 基础处理完成，等待增强处理
+    - 正在进行增强处理（关键词提取等）
+    - 增强处理失败
+    - 增强处理成功
+    x-enum-varnames:
+    - NodeRagStatusBasicPending
+    - NodeRagStatusBasicRunning
+    - NodeRagStatusBasicFailed
+    - NodeRagStatusBasicSucceeded
+    - NodeRagStatusEnhancePending
+    - NodeRagStatusEnhanceRunning
+    - NodeRagStatusEnhanceFailed
+    - NodeRagStatusEnhanceSucceeded
   consts.RedeemCaptchaReq:
     properties:
       solutions:
@@ -795,6 +833,24 @@ definitions:
     - ids
     - kb_id
     type: object
+  domain.BlockGridConfig:
+    properties:
+      list:
+        items:
+          properties:
+            id:
+              type: string
+            name:
+              type: string
+            url:
+              type: string
+          type: object
+        type: array
+      title:
+        type: string
+      type:
+        type: string
+    type: object
   domain.BrandGroup:
     properties:
       links:
@@ -896,6 +952,28 @@ definitions:
         items:
           $ref: '#/definitions/domain.NodeContentChunkSSE'
         type: array
+    type: object
+  domain.CommentConfig:
+    properties:
+      list:
+        items:
+          properties:
+            avatar:
+              type: string
+            comment:
+              type: string
+            id:
+              type: string
+            profession:
+              type: string
+            user_name:
+              type: string
+          type: object
+        type: array
+      title:
+        type: string
+      type:
+        type: string
     type: object
   domain.CommentInfo:
     properties:
@@ -1269,6 +1347,24 @@ definitions:
       title_color:
         type: string
     type: object
+  domain.FeatureConfig:
+    properties:
+      list:
+        items:
+          properties:
+            desc:
+              type: string
+            id:
+              type: string
+            name:
+              type: string
+          type: object
+        type: array
+      title:
+        type: string
+      type:
+        type: string
+    type: object
   domain.FeedBackInfo:
     properties:
       feedback_content:
@@ -1395,6 +1491,22 @@ definitions:
       ip:
         type: string
       province:
+        type: string
+    type: object
+  domain.ImgTextConfig:
+    properties:
+      item:
+        properties:
+          desc:
+            type: string
+          name:
+            type: string
+          url:
+            type: string
+        type: object
+      title:
+        type: string
+      type:
         type: string
     type: object
   domain.InstantCountResp:
@@ -1621,6 +1733,8 @@ definitions:
         $ref: '#/definitions/domain.NodePermissions'
       position:
         type: number
+      rag_info:
+        $ref: '#/definitions/domain.RagInfo'
       status:
         $ref: '#/definitions/domain.NodeStatus'
       summary:
@@ -1897,6 +2011,29 @@ definitions:
       model:
         type: string
     type: object
+  domain.QuestionConfig:
+    properties:
+      list:
+        items:
+          properties:
+            id:
+              type: string
+            question:
+              type: string
+          type: object
+        type: array
+      title:
+        type: string
+      type:
+        type: string
+    type: object
+  domain.RagInfo:
+    properties:
+      message:
+        type: string
+      status:
+        $ref: '#/definitions/consts.NodeRagInfoStatus'
+    type: object
   domain.RecommendNodeListResp:
     properties:
       emoji:
@@ -2048,6 +2185,22 @@ definitions:
       type:
         type: string
     type: object
+  domain.TextImgConfig:
+    properties:
+      item:
+        properties:
+          desc:
+            type: string
+          name:
+            type: string
+          url:
+            type: string
+        type: object
+      title:
+        type: string
+      type:
+        type: string
+    type: object
   domain.TextReq:
     properties:
       action:
@@ -2190,6 +2343,8 @@ definitions:
         $ref: '#/definitions/domain.BannerConfig'
       basic_doc_config:
         $ref: '#/definitions/domain.BasicDocConfig'
+      block_grid_config:
+        $ref: '#/definitions/domain.BlockGridConfig'
       carousel_config:
         $ref: '#/definitions/domain.CarouselConfig'
       case_config:
@@ -2198,20 +2353,30 @@ definitions:
         items:
           type: string
         type: array
+      comment_config:
+        $ref: '#/definitions/domain.CommentConfig'
       dir_doc_config:
         $ref: '#/definitions/domain.DirDocConfig'
       faq_config:
         $ref: '#/definitions/domain.FaqConfig'
+      feature_config:
+        $ref: '#/definitions/domain.FeatureConfig'
+      img_text_config:
+        $ref: '#/definitions/domain.ImgTextConfig'
       metrics_config:
         $ref: '#/definitions/domain.MetricsConfig'
       node_ids:
         items:
           type: string
         type: array
+      question_config:
+        $ref: '#/definitions/domain.QuestionConfig'
       simple_doc_config:
         $ref: '#/definitions/domain.SimpleDocConfig'
       text_config:
         $ref: '#/definitions/domain.TextConfig'
+      text_img_config:
+        $ref: '#/definitions/domain.TextImgConfig'
       type:
         type: string
     type: object
@@ -2221,6 +2386,8 @@ definitions:
         $ref: '#/definitions/domain.BannerConfig'
       basic_doc_config:
         $ref: '#/definitions/domain.BasicDocConfig'
+      block_grid_config:
+        $ref: '#/definitions/domain.BlockGridConfig'
       carousel_config:
         $ref: '#/definitions/domain.CarouselConfig'
       case_config:
@@ -2229,10 +2396,16 @@ definitions:
         items:
           type: string
         type: array
+      comment_config:
+        $ref: '#/definitions/domain.CommentConfig'
       dir_doc_config:
         $ref: '#/definitions/domain.DirDocConfig'
       faq_config:
         $ref: '#/definitions/domain.FaqConfig'
+      feature_config:
+        $ref: '#/definitions/domain.FeatureConfig'
+      img_text_config:
+        $ref: '#/definitions/domain.ImgTextConfig'
       metrics_config:
         $ref: '#/definitions/domain.MetricsConfig'
       node_ids:
@@ -2243,10 +2416,14 @@ definitions:
         items:
           $ref: '#/definitions/domain.RecommendNodeListResp'
         type: array
+      question_config:
+        $ref: '#/definitions/domain.QuestionConfig'
       simple_doc_config:
         $ref: '#/definitions/domain.SimpleDocConfig'
       text_config:
         $ref: '#/definitions/domain.TextConfig'
+      text_img_config:
+        $ref: '#/definitions/domain.TextImgConfig'
       type:
         type: string
     type: object

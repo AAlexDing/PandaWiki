@@ -1,3 +1,4 @@
+import React from 'react';
 import {
   Box,
   IconButton,
@@ -10,7 +11,7 @@ import {
 } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
 import { Icon } from '@ctzhian/ui';
-import { Dispatch, SetStateAction, useMemo, useState, lazy } from 'react';
+import { Dispatch, SetStateAction, useMemo, useState } from 'react';
 import type { CSSProperties } from 'react';
 import { Component } from '../../index';
 import {
@@ -31,18 +32,8 @@ import { CSS } from '@dnd-kit/utilities';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setAppPreviewData } from '@/store/slices/config';
 import AddCircleRoundedIcon from '@mui/icons-material/AddCircleRounded';
-import {
-  IconMuluwendang,
-  IconJichuwendang,
-  IconJianyiwendang,
-  IconChangjianwenti,
-  IconLunbotu,
-  IconShanchu,
-  IconDanwenzi,
-  IconShuzikapian,
-  IconKehuanli,
-} from '@panda-wiki/icons';
-import { DEFAULT_DATA } from '../../constants';
+import { IconShanchu } from '@panda-wiki/icons';
+import { DEFAULT_DATA, COMPONENTS_MAP } from '../../constants';
 import { THEME_LIST, THEME_TO_PALETTE } from '@panda-wiki/themes/constants';
 interface ComponentBarProps {
   components: Component[];
@@ -104,70 +95,7 @@ const ComponentBar = ({
   const [anchorEl, setAnchorEl] = useState<HTMLElement | null>(null);
   const popoverOpen = Boolean(anchorEl);
   const options = useMemo(
-    () => [
-      {
-        name: 'basic_doc',
-        title: '文档摘要卡片',
-        icon: IconJichuwendang,
-        component: lazy(() => import('@panda-wiki/ui/basicDoc')),
-        config: lazy(() => import('../config/BasicDocConfig')),
-      },
-      {
-        name: 'dir_doc',
-        title: '文档目录卡片',
-        icon: IconMuluwendang,
-        component: lazy(() => import('@panda-wiki/ui/dirDoc')),
-        config: lazy(() => import('../config/DirDocConfig')),
-      },
-      {
-        name: 'simple_doc',
-        title: '简易文档卡片',
-        icon: IconJianyiwendang,
-        component: lazy(() => import('@panda-wiki/ui/simpleDoc')),
-        config: lazy(() => import('../config/SimpleDocConfig')),
-      },
-      {
-        name: 'carousel',
-        title: '轮播图',
-        icon: IconLunbotu,
-        component: lazy(() => import('@panda-wiki/ui/carousel')),
-        config: lazy(() => import('../config/CarouselConfig')),
-      },
-      {
-        name: 'faq',
-        title: '链接组',
-        icon: IconChangjianwenti,
-        component: lazy(() => import('@panda-wiki/ui/faq')),
-        config: lazy(() => import('../config/FaqConfig')),
-      },
-      {
-        name: 'text',
-        title: '标题',
-        icon: IconDanwenzi,
-        component: lazy(() => import('@panda-wiki/ui/text')),
-        config: lazy(() => import('../config/TextConfig')),
-      },
-      {
-        name: 'metrics',
-        title: '指标卡片',
-        icon: IconShuzikapian,
-        component: lazy(() => import('@panda-wiki/ui/metrics')),
-        config: lazy(() => import('../config/MetricsConfig')),
-      },
-      {
-        name: 'case',
-        title: '案例卡片',
-        icon: IconKehuanli,
-        component: lazy(() => import('@panda-wiki/ui/case')),
-        config: lazy(() => import('../config/CaseConfig')),
-      },
-      // {
-      //   name: 'contact',
-      //   title: '联系我们',
-      //   component: lazy(() => import('@panda-wiki/ui/faq')),
-      //   config: lazy(() => import('../config/FaqConfig')),
-      // },
-    ],
+    () => Object.values(COMPONENTS_MAP).filter(item => !item.fixed),
     [],
   );
   const sensors = useSensors(
@@ -229,6 +157,7 @@ const ComponentBar = ({
         ref={setNodeRef}
         direction={'row'}
         sx={{
+          flexShrink: 0,
           cursor: 'not-allowed',
           height: '40px',
           borderRadius: '6px',
@@ -292,7 +221,8 @@ const ComponentBar = ({
             const filterComponents = components.filter(c => c.id !== item.id);
             if (curComponent.id === item.id) {
               setCurComponent(
-                filterComponents.find(c => !c.disabled) || filterComponents[0],
+                filterComponents.find(c => !c.disabled && !c.hidden) ||
+                  filterComponents[0],
               );
             }
             setComponents(filterComponents);
@@ -429,7 +359,7 @@ const ComponentBar = ({
           paper: {
             sx: {
               p: '12px',
-              width: '200px',
+              width: '282px',
             },
           },
         }}
@@ -437,7 +367,7 @@ const ComponentBar = ({
         <Stack
           sx={{
             display: 'grid',
-            gridTemplateColumns: '1fr 1fr',
+            gridTemplateColumns: '1fr 1fr 1fr',
             gap: '12px',
           }}
         >
@@ -507,7 +437,12 @@ const ComponentBar = ({
                   },
                 }}
               >
-                <item.icon sx={{ fontSize: '24px' }} />
+                {'icon' in item &&
+                  item.icon &&
+                  (() => {
+                    const IconComponent = item.icon;
+                    return <IconComponent sx={{ fontSize: '24px' }} />;
+                  })()}
               </Box>
               <Typography sx={{ fontSize: '12px' }}>{item.title}</Typography>
             </Stack>

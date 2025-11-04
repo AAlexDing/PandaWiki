@@ -37,7 +37,8 @@ export const StyledAccordion = styled(Accordion)(({ theme }) => ({
     content: '""',
     height: 0,
   },
-  backgroundColor: theme.palette.background.default,
+  background: 'transparent',
+  backgroundImage: 'none',
 }));
 
 export const StyledAccordionSummary = styled(AccordionSummary)(({ theme }) => ({
@@ -66,7 +67,8 @@ export const StyledQuestionText = styled(Box)(() => ({
 
 // 搜索结果相关组件
 export const StyledChunkAccordion = styled(Accordion)(({ theme }) => ({
-  backgroundColor: 'transparent',
+  backgroundImage: 'none',
+  background: 'transparent',
   border: 'none',
   padding: 0,
   paddingBottom: theme.spacing(2),
@@ -140,7 +142,7 @@ export const StyledThinkingAccordionDetails = styled(AccordionDetails)(
 // 操作区域组件
 export const StyledActionStack = styled(Stack)(({ theme }) => ({
   fontSize: 12,
-  color: theme.palette.text.tertiary,
+  color: alpha(theme.palette.text.primary, 0.75),
   marginTop: theme.spacing(2),
 }));
 

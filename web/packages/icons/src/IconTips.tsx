@@ -1,7 +1,7 @@
 import React from 'react';
 import SvgIcon, { SvgIconProps } from '@mui/material/SvgIcon';
 
-const IconTips_and_updates_24dp_1F1F1F = (props: SvgIconProps) => (
+const IconTips = (props: SvgIconProps) => (
   <SvgIcon
     xmlns='http://www.w3.org/2000/svg'
     viewBox='0 0 1024 1024'
@@ -11,7 +11,6 @@ const IconTips_and_updates_24dp_1F1F1F = (props: SvgIconProps) => (
   </SvgIcon>
 );
 
-IconTips_and_updates_24dp_1F1F1F.displayName =
-  'icon-tips_and_updates_24dp_1F1F1F';
+IconTips.displayName = 'icon-tips';
 
-export default IconTips_and_updates_24dp_1F1F1F;
+export default IconTips;

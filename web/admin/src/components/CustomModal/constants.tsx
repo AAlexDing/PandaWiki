@@ -5,6 +5,15 @@ import {
   IconJianyiwendang,
   IconChangjianwenti,
   IconLunbotu,
+  IconDanwenzi,
+  IconShuzikapian,
+  IconKehuanli,
+  IconTexing,
+  IconZuotuyouzi,
+  IconYoutuzuozi,
+  IconKehupingjia,
+  IconJiugongge,
+  IconLianjiezu1,
 } from '@panda-wiki/icons';
 import { DomainRecommendNodeListResp } from '@/request/types';
 
@@ -28,14 +37,52 @@ export const DEFAULT_DATA = {
       link: string;
     }[],
   },
+  feature: {
+    title: '产品特性',
+    list: [] as {
+      id: string;
+      name: string;
+      desc: string;
+    }[],
+  },
+  img_text: {
+    title: '图文卡片',
+    item: {
+      url: '',
+      name: '',
+      desc: '',
+    },
+  },
+  text_img: {
+    title: '图文卡片',
+    item: {
+      url: '',
+      name: '',
+      desc: '',
+    },
+  },
+  comment: {
+    title: '点评卡片',
+    list: [] as {
+      id: string;
+      user_name: string;
+      avatar: string;
+      profession: string;
+      comment: string;
+    }[],
+  },
+  block_grid: {
+    title: '区块网格',
+    list: [] as {
+      id: string;
+      url: string;
+      name: string;
+    }[],
+  },
   banner: {
     title: '',
-    title_color: '#6E73FE',
-    title_font_size: 60,
     subtitle: '',
     placeholder: '',
-    subtitle_color: '#ffffff80',
-    subtitle_font_size: 16,
     bg_url: '',
     hot_search: [] as string[],
     btns: [] as {
@@ -47,26 +94,18 @@ export const DEFAULT_DATA = {
   },
   basic_doc: {
     title: '文档摘要卡片',
-    bg_color: '#ffffff00',
-    title_color: '#000000',
     nodes: [] as DomainRecommendNodeListResp[],
   },
   dir_doc: {
     title: '文档目录卡片',
-    bg_color: '#3248F2',
-    title_color: '#ffffff',
     nodes: [] as DomainRecommendNodeListResp[],
   },
   simple_doc: {
     title: '简易文档卡片',
-    bg_color: '#ffffff00',
-    title_color: '#000000',
     nodes: [] as DomainRecommendNodeListResp[],
   },
   carousel: {
     title: '轮播图',
-    bg_color: '#3248F2',
-    title_color: '#ffffff',
     list: [] as {
       id: string;
       title: string;
@@ -76,12 +115,17 @@ export const DEFAULT_DATA = {
   },
   faq: {
     title: '链接组',
-    bg_color: '#ffffff00',
-    title_color: '#000000',
     list: [] as {
       id: string;
       question: string;
       link: string;
+    }[],
+  },
+  question: {
+    title: '常见问题',
+    list: [] as {
+      id: string;
+      question: string;
     }[],
   },
 };
@@ -94,6 +138,7 @@ export const COMPONENTS_MAP = {
     config: lazy(() => import('./components/config/HeaderConfig')),
     fixed: true,
     disabled: false,
+    hidden: false,
   },
   banner: {
     name: 'banner',
@@ -102,6 +147,7 @@ export const COMPONENTS_MAP = {
     config: lazy(() => import('./components/config/BannerConfig')),
     fixed: true,
     disabled: false,
+    hidden: false,
   },
   basic_doc: {
     name: 'basic_doc',
@@ -111,6 +157,7 @@ export const COMPONENTS_MAP = {
     config: lazy(() => import('./components/config/BasicDocConfig')),
     fixed: false,
     disabled: false,
+    hidden: false,
   },
   dir_doc: {
     name: 'dir_doc',
@@ -120,6 +167,7 @@ export const COMPONENTS_MAP = {
     config: lazy(() => import('./components/config/DirDocConfig')),
     fixed: false,
     disabled: false,
+    hidden: false,
   },
   simple_doc: {
     name: 'simple_doc',
@@ -129,6 +177,7 @@ export const COMPONENTS_MAP = {
     config: lazy(() => import('./components/config/SimpleDocConfig')),
     fixed: false,
     disabled: false,
+    hidden: false,
   },
   carousel: {
     name: 'carousel',
@@ -138,15 +187,17 @@ export const COMPONENTS_MAP = {
     config: lazy(() => import('./components/config/CarouselConfig')),
     fixed: false,
     disabled: false,
+    hidden: false,
   },
   faq: {
     name: 'faq',
     title: '链接组',
-    icon: IconChangjianwenti,
+    icon: IconLianjiezu1,
     component: lazy(() => import('@panda-wiki/ui/faq')),
     config: lazy(() => import('./components/config/FaqConfig')),
     fixed: false,
     disabled: false,
+    hidden: false,
   },
   footer: {
     name: 'footer',
@@ -155,30 +206,97 @@ export const COMPONENTS_MAP = {
     config: lazy(() => import('./components/config/FooterConfig')),
     fixed: true,
     disabled: false,
+    hidden: false,
   },
   text: {
     name: 'text',
     title: '标题',
+    icon: IconDanwenzi,
     component: lazy(() => import('@panda-wiki/ui/text')),
     config: lazy(() => import('./components/config/TextConfig')),
     fixed: false,
     disabled: false,
+    hidden: false,
   },
   case: {
     name: 'case',
     title: '案例卡片',
+    icon: IconKehuanli,
     component: lazy(() => import('@panda-wiki/ui/case')),
     config: lazy(() => import('./components/config/CaseConfig')),
     fixed: false,
     disabled: false,
+    hidden: false,
   },
   metrics: {
     name: 'metrics',
     title: '指标卡片',
+    icon: IconShuzikapian,
     component: lazy(() => import('@panda-wiki/ui/metrics')),
     config: lazy(() => import('./components/config/MetricsConfig')),
     fixed: false,
     disabled: false,
+    hidden: false,
+  },
+  feature: {
+    name: 'feature',
+    title: '产品特性',
+    icon: IconTexing,
+    component: lazy(() => import('@panda-wiki/ui/feature')),
+    config: lazy(() => import('./components/config/FeatureConfig')),
+    fixed: false,
+    disabled: false,
+    hidden: false,
+  },
+  img_text: {
+    name: 'img_text',
+    title: '左图右字',
+    icon: IconZuotuyouzi,
+    component: lazy(() => import('@panda-wiki/ui/imgText')),
+    config: lazy(() => import('./components/config/ImgTextConfig')),
+    fixed: false,
+    disabled: false,
+    hidden: false,
+  },
+  text_img: {
+    name: 'text_img',
+    title: '右图左字',
+    icon: IconYoutuzuozi,
+    component: lazy(() => import('@panda-wiki/ui/imgText')),
+    config: lazy(() => import('./components/config/ImgTextConfig')),
+    fixed: false,
+    disabled: false,
+    hidden: false,
+  },
+  comment: {
+    name: 'comment',
+    title: '评论卡片',
+    icon: IconKehupingjia,
+    component: lazy(() => import('@panda-wiki/ui/comment')),
+    config: lazy(() => import('./components/config/CommentConfig')),
+    fixed: false,
+    disabled: false,
+    hidden: false,
+  },
+  block_grid: {
+    name: 'block_grid',
+    title: '区块网格',
+    icon: IconJiugongge,
+    component: lazy(() => import('@panda-wiki/ui/blockGrid')),
+    config: lazy(() => import('./components/config/BlockGridConfig')),
+    fixed: false,
+    disabled: false,
+    hidden: false,
+  },
+  question: {
+    name: 'question',
+    title: '常见问题',
+    icon: IconChangjianwenti,
+    component: lazy(() => import('@panda-wiki/ui/question')),
+    config: lazy(() => import('./components/config/QuestionConfig')),
+    fixed: false,
+    disabled: false,
+    hidden: false,
   },
 };
 
@@ -192,4 +310,10 @@ export const TYPE_TO_CONFIG_LABEL = {
   text: 'text_config',
   case: 'case_config',
   metrics: 'metrics_config',
+  feature: 'feature_config',
+  text_img: 'text_img_config',
+  img_text: 'img_text_config',
+  comment: 'comment_config',
+  block_grid: 'block_grid_config',
+  question: 'question_config',
 } as const;

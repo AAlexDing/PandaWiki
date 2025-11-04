@@ -72,3 +72,22 @@ export const postApiV1License = (
     format: "json",
     ...params,
   });
+
+/**
+ * @description Unbind license and delete license record
+ *
+ * @tags license
+ * @name DeleteApiV1License
+ * @summary Unbind license
+ * @request DELETE:/api/v1/license
+ * @response `200` `DomainPWResponse` OK
+ */
+
+export const deleteApiV1License = (params: RequestParams = {}) =>
+  httpRequest<DomainPWResponse>({
+    path: `/api/v1/license`,
+    method: "DELETE",
+    type: ContentType.Json,
+    format: "json",
+    ...params,
+  });

@@ -42,6 +42,7 @@ export interface Component {
   config: React.FC<any>;
   fixed?: boolean;
   disabled?: boolean;
+  hidden?: boolean;
 }
 
 const CustomModal = ({
@@ -193,10 +194,12 @@ const CustomModal = ({
         });
         // @ts-expect-error ignore
         customComponents = [pre[0], ...customComponents, pre[pre.length - 1]];
+
         if (propsComponents) {
-          customComponents = customComponents.filter(item =>
-            propsComponents.includes(item.name),
-          );
+          customComponents = customComponents.map(item => ({
+            ...item,
+            hidden: !propsComponents?.includes(item.name),
+          }));
         }
         if ((disabledComponents || []).length > 0) {
           customComponents = customComponents.map(item => ({
@@ -205,7 +208,8 @@ const CustomModal = ({
           }));
         }
         setCurComponent(
-          customComponents.find(item => !item.disabled) || customComponents[0],
+          customComponents.find(item => !item.disabled && !item.hidden) ||
+            customComponents[0],
         );
         return customComponents;
       });

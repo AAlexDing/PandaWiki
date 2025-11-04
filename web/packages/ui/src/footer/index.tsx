@@ -5,6 +5,8 @@ import { useState } from 'react';
 import { IconDianhua, IconWeixingongzhonghao } from '@panda-wiki/icons';
 import Overlay from './Overlay';
 import { DocWidth } from '../constants';
+import { PROJECT_NAME } from '../constants';
+import { decodeBase64 } from '../utils';
 
 interface DomainSocialMediaAccount {
   channel?: string;
@@ -340,7 +342,7 @@ const Footer = React.memo(
                       cursor: 'pointer',
                     }}
                   >
-                    <Box>本网站由 PandaWiki 提供技术支持</Box>
+                    <Box>{decodeBase64(PROJECT_NAME)}</Box>
                     <img src={logo} alt='PandaWiki' width={16} height={16} />
                   </Stack>
                 </Link>
@@ -777,7 +779,7 @@ const Footer = React.memo(
                             },
                           }}
                         >
-                          <Box>本网站由 PandaWiki 提供技术支持</Box>
+                          <Box>{decodeBase64(PROJECT_NAME)}</Box>
                           <img
                             src={logo}
                             alt='PandaWiki'

@@ -263,7 +263,7 @@ export const useTypewriterText = (
 };
 
 // 卡片渐入动画 hook
-export const useCardAnimation = (
+export const useCardFadeInAnimation = (
   delay: number = 0,
   threshold: number = 0.1,
 ) => {
@@ -308,7 +308,6 @@ export const useCardAnimation = (
     gsap.set(card, {
       opacity: 0,
       y: 50,
-      // scale: 0.9,
     });
 
     // 创建动画
@@ -317,10 +316,142 @@ export const useCardAnimation = (
     tl.to(card, {
       opacity: 1,
       y: 0,
-      scale: 1,
       duration: 0.4,
       ease: 'back.out(1.4)',
     });
+
+    return () => {
+      tl.kill();
+    };
+  }, [isVisible, delay]);
+
+  return cardRef;
+};
+
+export const useCardScaleAnimation = ({
+  delay = 0,
+  threshold = 0.1,
+  duration = 0.4,
+}: {
+  delay?: number;
+  threshold?: number;
+  duration?: number;
+}) => {
+  const cardRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    if (!cardRef.current || hasAnimated) return;
+
+    const card = cardRef.current;
+
+    // 创建 Intersection Observer
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setIsVisible(true);
+            setHasAnimated(true);
+          }
+        });
+      },
+      {
+        threshold,
+        rootMargin: '0px 0px -50px 0px',
+      },
+    );
+
+    observer.observe(card);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [threshold, hasAnimated]);
+
+  useEffect(() => {
+    if (!cardRef.current || !isVisible) return;
+
+    const card = cardRef.current;
+
+    // 设置初始状态
+    gsap.set(card, {
+      opacity: 0,
+      scale: 0,
+    });
+
+    // 创建动画
+    const tl = gsap.timeline({ delay });
+
+    tl.to(card, {
+      opacity: 1,
+      scale: 1,
+      duration,
+    });
+
+    return () => {
+      tl.kill();
+    };
+  }, [isVisible, delay]);
+
+  return cardRef;
+};
+
+export const useCardAnimation = ({
+  delay = 0,
+  threshold = 0.1,
+  initial,
+  to,
+}: {
+  delay?: number;
+  threshold?: number;
+  initial: GSAPTweenVars;
+  to: GSAPTweenVars;
+}) => {
+  const cardRef = useRef<HTMLElement>(null);
+  const [isVisible, setIsVisible] = useState(false);
+  const [hasAnimated, setHasAnimated] = useState(false);
+
+  useEffect(() => {
+    if (!cardRef.current || hasAnimated) return;
+
+    const card = cardRef.current;
+
+    // 创建 Intersection Observer
+    const observer = new IntersectionObserver(
+      entries => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting && !hasAnimated) {
+            setIsVisible(true);
+            setHasAnimated(true);
+          }
+        });
+      },
+      {
+        threshold,
+        rootMargin: '0px 0px -50px 0px',
+      },
+    );
+
+    observer.observe(card);
+
+    return () => {
+      observer.disconnect();
+    };
+  }, [threshold, hasAnimated]);
+
+  useEffect(() => {
+    if (!cardRef.current || !isVisible) return;
+
+    const card = cardRef.current;
+
+    // 设置初始状态
+    gsap.set(card, initial);
+
+    // 创建动画
+    const tl = gsap.timeline({ delay });
+
+    tl.to(card, to);
 
     return () => {
       tl.kill();

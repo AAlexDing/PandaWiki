@@ -11,10 +11,17 @@ export { default as Faq } from './faq';
 export { default as Metrics } from './metrics';
 export { default as Text } from './text';
 export { default as Case } from './case';
+export { default as ImgText } from './imgText';
+export { default as Feature } from './feature';
+export { default as Comment } from './comment';
+export { default as Question } from './question';
+export { default as BlockGrid } from './blockGrid';
+
 // 导出动画 hooks
 export {
   useTextAnimation,
   useFadeInText,
   useTypewriterText,
+  useCardFadeInAnimation,
   useCardAnimation,
 } from './hooks/useGsapAnimation';

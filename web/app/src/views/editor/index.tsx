@@ -1,11 +1,10 @@
 'use client';
-import { createContext, useContext } from 'react';
 import { postShareProV1ContributeSubmit } from '@/request/pro/ShareContribute';
 import { V1NodeDetailResp } from '@/request/types';
-import { useParams, useRouter } from 'next/navigation';
-import { Box, Stack, useMediaQuery } from '@mui/material';
 import { message } from '@ctzhian/ui';
-import { useEffect, useState } from 'react';
+import { Box, Stack, useMediaQuery } from '@mui/material';
+import { useParams } from 'next/navigation';
+import { createContext, useContext, useEffect, useState } from 'react';
 import Edit from './edit';
 
 export interface WrapContext {
@@ -13,7 +12,12 @@ export interface WrapContext {
   setCatalogOpen: (open: boolean) => void;
   nodeDetail: V1NodeDetailResp | null;
   setNodeDetail: (detail: V1NodeDetailResp) => void;
-  onSave: (content: string, reason: string, token: string) => void;
+  onSave: (
+    content: string,
+    reason: string,
+    token: string,
+    contentType?: 'html' | 'md',
+  ) => void;
   saveLoading: boolean;
 }
 
@@ -41,7 +45,12 @@ const DocEditor = () => {
   );
   const [catalogOpen, setCatalogOpen] = useState(true);
 
-  const onSave = (content: string, reason: string, token: string) => {
+  const onSave = (
+    content: string,
+    reason: string,
+    token: string,
+    contentType?: 'html' | 'md',
+  ) => {
     setSaveLoading(true);
     return postShareProV1ContributeSubmit({
       node_id: id ? id[0] : undefined,
@@ -51,6 +60,7 @@ const DocEditor = () => {
       reason,
       emoji: nodeDetail?.meta?.emoji,
       captcha_token: token,
+      content_type: contentType || 'html',
     }).then(() => {
       message.success('保存成功, 即将关闭页面');
       setTimeout(() => {

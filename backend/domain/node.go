@@ -38,30 +38,44 @@ const (
 
 // table: nodes
 type Node struct {
-	ID string `json:"id" gorm:"primaryKey"`
-
-	KBID string `json:"kb_id" gorm:"index"`
-
-	Type NodeType `json:"type"`
-
-	Status NodeStatus `json:"status"`
-
-	Name    string   `json:"name"`
-	Content string   `json:"content"`
-	Meta    NodeMeta `json:"meta" gorm:"type:jsonb"` // summary
-
-	ParentID string  `json:"parent_id"`
-	Position float64 `json:"position"`
-
-	DocID     string    `json:"doc_id"` // DEPRECATED: for rag service
-	CreatorId string    `json:"creator_id"`
-	EditorId  string    `json:"editor_id"`
-	EditTime  time.Time `json:"edit_time"`
-
+	ID          string          `json:"id" gorm:"primaryKey"`
+	KBID        string          `json:"kb_id" gorm:"index"`
+	Type        NodeType        `json:"type"`
+	Status      NodeStatus      `json:"status"`
+	RagInfo     RagInfo         `json:"rag_info" gorm:"type:jsonb"`
+	Name        string          `json:"name"`
+	Content     string          `json:"content"`
+	Meta        NodeMeta        `json:"meta" gorm:"type:jsonb"` // summary
+	ParentID    string          `json:"parent_id"`
+	Position    float64         `json:"position"`
+	DocID       string          `json:"doc_id"` // DEPRECATED: for rag service
+	CreatorId   string          `json:"creator_id"`
+	EditorId    string          `json:"editor_id"`
+	EditTime    time.Time       `json:"edit_time"`
 	Permissions NodePermissions `json:"permissions" gorm:"type:jsonb"`
+	CreatedAt   time.Time       `json:"created_at"`
+	UpdatedAt   time.Time       `json:"updated_at"`
+}
 
-	CreatedAt time.Time `json:"created_at"`
-	UpdatedAt time.Time `json:"updated_at"`
+func (Node) TableName() string {
+	return "nodes"
+}
+
+type RagInfo struct {
+	Status  consts.NodeRagInfoStatus `json:"status"`
+	Message string                   `json:"message"`
+}
+
+func (d *RagInfo) Value() (driver.Value, error) {
+	return json.Marshal(d)
+}
+
+func (d *RagInfo) Scan(value any) error {
+	bytes, ok := value.([]byte)
+	if !ok {
+		return errors.New(fmt.Sprint("invalid node meta type:", value))
+	}
+	return json.Unmarshal(bytes, d)
 }
 
 type NodePermissions struct {
@@ -147,6 +161,7 @@ type NodeListItemResp struct {
 	ID          string          `json:"id"`
 	Type        NodeType        `json:"type"`
 	Status      NodeStatus      `json:"status"`
+	RagInfo     RagInfo         `json:"rag_info"`
 	Name        string          `json:"name"`
 	Summary     string          `json:"summary"`
 	Emoji       string          `json:"emoji"`
@@ -280,6 +295,10 @@ type NodeRelease struct {
 
 	CreatedAt time.Time `json:"created_at"`
 	UpdatedAt time.Time `json:"updated_at"`
+}
+
+func (NodeRelease) TableName() string {
+	return "node_releases"
 }
 
 // NodeReleaseWithDirPath extends NodeRelease with directory path information

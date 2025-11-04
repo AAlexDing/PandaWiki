@@ -1,26 +1,27 @@
-import { useState, useEffect } from 'react';
-import { styled } from '@mui/material/styles';
 import Logo from '@/assets/images/logo.png';
-import { Box, Chip, Stack, TextField } from '@mui/material';
 import Card from '@/components/Card';
 import { tableSx } from '@/constant/styles';
-import dayjs from 'dayjs';
-import { Table, Ellipsis, message, Modal } from '@ctzhian/ui';
+import { Ellipsis, message, Modal, Table } from '@ctzhian/ui';
 import type { ColumnType } from '@ctzhian/ui/dist/Table';
+import { Box, Chip, Stack, TextField } from '@mui/material';
+import { styled } from '@mui/material/styles';
+import dayjs from 'dayjs';
+import { useEffect, useState } from 'react';
 import DocModal from './DocModal';
 
+import { useURLSearchParams } from '@/hooks';
 import {
   getApiProV1ContributeList,
   postApiProV1ContributeAudit,
 } from '@/request/pro/Contribute';
 import {
-  GithubComChaitinPandaWikiProApiContributeV1ContributeItem,
   ConstsContributeStatus,
   ConstsContributeType,
+  GithubComChaitinPandaWikiProApiContributeV1ContributeItem,
 } from '@/request/pro/types';
-import { useURLSearchParams } from '@/hooks';
 import { useAppSelector } from '@/store';
 import ContributePreviewModal from './ContributePreviewModal';
+import MarkdownPreviewModal from './MarkdownPreviewModal';
 
 const StyledSearchRow = styled(Stack)(({ theme }) => ({
   padding: theme.spacing(2),
@@ -365,13 +366,23 @@ export default function ContributionPage() {
         }}
       />
 
-      <ContributePreviewModal
-        open={open}
-        row={previewRow}
-        onClose={closeDialog}
-        onAccept={handleAccept}
-        onReject={handleReject}
-      />
+      {previewRow?.meta?.content_type === 'md' ? (
+        <MarkdownPreviewModal
+          open={open}
+          row={previewRow}
+          onClose={closeDialog}
+          onAccept={handleAccept}
+          onReject={handleReject}
+        />
+      ) : (
+        <ContributePreviewModal
+          open={open}
+          row={previewRow}
+          onClose={closeDialog}
+          onAccept={handleAccept}
+          onReject={handleReject}
+        />
+      )}
       <DocModal
         open={docModalOpen}
         onClose={() => setDocModalOpen(false)}

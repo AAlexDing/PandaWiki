@@ -217,7 +217,8 @@ const ShowContent = ({
       const filterComponents = components.filter(c => c.id !== item.id);
       if (curComponent?.id === item.id) {
         setCurComponent(
-          filterComponents.find(c => !c.disabled) || filterComponents[0],
+          filterComponents.find(c => !c.disabled && !c.hidden) ||
+            filterComponents[0],
         );
       }
       setComponents(filterComponents);
@@ -301,20 +302,22 @@ const ShowContent = ({
 
   // 渲染项缓存：仅在关键签名或必要依赖变更时重建
   const renderedItems = useMemo(() => {
-    return components.map(item =>
-      propsCacheRef.current[item.id] ? (
-        <SortableItem
-          key={item.id}
-          item={item}
-          renderMode={renderMode}
-          cachedProps={propsCacheRef.current[item.id]}
-          isHighlighted={curComponent?.id === item.id}
-          onSelect={handleSelect}
-          onDelete={handleDelete}
-          baseUrl={baseUrl}
-        />
-      ) : null,
-    );
+    return components
+      .filter(item => !item.hidden)
+      .map(item =>
+        propsCacheRef.current[item.id] ? (
+          <SortableItem
+            key={item.id}
+            item={item}
+            renderMode={renderMode}
+            cachedProps={propsCacheRef.current[item.id]}
+            isHighlighted={curComponent?.id === item.id}
+            onSelect={handleSelect}
+            onDelete={handleDelete}
+            baseUrl={baseUrl}
+          />
+        ) : null,
+      );
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [
     renderMode,

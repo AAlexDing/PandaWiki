@@ -17,6 +17,7 @@ interface TocProps {
   setFixed: (fixed: boolean) => void;
   setShowSummary: (showSummary: boolean) => void;
   isMarkdown: boolean;
+  scrollToHeading?: (headingText: string) => void;
 }
 
 const HeadingIcon = [
@@ -34,7 +35,13 @@ const HeadingSx = [
   { fontSize: 14, fontWeight: 400, color: 'text.disabled' },
 ];
 
-const Toc = ({ headings, fixed, setFixed, isMarkdown }: TocProps) => {
+const Toc = ({
+  headings,
+  fixed,
+  setFixed,
+  isMarkdown,
+  scrollToHeading,
+}: TocProps) => {
   const storageTocOpen = localStorage.getItem('toc-open');
   const [open, setOpen] = useState(!!storageTocOpen);
   const levels = Array.from(
@@ -190,6 +197,10 @@ const Toc = ({ headings, fixed, setFixed, isMarkdown }: TocProps) => {
                             top: scrollTop,
                             behavior: 'smooth',
                           });
+                        }
+                        // 同时滚动 AceEditor
+                        if (scrollToHeading) {
+                          scrollToHeading(it.textContent);
                         }
                       } else {
                         // 在富文本编辑器模式下，滚动整个窗口

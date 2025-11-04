@@ -14,6 +14,7 @@ interface UploadFileProps {
   onChange: (url: string) => void;
   width?: number;
   height?: number;
+  label?: string;
 }
 
 const UploadFile = ({
@@ -26,6 +27,7 @@ const UploadFile = ({
   width,
   height,
   disabled = false,
+  label = '点击上传',
 }: UploadFileProps) => {
   const [preview, setPreview] = useState<string>(value);
   const [uploadProgress, setUploadProgress] = useState<number | null>(null);
@@ -255,7 +257,7 @@ const UploadFile = ({
               type='icon-shangchuan'
               sx={{ fontSize: width ? (width < 40 ? 12 : 18) : 18 }}
             />
-            <Box>点击上传</Box>
+            <Box>{label}</Box>
           </Stack>
         )}
       </Box>

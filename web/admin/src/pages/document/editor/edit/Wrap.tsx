@@ -3,7 +3,13 @@ import Emoji from '@/components/Emoji';
 import { postApiV1CreationTabComplete, putApiV1NodeDetail } from '@/request';
 import { V1NodeDetailResp } from '@/request/types';
 import { useAppSelector } from '@/store';
-import { TocList, useTiptap, UseTiptapReturn } from '@ctzhian/tiptap';
+import {
+  EditorMarkdown,
+  MarkdownEditorRef,
+  TocList,
+  useTiptap,
+  UseTiptapReturn,
+} from '@ctzhian/tiptap';
 import { Icon, message } from '@ctzhian/ui';
 import { Box, Stack, TextField, Tooltip } from '@mui/material';
 import dayjs from 'dayjs';
@@ -19,7 +25,6 @@ import { WrapContext } from '..';
 import AIGenerate from './AIGenerate';
 import FullTextEditor from './FullTextEditor';
 import Header from './Header';
-import MarkdownEditor from './MarkdownEditor';
 import Summary from './Summary';
 import Toc from './Toc';
 import Toolbar from './Toolbar';
@@ -42,6 +47,8 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
   const postApiV1CreationTabCompleteController = useRef<AbortController | null>(
     null,
   );
+
+  const markdownEditorRef = useRef<MarkdownEditorRef>(null);
 
   const isMarkdown = useMemo(() => {
     return defaultDetail.meta?.content_type === 'md';
@@ -185,7 +192,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
     editable: !isMarkdown,
     contentType: isMarkdown ? 'markdown' : 'html',
     immediatelyRender: true,
-    content: defaultDetail.content || '',
+    content: defaultDetail.content,
     exclude: ['invisibleCharacters', 'youtube', 'mention'],
     onCreate: ({ editor: tiptapEditor }) => {
       const characterCount = (
@@ -584,17 +591,27 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
       </Box>
       <Box sx={{ ...(fixedToc && { display: 'flex' }) }}>
         {isMarkdown ? (
-          <MarkdownEditor
-            editor={editorRef.editor}
-            value={nodeDetail?.content || ''}
-            onChange={value => {
-              updateDetail({
-                content: value,
-              });
-              editorRef.setContent(value);
+          <Box
+            sx={{
+              mt: '56px',
+              px: 10,
+              pt: 4,
+              flex: 1,
             }}
-            header={renderEditorTitleEmojiSummary()}
-          />
+          >
+            <Box sx={{}}>{renderEditorTitleEmojiSummary()}</Box>
+            <EditorMarkdown
+              ref={markdownEditorRef}
+              editor={editorRef.editor}
+              value={nodeDetail?.content || ''}
+              onAceChange={value => {
+                updateDetail({
+                  content: value,
+                });
+              }}
+              height='calc(100vh - 340px)'
+            />
+          </Box>
         ) : (
           <FullTextEditor
             editor={editorRef.editor}
@@ -609,6 +626,12 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
         isMarkdown={isMarkdown}
         setFixed={setFixedToc}
         setShowSummary={setShowSummary}
+        scrollToHeading={
+          isMarkdown
+            ? headingText =>
+                markdownEditorRef.current?.scrollToHeading(headingText)
+            : undefined
+        }
       />
       <AIGenerate
         open={aiGenerateOpen}

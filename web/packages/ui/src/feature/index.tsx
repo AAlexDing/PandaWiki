@@ -1,91 +1,115 @@
 'use client';
 
 import React from 'react';
-import { styled, Grid, alpha } from '@mui/material';
+import { styled, Grid, alpha, Stack } from '@mui/material';
 import { StyledTopicBox, StyledTopicTitle } from '../component/styledCommon';
-import { IconLianjiezu } from '@panda-wiki/icons';
-import { useFadeInText, useCardAnimation } from '../hooks/useGsapAnimation';
+import {
+  useFadeInText,
+  useCardFadeInAnimation,
+} from '../hooks/useGsapAnimation';
+import { IconTips } from '@panda-wiki/icons';
 
 interface FeatureProps {
   mobile?: boolean;
   title?: string;
-  bgColor?: string;
-  titleColor?: string;
   items?: {
-    question: string;
-    url: string;
+    name: string;
+    desc: string;
   }[];
 }
-
-const StyledFaqItem = styled('a')(({ theme }) => ({
-  position: 'relative',
-  overflow: 'hidden',
-  display: 'flex',
-  alignItems: 'center',
-  gap: theme.spacing(2),
-  color: theme.palette.text.primary,
+const StyledFeatureItem = styled(Stack)(({ theme }) => ({
+  border: `1px solid ${alpha(theme.palette.text.primary, 0.15)}`,
   borderRadius: '10px',
-  border: `1px solid ${alpha(theme.palette.text.primary, 0.1)}`,
+  padding: theme.spacing(2.5),
   boxShadow: `0px 5px 20px 0px ${alpha(theme.palette.text.primary, 0.06)}`,
-  padding: theme.spacing(3, 4),
   transition: 'all 0.2s ease',
   '&:hover': {
-    transform: 'translateY(-5px)',
     color: theme.palette.primary.main,
-    border: `1px solid ${alpha(theme.palette.primary.main, 0.5)}`,
-    boxShadow: '0px 10px 20px 0px rgba(0,0,5,0.2)',
+    borderColor: theme.palette.primary.main,
+    boxShadow: `0px 10px 20px 0px ${alpha(theme.palette.text.primary, 0.1)}`,
   },
-  whiteSpace: 'nowrap',
-  textOverflow: 'ellipsis',
+  opacity: 0,
 }));
 
-const StyledFaqItemTitle = styled('span')(({ theme }) => ({
-  fontSize: 16,
+export const StyledFeatureItemIcon = styled('div')(({ theme }) => ({
+  width: 60,
+  height: 60,
+  borderRadius: '50%',
+  backgroundColor: alpha(theme.palette.primary.main, 0.06),
+  display: 'flex',
+  alignItems: 'center',
+  justifyContent: 'center',
+  flex: '0 0 60px',
+}));
+
+const StyledFeatureItemTitle = styled('span')(({ theme }) => ({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  whiteSpace: 'nowrap',
+  fontSize: 20,
+  fontWeight: 700,
+  color: theme.palette.text.primary,
+}));
+
+const StyledFeatureItemSummary = styled('div')(({ theme }) => ({
+  overflow: 'hidden',
+  textOverflow: 'ellipsis',
+  display: '-webkit-box',
+  WebkitLineClamp: 3,
+  WebkitBoxOrient: 'vertical',
+  height: 60,
+  fontSize: 14,
   fontWeight: 400,
+  color: alpha(theme.palette.text.primary, 0.5),
 }));
 
 // 单个卡片组件，带动画效果
-const FaqItem: React.FC<{
-  item: any;
+const FeatureItem: React.FC<{
+  item: {
+    name: string;
+    desc: string;
+  };
   index: number;
-  size: any;
-}> = React.memo(({ item, index, size }) => {
-  const cardRef = useCardAnimation(0.2 + index * 0.1, 0.1);
-
+}> = React.memo(({ item, index }) => {
+  const cardRef = useCardFadeInAnimation(0.2 + index * 0.1, 0.1);
   return (
-    <Grid size={size} key={index}>
-      <StyledFaqItem
-        ref={cardRef as React.Ref<HTMLAnchorElement>}
-        href={item.url}
-        target='_blank'
-      >
-        <IconLianjiezu sx={{ color: 'primary.main', fontSize: 18 }} />
-        <StyledFaqItemTitle>{item.question}</StyledFaqItemTitle>
-      </StyledFaqItem>
-    </Grid>
+    <StyledFeatureItem
+      ref={cardRef as React.Ref<HTMLDivElement>}
+      gap={2.5}
+      direction='row'
+      alignItems='flex-start'
+    >
+      <StyledFeatureItemIcon>
+        <IconTips sx={{ color: 'primary.main', fontSize: 24 }} />
+      </StyledFeatureItemIcon>
+      <Stack gap={1} sx={{ minWidth: 0 }}>
+        <StyledFeatureItemTitle>{item.name}</StyledFeatureItemTitle>
+        <StyledFeatureItemSummary>{item.desc}</StyledFeatureItemSummary>
+      </Stack>
+    </StyledFeatureItem>
   );
 });
 
 const Feature: React.FC<FeatureProps> = React.memo(
-  ({ title = '链接组', items = [], mobile, bgColor, titleColor }) => {
+  ({ title, items = [], mobile }) => {
     const size =
       typeof mobile === 'boolean'
         ? mobile
           ? 12
-          : { xs: 12, md: 4 }
-        : { xs: 12, md: 4 };
+          : { xs: 12, md: 6 }
+        : { xs: 12, md: 6 };
 
     // 添加标题淡入动画
     const titleRef = useFadeInText(0.2, 0.1);
 
     return (
       <StyledTopicBox>
-        <StyledTopicTitle ref={titleRef} sx={{ color: titleColor }}>
-          {title}
-        </StyledTopicTitle>
+        <StyledTopicTitle ref={titleRef}>{title}</StyledTopicTitle>
         <Grid container spacing={3} sx={{ width: '100%' }}>
           {items.map((item, index) => (
-            <FaqItem key={index} item={item} index={index} size={size} />
+            <Grid size={size} key={index}>
+              <FeatureItem item={item} index={index} />
+            </Grid>
           ))}
         </Grid>
       </StyledTopicBox>

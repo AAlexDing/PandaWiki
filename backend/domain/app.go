@@ -255,6 +255,61 @@ type CaseConfig struct {
 		Link string `json:"link"`
 	} `json:"list"`
 }
+type CommentConfig struct {
+	Type  string `json:"type"`
+	Title string `json:"title"`
+	List  []struct {
+		ID         string `json:"id"`
+		Avatar     string `json:"avatar"`
+		UserName   string `json:"user_name"`
+		Profession string `json:"profession"`
+		Comment    string `json:"comment"`
+	} `json:"list"`
+}
+type FeatureConfig struct {
+	Type  string `json:"type"`
+	Title string `json:"title"`
+	List  []struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+		Desc string `json:"desc"`
+	} `json:"list"`
+}
+type ImgTextConfig struct {
+	Type  string `json:"type"`
+	Title string `json:"title"`
+	Item  struct {
+		URL  string `json:"url"`
+		Name string `json:"name"`
+		Desc string `json:"desc"`
+	} `json:"item"`
+}
+type TextImgConfig struct {
+	Type  string `json:"type"`
+	Title string `json:"title"`
+	Item  struct {
+		URL  string `json:"url"`
+		Name string `json:"name"`
+		Desc string `json:"desc"`
+	} `json:"item"`
+}
+type QuestionConfig struct {
+	Type  string `json:"type"`
+	Title string `json:"title"`
+	List  []struct {
+		ID       string `json:"id"`
+		Question string `json:"question"`
+	} `json:"list"`
+}
+type BlockGridConfig struct {
+	Type  string `json:"type"`
+	Title string `json:"title"`
+	List  []struct {
+		ID   string `json:"id"`
+		Name string `json:"name"`
+		URL  string `json:"url"`
+	} `json:"list"`
+}
 
 type WebAppLandingConfig struct {
 	Type            string           `json:"type"`
@@ -268,6 +323,12 @@ type WebAppLandingConfig struct {
 	MetricsConfig   *MetricsConfig   `json:"metrics_config,omitempty"`
 	CaseConfig      *CaseConfig      `json:"case_config,omitempty"`
 	TextConfig      *TextConfig      `json:"text_config,omitempty"`
+	CommentConfig   *CommentConfig   `json:"comment_config,omitempty"`
+	FeatureConfig   *FeatureConfig   `json:"feature_config,omitempty"`
+	ImgTextConfig   *ImgTextConfig   `json:"img_text_config,omitempty"`
+	TextImgConfig   *TextImgConfig   `json:"text_img_config,omitempty"`
+	QuestionConfig  *QuestionConfig  `json:"question_config,omitempty"`
+	BlockGridConfig *BlockGridConfig `json:"block_grid_config,omitempty"`
 	ComConfigOrder  []string         `json:"com_config_order"`
 }
 
@@ -478,6 +539,12 @@ type WebAppLandingConfigResp struct {
 	MetricsConfig   *MetricsConfig           `json:"metrics_config,omitempty"`
 	CaseConfig      *CaseConfig              `json:"case_config,omitempty"`
 	TextConfig      *TextConfig              `json:"text_config,omitempty"`
+	CommentConfig   *CommentConfig           `json:"comment_config,omitempty"`
+	FeatureConfig   *FeatureConfig           `json:"feature_config,omitempty"`
+	ImgTextConfig   *ImgTextConfig           `json:"img_text_config,omitempty"`
+	TextImgConfig   *TextImgConfig           `json:"text_img_config,omitempty"`
+	QuestionConfig  *QuestionConfig          `json:"question_config,omitempty"`
+	BlockGridConfig *BlockGridConfig         `json:"block_grid_config,omitempty"`
 	ComConfigOrder  []string                 `json:"com_config_order"`
 	NodeIds         []string                 `json:"node_ids"`
 	Nodes           []*RecommendNodeListResp `json:"nodes" gorm:"-"`

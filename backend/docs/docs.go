@@ -3986,6 +3986,49 @@ const docTemplate = `{
                 "NodePermNameAnswerable"
             ]
         },
+        "consts.NodeRagInfoStatus": {
+            "type": "string",
+            "enum": [
+                "BASIC_PENDING",
+                "BASIC_RUNNING",
+                "BASIC_FAILED",
+                "BASIC_SUCCEEDED",
+                "ENHANCE_PENDING",
+                "ENHANCE_RUNNING",
+                "ENHANCE_FAILED",
+                "ENHANCE_SUCCEEDED"
+            ],
+            "x-enum-comments": {
+                "NodeRagStatusBasicFailed": "基础处理失败",
+                "NodeRagStatusBasicPending": "等待基础处理",
+                "NodeRagStatusBasicRunning": "正在进行基础处理（文本分割、向量化等）",
+                "NodeRagStatusBasicSucceeded": "基础处理成功",
+                "NodeRagStatusEnhanceFailed": "增强处理失败",
+                "NodeRagStatusEnhancePending": "基础处理完成，等待增强处理",
+                "NodeRagStatusEnhanceRunning": "正在进行增强处理（关键词提取等）",
+                "NodeRagStatusEnhanceSucceeded": "增强处理成功"
+            },
+            "x-enum-descriptions": [
+                "等待基础处理",
+                "正在进行基础处理（文本分割、向量化等）",
+                "基础处理失败",
+                "基础处理成功",
+                "基础处理完成，等待增强处理",
+                "正在进行增强处理（关键词提取等）",
+                "增强处理失败",
+                "增强处理成功"
+            ],
+            "x-enum-varnames": [
+                "NodeRagStatusBasicPending",
+                "NodeRagStatusBasicRunning",
+                "NodeRagStatusBasicFailed",
+                "NodeRagStatusBasicSucceeded",
+                "NodeRagStatusEnhancePending",
+                "NodeRagStatusEnhanceRunning",
+                "NodeRagStatusEnhanceFailed",
+                "NodeRagStatusEnhanceSucceeded"
+            ]
+        },
         "consts.RedeemCaptchaReq": {
             "type": "object",
             "properties": {
@@ -4921,6 +4964,34 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.BlockGridConfig": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            },
+                            "url": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.BrandGroup": {
             "type": "object",
             "properties": {
@@ -5076,6 +5147,40 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/domain.NodeContentChunkSSE"
                     }
+                }
+            }
+        },
+        "domain.CommentConfig": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "avatar": {
+                                "type": "string"
+                            },
+                            "comment": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "profession": {
+                                "type": "string"
+                            },
+                            "user_name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
                 }
             }
         },
@@ -5655,6 +5760,34 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.FeatureConfig": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "desc": {
+                                "type": "string"
+                            },
+                            "id": {
+                                "type": "string"
+                            },
+                            "name": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.FeedBackInfo": {
             "type": "object",
             "properties": {
@@ -5848,6 +5981,31 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "province": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.ImgTextConfig": {
+            "type": "object",
+            "properties": {
+                "item": {
+                    "type": "object",
+                    "properties": {
+                        "desc": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "url": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
                     "type": "string"
                 }
             }
@@ -6189,6 +6347,9 @@ const docTemplate = `{
                 },
                 "position": {
                     "type": "number"
+                },
+                "rag_info": {
+                    "$ref": "#/definitions/domain.RagInfo"
                 },
                 "status": {
                     "$ref": "#/definitions/domain.NodeStatus"
@@ -6617,6 +6778,42 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.QuestionConfig": {
+            "type": "object",
+            "properties": {
+                "list": {
+                    "type": "array",
+                    "items": {
+                        "type": "object",
+                        "properties": {
+                            "id": {
+                                "type": "string"
+                            },
+                            "question": {
+                                "type": "string"
+                            }
+                        }
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.RagInfo": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                },
+                "status": {
+                    "$ref": "#/definitions/consts.NodeRagInfoStatus"
+                }
+            }
+        },
         "domain.RecommendNodeListResp": {
             "type": "object",
             "properties": {
@@ -6847,6 +7044,31 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.TextImgConfig": {
+            "type": "object",
+            "properties": {
+                "item": {
+                    "type": "object",
+                    "properties": {
+                        "desc": {
+                            "type": "string"
+                        },
+                        "name": {
+                            "type": "string"
+                        },
+                        "url": {
+                            "type": "string"
+                        }
+                    }
+                },
+                "title": {
+                    "type": "string"
+                },
+                "type": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.TextReq": {
             "type": "object",
             "required": [
@@ -7061,6 +7283,9 @@ const docTemplate = `{
                 "basic_doc_config": {
                     "$ref": "#/definitions/domain.BasicDocConfig"
                 },
+                "block_grid_config": {
+                    "$ref": "#/definitions/domain.BlockGridConfig"
+                },
                 "carousel_config": {
                     "$ref": "#/definitions/domain.CarouselConfig"
                 },
@@ -7073,11 +7298,20 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "comment_config": {
+                    "$ref": "#/definitions/domain.CommentConfig"
+                },
                 "dir_doc_config": {
                     "$ref": "#/definitions/domain.DirDocConfig"
                 },
                 "faq_config": {
                     "$ref": "#/definitions/domain.FaqConfig"
+                },
+                "feature_config": {
+                    "$ref": "#/definitions/domain.FeatureConfig"
+                },
+                "img_text_config": {
+                    "$ref": "#/definitions/domain.ImgTextConfig"
                 },
                 "metrics_config": {
                     "$ref": "#/definitions/domain.MetricsConfig"
@@ -7088,11 +7322,17 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "question_config": {
+                    "$ref": "#/definitions/domain.QuestionConfig"
+                },
                 "simple_doc_config": {
                     "$ref": "#/definitions/domain.SimpleDocConfig"
                 },
                 "text_config": {
                     "$ref": "#/definitions/domain.TextConfig"
+                },
+                "text_img_config": {
+                    "$ref": "#/definitions/domain.TextImgConfig"
                 },
                 "type": {
                     "type": "string"
@@ -7108,6 +7348,9 @@ const docTemplate = `{
                 "basic_doc_config": {
                     "$ref": "#/definitions/domain.BasicDocConfig"
                 },
+                "block_grid_config": {
+                    "$ref": "#/definitions/domain.BlockGridConfig"
+                },
                 "carousel_config": {
                     "$ref": "#/definitions/domain.CarouselConfig"
                 },
@@ -7120,11 +7363,20 @@ const docTemplate = `{
                         "type": "string"
                     }
                 },
+                "comment_config": {
+                    "$ref": "#/definitions/domain.CommentConfig"
+                },
                 "dir_doc_config": {
                     "$ref": "#/definitions/domain.DirDocConfig"
                 },
                 "faq_config": {
                     "$ref": "#/definitions/domain.FaqConfig"
+                },
+                "feature_config": {
+                    "$ref": "#/definitions/domain.FeatureConfig"
+                },
+                "img_text_config": {
+                    "$ref": "#/definitions/domain.ImgTextConfig"
                 },
                 "metrics_config": {
                     "$ref": "#/definitions/domain.MetricsConfig"
@@ -7141,11 +7393,17 @@ const docTemplate = `{
                         "$ref": "#/definitions/domain.RecommendNodeListResp"
                     }
                 },
+                "question_config": {
+                    "$ref": "#/definitions/domain.QuestionConfig"
+                },
                 "simple_doc_config": {
                     "$ref": "#/definitions/domain.SimpleDocConfig"
                 },
                 "text_config": {
                     "$ref": "#/definitions/domain.TextConfig"
+                },
+                "text_img_config": {
+                    "$ref": "#/definitions/domain.TextImgConfig"
                 },
                 "type": {
                     "type": "string"

@@ -11,7 +11,10 @@ import {
 } from '../component/styledCommon';
 import { IconWenjianjia, IconWenjian } from '@panda-wiki/icons';
 import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import { useFadeInText, useCardAnimation } from '../hooks/useGsapAnimation';
+import {
+  useFadeInText,
+  useCardFadeInAnimation,
+} from '../hooks/useGsapAnimation';
 interface DirDocProps {
   mobile?: boolean;
   title?: string;
@@ -93,7 +96,7 @@ const DirDocItem: React.FC<{
   baseUrl: string;
   size: any;
 }> = React.memo(({ item, index, baseUrl, size }) => {
-  const cardRef = useCardAnimation(0.2 + index * 0.1, 0.1);
+  const cardRef = useCardFadeInAnimation(0.2 + index * 0.1, 0.1);
 
   return (
     <Grid size={size} key={index}>
@@ -137,14 +140,7 @@ const DirDocItem: React.FC<{
 });
 
 const DirDoc: React.FC<DirDocProps> = React.memo(
-  ({
-    title = '文档目录卡片',
-    items = [],
-    mobile,
-    baseUrl = '',
-    bgColor,
-    titleColor,
-  }) => {
+  ({ title, items = [], mobile, baseUrl = '' }) => {
     const size =
       typeof mobile === 'boolean' ? (mobile ? 12 : 4) : { xs: 12, md: 4 };
 

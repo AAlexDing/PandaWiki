@@ -3,7 +3,15 @@ import React, { useState, useEffect, useRef, useMemo } from 'react';
 import Logo from '@/assets/images/logo.png';
 import { IconZhinengwenda, IconJinsousuo } from '@panda-wiki/icons';
 import { useSearchParams } from 'next/navigation';
-import { Box, Button, Typography, Modal, Stack, lighten } from '@mui/material';
+import {
+  Box,
+  Button,
+  Typography,
+  Modal,
+  Stack,
+  lighten,
+  alpha,
+} from '@mui/material';
 import { CusTabs } from '@ctzhian/ui';
 import AiQaContent from './AiQaContent';
 import SearchDocContent from './SearchDocContent';
@@ -159,19 +167,14 @@ const QaModal: React.FC<QaModalProps> = () => {
             <Button
               onClick={onClose}
               size='small'
-              sx={{
+              sx={theme => ({
                 minWidth: 'auto',
                 px: 1.5,
                 py: 0.5,
-                bgcolor: 'background.paper3',
-                color: 'text.tertiary',
                 fontSize: 12,
                 fontWeight: 500,
                 textTransform: 'none',
-                '&:hover': {
-                  bgcolor: 'grey.200',
-                },
-              }}
+              })}
             >
               Esc
             </Button>

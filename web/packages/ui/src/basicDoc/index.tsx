@@ -1,17 +1,17 @@
 'use client';
 
 import React from 'react';
-import { styled, Grid, Box, Button, alpha } from '@mui/material';
+import { styled, Grid, Box, alpha } from '@mui/material';
 import { StyledTopicBox, StyledTopicTitle } from '../component/styledCommon';
 import IconWenjian from '@panda-wiki/icons/IconWenjian';
-import ArrowForwardRoundedIcon from '@mui/icons-material/ArrowForwardRounded';
-import { useFadeInText, useCardAnimation } from '../hooks/useGsapAnimation';
+import {
+  useFadeInText,
+  useCardFadeInAnimation,
+} from '../hooks/useGsapAnimation';
 
 interface BasicDocProps {
   mobile?: boolean;
   title?: string;
-  bgColor?: string;
-  titleColor?: string;
   items?: {
     id: string;
     name: string;
@@ -36,9 +36,13 @@ const StyledBasicDocItem = styled('div')(({ theme }) => ({
     transform: 'translateY(-5px)',
     boxShadow: `0px 10px 20px 0px ${alpha(theme.palette.text.primary, 0.1)}`,
     borderColor: theme.palette.primary.main,
+    '.basic-doc-item-title': {
+      color: theme.palette.primary.main,
+    },
   },
   width: '100%',
   cursor: 'pointer',
+  opacity: 0,
 }));
 
 const StyledBasicDocItemTitle = styled('h3')(({ theme }) => ({
@@ -77,12 +81,17 @@ const BasicDocItem: React.FC<{
   baseUrl: string;
   size: any;
 }> = React.memo(({ item, index, baseUrl, size }) => {
-  const cardRef = useCardAnimation(0.2 + index * 0.1, 0.1);
+  const cardRef = useCardFadeInAnimation(0.2 + index * 0.1, 0.1);
 
   return (
     <Grid size={size} key={index}>
-      <StyledBasicDocItem ref={cardRef as React.Ref<HTMLDivElement>}>
-        <StyledBasicDocItemTitle>
+      <StyledBasicDocItem
+        ref={cardRef as React.Ref<HTMLDivElement>}
+        onClick={() => {
+          window.open(`${baseUrl}/node/${item.id}`, '_blank');
+        }}
+      >
+        <StyledBasicDocItemTitle className='basic-doc-item-title'>
           {item.emoji ? (
             <Box>{item.emoji}</Box>
           ) : (
@@ -91,23 +100,13 @@ const BasicDocItem: React.FC<{
           <StyledBasicDocItemName>{item.name}</StyledBasicDocItemName>
         </StyledBasicDocItemTitle>
         <StyledBasicDocItemSummary>{item.summary}</StyledBasicDocItemSummary>
-        <Box
-          sx={{
-            color: 'primary.main',
-            fontSize: 14,
-            fontWeight: 400,
-            alignSelf: 'flex-end',
-          }}
-        >
-          查看更多
-        </Box>
       </StyledBasicDocItem>
     </Grid>
   );
 });
 
 const BasicDoc: React.FC<BasicDocProps> = React.memo(
-  ({ title, items = [], mobile, baseUrl = '', bgColor, titleColor }) => {
+  ({ title, items = [], mobile, baseUrl = '' }) => {
     const size =
       typeof mobile === 'boolean' ? (mobile ? 12 : 4) : { xs: 12, md: 4 };
 

@@ -4,13 +4,14 @@ import React from 'react';
 import { styled, Grid, alpha } from '@mui/material';
 import { StyledTopicBox, StyledTopicTitle } from '../component/styledCommon';
 import { IconLianjiezu } from '@panda-wiki/icons';
-import { useFadeInText, useCardAnimation } from '../hooks/useGsapAnimation';
+import {
+  useFadeInText,
+  useCardFadeInAnimation,
+} from '../hooks/useGsapAnimation';
 
 interface FaqProps {
   mobile?: boolean;
   title?: string;
-  bgColor?: string;
-  titleColor?: string;
   items?: {
     question: string;
     url: string;
@@ -37,6 +38,7 @@ const StyledFaqItem = styled('a')(({ theme }) => ({
   },
   whiteSpace: 'nowrap',
   textOverflow: 'ellipsis',
+  opacity: 0,
 }));
 
 const StyledFaqItemTitle = styled('span')(({ theme }) => ({
@@ -50,7 +52,7 @@ const FaqItem: React.FC<{
   index: number;
   size: any;
 }> = React.memo(({ item, index, size }) => {
-  const cardRef = useCardAnimation(0.2 + index * 0.1, 0.1);
+  const cardRef = useCardFadeInAnimation(0.2 + index * 0.1, 0.1);
 
   return (
     <Grid size={size} key={index}>
@@ -66,29 +68,27 @@ const FaqItem: React.FC<{
   );
 });
 
-const Faq: React.FC<FaqProps> = React.memo(
-  ({ title = '链接组', items = [], mobile, bgColor, titleColor }) => {
-    const size =
-      typeof mobile === 'boolean'
-        ? mobile
-          ? 12
-          : { xs: 12, md: 4 }
-        : { xs: 12, md: 4 };
+const Faq: React.FC<FaqProps> = React.memo(({ title, items = [], mobile }) => {
+  const size =
+    typeof mobile === 'boolean'
+      ? mobile
+        ? 12
+        : { xs: 12, md: 4 }
+      : { xs: 12, md: 4 };
 
-    // 添加标题淡入动画
-    const titleRef = useFadeInText(0.2, 0.1);
+  // 添加标题淡入动画
+  const titleRef = useFadeInText(0.2, 0.1);
 
-    return (
-      <StyledTopicBox>
-        <StyledTopicTitle ref={titleRef}>{title}</StyledTopicTitle>
-        <Grid container spacing={3} sx={{ width: '100%' }}>
-          {items.map((item, index) => (
-            <FaqItem key={index} item={item} index={index} size={size} />
-          ))}
-        </Grid>
-      </StyledTopicBox>
-    );
-  },
-);
+  return (
+    <StyledTopicBox>
+      <StyledTopicTitle ref={titleRef}>{title}</StyledTopicTitle>
+      <Grid container spacing={3} sx={{ width: '100%' }}>
+        {items.map((item, index) => (
+          <FaqItem key={index} item={item} index={index} size={size} />
+        ))}
+      </Grid>
+    </StyledTopicBox>
+  );
+});
 
 export default Faq;

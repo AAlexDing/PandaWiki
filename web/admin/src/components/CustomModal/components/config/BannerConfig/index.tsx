@@ -1,16 +1,8 @@
 import React, { useState, useEffect } from 'react';
-import {
-  InputAdornment,
-  Stack,
-  TextField,
-  Chip,
-  Autocomplete,
-  Box,
-} from '@mui/material';
+import { TextField, Chip, Autocomplete, Box } from '@mui/material';
 import { CommonItem, StyledCommonWrapper } from '../../components/StyledCommon';
 import type { ConfigProps } from '../type';
 import { useForm, Controller } from 'react-hook-form';
-import ColorPickerField from '../../components/ColorPickerField';
 import { useAppSelector } from '@/store';
 import DragList from './DragList';
 import UploadFile from '@/components/UploadFile';
@@ -56,8 +48,6 @@ const Config: React.FC<ConfigProps> = ({ setIsEdit, id }) => {
               config: appPreviewData?.settings?.web_app_landing_configs || [],
               values: {
                 ...values,
-                title_font_size: +(values.title_font_size || 0),
-                subtitle_font_size: +(values.subtitle_font_size || 0),
               },
             }),
           },
@@ -91,43 +81,6 @@ const Config: React.FC<ConfigProps> = ({ setIsEdit, id }) => {
             />
           )}
         />
-        {/* <Stack direction='row' gap={2}>
-          <Controller
-            control={control}
-            name='title_font_size'
-            render={({ field }) => (
-              <TextField
-                label='字体大小'
-                type='number'
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                  input: {
-                    endAdornment: (
-                      <InputAdornment position='end'>px</InputAdornment>
-                    ),
-                  },
-                }}
-                {...field}
-                sx={{ flex: 1 }}
-                placeholder='请输入'
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name='title_color'
-            render={({ field }) => (
-              <ColorPickerField
-                label='字体颜色'
-                value={field.value}
-                onChange={field.onChange}
-                sx={{ flex: 1 }}
-              />
-            )}
-          />
-        </Stack> */}
       </CommonItem>
       <CommonItem title='副标题'>
         <Controller
@@ -149,43 +102,6 @@ const Config: React.FC<ConfigProps> = ({ setIsEdit, id }) => {
             />
           )}
         />
-        {/* <Stack direction='row' gap={2}>
-          <Controller
-            control={control}
-            name='subtitle_font_size'
-            render={({ field }) => (
-              <TextField
-                label='字体大小'
-                type='number'
-                slotProps={{
-                  inputLabel: {
-                    shrink: true,
-                  },
-                  input: {
-                    endAdornment: (
-                      <InputAdornment position='end'>px</InputAdornment>
-                    ),
-                  },
-                }}
-                {...field}
-                sx={{ flex: 1 }}
-                placeholder='请输入'
-              />
-            )}
-          />
-          <Controller
-            control={control}
-            name='subtitle_color'
-            render={({ field }) => (
-              <ColorPickerField
-                label='字体颜色'
-                value={field.value}
-                onChange={field.onChange}
-                sx={{ flex: 1 }}
-              />
-            )}
-          />
-        </Stack> */}
       </CommonItem>
       <CommonItem title='背景图' desc='(推荐 1920*720)'>
         <Controller

@@ -1,3 +1,4 @@
+import { decodeBase64 } from '../utils';
 export const DocWidth = {
   full: {
     label: '全屏',
@@ -12,3 +13,6 @@ export const DocWidth = {
     value: 720,
   },
 };
+
+export const PROJECT_NAME =
+  '5pys572R56uZ55SxIFBhbmRhV2lraSDmj5DkvpvmioDmnK/mlK/mjIE=';

@@ -3,7 +3,10 @@
 import React from 'react';
 import { styled, Grid, alpha, Stack } from '@mui/material';
 import { StyledTopicBox, StyledTopicTitle } from '../component/styledCommon';
-import { useFadeInText, useCardAnimation } from '../hooks/useGsapAnimation';
+import {
+  useFadeInText,
+  useCardFadeInAnimation,
+} from '../hooks/useGsapAnimation';
 
 interface MetricsProps {
   mobile?: boolean;
@@ -24,13 +27,19 @@ const StyledMetricsContainer = styled('div')(({ theme }) => ({
 
 const StyledMetricsItemNumber = styled('div')(({ theme }) => ({
   fontSize: 48,
-  fontWeight: 700,
+  fontWeight: 500,
   color: theme.palette.text.primary,
+  userSelect: 'none',
+  transition: 'color 0.2s ease',
+  '&:hover': {
+    color: theme.palette.primary.main,
+  },
 }));
 
 const StyledMetricsItemTitle = styled('span')(({ theme }) => ({
   fontSize: 16,
   color: alpha(theme.palette.text.primary, 0.5),
+  userSelect: 'none',
 }));
 
 // 单个卡片组件，带动画效果
@@ -42,7 +51,7 @@ const MetricsItem: React.FC<{
   index: number;
   size: any;
 }> = React.memo(({ item, index, size }) => {
-  const cardRef = useCardAnimation(0.2 + index * 0.1, 0.1);
+  const cardRef = useCardFadeInAnimation(0.2 + index * 0.1, 0.1);
 
   return (
     <Grid size={size} key={index}>
@@ -50,8 +59,11 @@ const MetricsItem: React.FC<{
         ref={cardRef as React.Ref<HTMLDivElement>}
         gap={1}
         alignItems='center'
+        sx={{ opacity: 0 }}
       >
-        <StyledMetricsItemNumber>{item.number}</StyledMetricsItemNumber>
+        <StyledMetricsItemNumber className='metrics-item-number'>
+          {item.number}
+        </StyledMetricsItemNumber>
 
         <StyledMetricsItemTitle>{item.name}</StyledMetricsItemTitle>
       </Stack>
@@ -60,7 +72,7 @@ const MetricsItem: React.FC<{
 });
 
 const Metrics: React.FC<MetricsProps> = React.memo(
-  ({ title = '指标卡片', items = [], mobile }) => {
+  ({ title, items = [], mobile }) => {
     const size =
       typeof mobile === 'boolean'
         ? mobile

@@ -132,7 +132,6 @@ interface BannerProps {
   onSearch?: (value: string, type?: 'search' | 'chat') => void;
   onSearchSuggestions?: (query: string) => Promise<SearchSuggestion[]>;
   baseUrl?: string;
-  onQaClick?: () => void;
 }
 
 const Banner = React.memo(
@@ -145,7 +144,6 @@ const Banner = React.memo(
     onSearch,
     onSearchSuggestions,
     baseUrl = '',
-    onQaClick,
   }: BannerProps) => {
     const [searchText, setSearchText] = useState('');
     const [suggestions, setSuggestions] = useState<SearchSuggestion[]>([]);

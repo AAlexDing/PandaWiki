@@ -376,6 +376,7 @@ export interface GithubComChaitinPandaWikiProApiContributeV1ContributeListResp {
 }
 
 export interface GithubComChaitinPandaWikiProApiContributeV1NodeMeta {
+  content_type?: string;
   doc_width?: string;
   emoji?: string;
 }
@@ -492,6 +493,7 @@ export type GithubComChaitinPandaWikiProApiShareV1OAuthCallbackResp = Record<
 export interface GithubComChaitinPandaWikiProApiShareV1SubmitContributeReq {
   captcha_token: string;
   content?: string;
+  content_type: "html" | "md";
   emoji?: string;
   name?: string;
   node_id?: string;
