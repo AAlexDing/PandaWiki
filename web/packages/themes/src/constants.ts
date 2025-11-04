@@ -46,11 +46,11 @@ export const THEME_LIST = [
     value: 'darkDeepForest',
     palette: darkDeepForestPalette,
   },
-  {
-    label: '深邃黑',
-    value: 'white',
-    palette: whitePalette,
-  },
+  // {
+  //   label: '深邃黑',
+  //   value: 'white',
+  //   palette: whitePalette,
+  // },
   {
     label: '电光蓝',
     value: 'electricBlue',

@@ -385,14 +385,14 @@ const ThemeWrapper = ({ children }: { children: React.ReactNode }) => {
   const { appPreviewData } = useAppSelector(state => state.config);
 
   const theme = useMemo(() => {
+    const themeName =
+      appPreviewData?.settings?.web_app_landing_theme?.name || 'blue';
     return createTheme(
       // @ts-expect-error themeOptions is not typed
       {
         ...themeOptions[0],
         palette:
-          THEME_TO_PALETTE[
-            appPreviewData?.settings?.web_app_landing_theme?.name || 'blue'
-          ].palette,
+          THEME_TO_PALETTE[themeName]?.palette || THEME_TO_PALETTE.blue.palette,
       },
       ...themeOptions.slice(1),
     );

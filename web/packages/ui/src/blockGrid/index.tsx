@@ -18,9 +18,10 @@ interface BlockGridProps {
 }
 const StyledBlockGridItem = styled(Stack)(({ theme }) => ({
   aspectRatio: '1 / 1',
+  position: 'relative',
   border: `1px solid ${alpha(theme.palette.text.primary, 0.15)}`,
   borderRadius: '10px',
-  padding: theme.spacing(2),
+  padding: theme.spacing(1),
   boxShadow: `0px 5px 20px 0px ${alpha(theme.palette.text.primary, 0.06)}`,
   transition: 'all 0.2s ease',
   '&:hover': {
@@ -44,14 +45,22 @@ export const StyledBlockGridItemImg = styled('img')(({ theme }) => ({
 }));
 
 const StyledBlockGridItemTitle = styled('div')(({ theme }) => ({
+  position: 'absolute',
+  bottom: '24px',
+  left: '50%',
+  maxWidth: 'calc(100% - 24px)',
+  transform: 'translateX(-50%)',
+  padding: theme.spacing(0.5, 1),
   overflow: 'hidden',
   textOverflow: 'ellipsis',
   flexShrink: 0,
   whiteSpace: 'nowrap',
-  fontSize: 16,
+  fontSize: 14,
   textAlign: 'center',
   fontWeight: 700,
-  color: theme.palette.text.primary,
+  color: theme.palette.background.default,
+  backgroundColor: alpha(theme.palette.text.primary, 0.5),
+  borderRadius: '6px',
 }));
 
 // 单个卡片组件，带动画效果

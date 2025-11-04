@@ -19,7 +19,9 @@ const HomePage = () => {
       cssVariables: {
         cssVarPrefix: 'welcome',
       },
-      palette: THEME_TO_PALETTE[themeMode].palette,
+      palette:
+        THEME_TO_PALETTE[themeMode]?.palette ||
+        THEME_TO_PALETTE['blue'].palette,
       typography: {
         fontFamily: 'var(--font-gilory), PingFang SC, sans-serif',
       },

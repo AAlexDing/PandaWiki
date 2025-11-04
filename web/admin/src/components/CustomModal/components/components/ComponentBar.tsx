@@ -269,7 +269,9 @@ const ComponentBar = ({
           <Stack sx={{ pr: '20px', marginTop: '15px' }}>
             <Select
               value={
-                appPreviewData.settings?.web_app_landing_theme?.name || 'blue'
+                THEME_TO_PALETTE[
+                  appPreviewData.settings?.web_app_landing_theme?.name || 'blue'
+                ]?.value || 'blue'
               }
               renderValue={value => {
                 return THEME_TO_PALETTE[value]?.label;

@@ -18,8 +18,8 @@ interface ImgTextProps {
 const StyledImgTextItem = styled(Stack)(({ theme }) => ({}));
 
 export const StyledImgTextItemImg = styled('img')(({ theme }) => ({
-  maxWidth: 350,
-  maxHeight: 350,
+  maxWidth: '100%',
+  maxHeight: '100%',
   width: '100%',
   height: '100%',
   objectFit: 'cover',
@@ -28,7 +28,7 @@ export const StyledImgTextItemImg = styled('img')(({ theme }) => ({
 }));
 
 const StyledImgTextItemTitle = styled('h3')(({ theme }) => ({
-  fontSize: 20,
+  fontSize: 24,
   fontWeight: 700,
   color: theme.palette.text.primary,
 }));
@@ -73,7 +73,7 @@ const ImgText: React.FC<ImgTextProps> = React.memo(
       <StyledTopicBox>
         <StyledTopicTitle ref={titleRef}>{title}</StyledTopicTitle>
         <StyledImgTextItem
-          gap={mobile ? 4 : { xs: 4, sm: 6, md: 38 }}
+          gap={mobile ? 4 : { xs: 4, sm: 6, md: 16 }}
           direction={
             mobile
               ? 'column-reverse'
@@ -96,9 +96,36 @@ const ImgText: React.FC<ImgTextProps> = React.memo(
             gap={1}
             sx={{ width: '100%' }}
             ref={cardRightRef as React.Ref<HTMLDivElement>}
+            alignItems={
+              mobile
+                ? 'flex-start'
+                : direction === 'row'
+                  ? 'flex-start'
+                  : 'flex-end'
+            }
           >
-            <StyledImgTextItemTitle>{item.name}</StyledImgTextItemTitle>
-            <StyledImgTextItemSummary>{item.desc}</StyledImgTextItemSummary>
+            <StyledImgTextItemTitle
+              sx={{
+                textAlign: mobile
+                  ? 'left'
+                  : direction === 'row'
+                    ? 'left'
+                    : 'right',
+              }}
+            >
+              {item.name}
+            </StyledImgTextItemTitle>
+            <StyledImgTextItemSummary
+              sx={{
+                textAlign: mobile
+                  ? 'left'
+                  : direction === 'row'
+                    ? 'left'
+                    : 'right',
+              }}
+            >
+              {item.desc}
+            </StyledImgTextItemSummary>
           </Stack>
         </StyledImgTextItem>
       </StyledTopicBox>

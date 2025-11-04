@@ -68,7 +68,7 @@ const StyledSwiperSlideDesc = styled('div')(({ theme }) => ({
   fontSize: 14,
   fontWeight: 400,
   color: theme.palette.background.default,
-  borderRadius: '12px',
+  borderRadius: '6px',
   overflow: 'hidden',
   whiteSpace: 'nowrap',
   zIndex: 0,
@@ -113,7 +113,7 @@ const StyledTabs = styled(Tabs)(({ theme }) => ({
 const StyledTab = styled(Tab)(({ theme }) => ({
   minHeight: 'auto',
   padding: theme.spacing(1, 2),
-  borderRadius: '10px',
+  borderRadius: '6px',
   backgroundColor: theme.palette.background.default,
   color: theme.palette.text.secondary,
   fontSize: 14,
