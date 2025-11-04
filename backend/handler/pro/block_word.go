@@ -1,4 +1,4 @@
-package v1
+package pro
 
 import (
 	"github.com/labstack/echo/v4"
@@ -19,7 +19,7 @@ func NewBlockWordHandler(e *echo.Echo, baseHandler *handler.BaseHandler, blockWo
 	h := &BlockWordHandler{
 		BaseHandler:   baseHandler,
 		blockWordRepo: blockWordRepo,
-		logger:        logger.WithModule("handler.v1.block_word"),
+		logger:        logger.WithModule("handler.pro.block_word"),
 	}
 
 	// 注册路由

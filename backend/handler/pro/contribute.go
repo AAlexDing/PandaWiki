@@ -1,4 +1,4 @@
-package v1
+package pro
 
 import (
 	"time"
@@ -23,7 +23,7 @@ func NewContributeHandler(e *echo.Echo, baseHandler *handler.BaseHandler, contri
 	h := &ContributeHandler{
 		BaseHandler:    baseHandler,
 		contributeRepo: contributeRepo,
-		logger:         logger.WithModule("handler.v1.contribute"),
+		logger:         logger.WithModule("handler.pro.contribute"),
 	}
 
 	// 注册路由

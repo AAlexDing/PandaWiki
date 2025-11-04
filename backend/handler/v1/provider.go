@@ -22,11 +22,9 @@ type APIHandlers struct {
 	CommentHandler       *CommentHandler
 	AuthV1Handler        *AuthV1Handler
 	LicenseHandler       *LicenseHandler
-	ProMockHandler       *ProMockHandler
-	PromptHandler        *PromptHandler
-	BlockWordHandler     *BlockWordHandler
-	APITokenHandler      *APITokenHandler
-	ContributeHandler    *ContributeHandler
+	// Pro handlers 已迁移到 handler/pro 包
+	// PromptHandler, BlockWordHandler, APITokenHandler, ContributeHandler 等
+	// 现在在 handler/pro 中注册和管理
 }
 
 var ProviderSet = wire.NewSet(
@@ -47,11 +45,6 @@ var ProviderSet = wire.NewSet(
 	NewCommentHandler,
 	NewAuthV1Handler,
 	NewLicenseHandler,
-	NewProMockHandler,
-	NewPromptHandler,
-	NewBlockWordHandler,
-	NewAPITokenHandler,
-	NewContributeHandler,
 
 	wire.Struct(new(APIHandlers), "*"),
 )

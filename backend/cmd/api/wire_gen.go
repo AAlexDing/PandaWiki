@@ -9,6 +9,7 @@ package main
 import (
 	"github.com/chaitin/panda-wiki/config"
 	"github.com/chaitin/panda-wiki/handler"
+	"github.com/chaitin/panda-wiki/handler/pro"
 	"github.com/chaitin/panda-wiki/handler/share"
 	"github.com/chaitin/panda-wiki/handler/v1"
 	"github.com/chaitin/panda-wiki/log"
@@ -140,12 +141,18 @@ func createApp() (*App, error) {
 	}
 	authV1Handler := v1.NewAuthV1Handler(echo, baseHandler, logger, authUsecase)
 	licenseHandler := v1.NewLicenseHandler(echo, baseHandler, logger, authMiddleware)
-	proMockHandler := v1.NewProMockHandler(echo, baseHandler, logger, authMiddleware)
-	promptHandler := v1.NewPromptHandler(echo, baseHandler, promptRepo, logger, authMiddleware)
-	blockWordHandler := v1.NewBlockWordHandler(echo, baseHandler, blockWordRepo, logger, authMiddleware)
-	apiTokenHandler := v1.NewAPITokenHandler(echo, baseHandler, apiTokenRepo, logger, authMiddleware)
+
+	// Pro handlers (路由在各 handler 的 New 函数中自动注册)
 	contributeRepo := pg2.NewContributeRepo(db, logger)
-	contributeHandler := v1.NewContributeHandler(echo, baseHandler, contributeRepo, logger, authMiddleware)
+	_ = pro.NewPromptHandler(echo, baseHandler, promptRepo, logger, authMiddleware)
+	_ = pro.NewBlockWordHandler(echo, baseHandler, blockWordRepo, logger, authMiddleware)
+	_ = pro.NewAPITokenHandler(echo, baseHandler, apiTokenRepo, logger, authMiddleware)
+	_ = pro.NewContributeHandler(echo, baseHandler, contributeRepo, logger, authMiddleware)
+	_ = pro.NewAuthHandler(echo, baseHandler, logger, authMiddleware)
+	_ = pro.NewAuthGroupHandler(echo, baseHandler, logger, authMiddleware)
+	_ = pro.NewDocumentFeedbackHandler(echo, baseHandler, logger, authMiddleware)
+	_ = pro.NewCommentModerateHandler(echo, baseHandler, logger, authMiddleware)
+	_ = pro.NewReleaseHandler(echo, baseHandler, logger, authMiddleware)
 	apiHandlers := &v1.APIHandlers{
 		UserHandler:          userHandler,
 		KnowledgeBaseHandler: knowledgeBaseHandler,
@@ -160,11 +167,6 @@ func createApp() (*App, error) {
 		CommentHandler:       commentHandler,
 		AuthV1Handler:        authV1Handler,
 		LicenseHandler:       licenseHandler,
-		ProMockHandler:       proMockHandler,
-		PromptHandler:        promptHandler,
-		BlockWordHandler:     blockWordHandler,
-		APITokenHandler:      apiTokenHandler,
-		ContributeHandler:    contributeHandler,
 	}
 	shareNodeHandler := share.NewShareNodeHandler(baseHandler, echo, nodeUsecase, logger)
 	shareAppHandler := share.NewShareAppHandler(echo, baseHandler, logger, appUsecase)

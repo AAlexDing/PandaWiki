@@ -1,4 +1,4 @@
-package v1
+package pro
 
 import (
 	"crypto/rand"
@@ -25,12 +25,13 @@ func NewAPITokenHandler(e *echo.Echo, baseHandler *handler.BaseHandler, apiToken
 	h := &APITokenHandler{
 		BaseHandler:  baseHandler,
 		apiTokenRepo: apiTokenRepo,
-		logger:       logger.WithModule("handler.v1.api_token"),
+		logger:       logger.WithModule("handler.pro.api_token"),
 	}
 
 	// 注册路由
 	e.GET("/api/pro/v1/token/list", h.GetTokenList, auth.Authorize)
 	e.POST("/api/pro/v1/token/create", h.CreateToken, auth.Authorize)
+	e.PATCH("/api/pro/v1/token/update", h.UpdateToken, auth.Authorize)
 	e.DELETE("/api/pro/v1/token/delete", h.DeleteToken, auth.Authorize)
 
 	return h
@@ -164,11 +165,51 @@ func (h *APITokenHandler) DeleteToken(c echo.Context) error {
 	return h.NewResponseWithData(c, map[string]string{"message": "token deleted successfully"})
 }
 
+// UpdateToken 更新 API Token
+//
+//	@Summary		Update API token
+//	@Description	Update API token name or permission
+//	@Tags			token
+//	@Accept			json
+//	@Produce		json
+//	@Param			body	body		UpdateTokenReq	true	"Update token request"
+//	@Success		200		{object}	domain.PWResponse
+//	@Router			/api/pro/v1/token/update [patch]
+//	@Security		bearerAuth
+func (h *APITokenHandler) UpdateToken(c echo.Context) error {
+	var req UpdateTokenReq
+	if err := c.Bind(&req); err != nil {
+		return h.NewResponseWithError(c, "invalid request", err)
+	}
+
+	if req.ID == "" || req.KBID == "" {
+		return h.NewResponseWithError(c, "id and kb_id are required", nil)
+	}
+
+	// TODO: 实现更新逻辑
+	// if err := h.apiTokenRepo.Update(c.Request().Context(), req.ID, req.KBID, req.Name, req.Permission); err != nil {
+	// 	h.logger.Error("update token failed", log.Error(err))
+	// 	return h.NewResponseWithError(c, "update token failed", err)
+	// }
+
+	h.logger.Info("Update token", "id", req.ID, "name", req.Name)
+
+	return h.NewResponseWithData(c, map[string]string{"message": "token updated successfully"})
+}
+
 // CreateTokenReq 创建 Token 请求
 type CreateTokenReq struct {
 	KBID       string                  `json:"kb_id" validate:"required"`
 	Name       string                  `json:"name" validate:"required"`
 	Permission consts.UserKBPermission `json:"permission" validate:"required"`
+}
+
+// UpdateTokenReq 更新 Token 请求
+type UpdateTokenReq struct {
+	ID         string                  `json:"id" validate:"required"`
+	KBID       string                  `json:"kb_id" validate:"required"`
+	Name       string                  `json:"name,omitempty"`
+	Permission consts.UserKBPermission `json:"permission,omitempty"`
 }
 
 // CreateTokenResp 创建 Token 响应

@@ -2,6 +2,7 @@ package v1
 
 import (
 	"errors"
+	"math"
 
 	"github.com/labstack/echo/v4"
 
@@ -80,7 +81,7 @@ func (h *NodeHandler) CreateNode(c echo.Context) error {
 	if err := c.Validate(req); err != nil {
 		return h.NewResponseWithError(c, "validate request body failed", err)
 	}
-	req.MaxNode = 300
+	req.MaxNode = math.MaxInt
 	if maxNode := c.Get("max_node"); maxNode != nil {
 		req.MaxNode = maxNode.(int)
 	}

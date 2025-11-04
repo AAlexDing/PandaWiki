@@ -1,4 +1,4 @@
-package v1
+package pro
 
 import (
 	"github.com/labstack/echo/v4"
@@ -20,7 +20,7 @@ func NewPromptHandler(e *echo.Echo, baseHandler *handler.BaseHandler, promptRepo
 	h := &PromptHandler{
 		BaseHandler: baseHandler,
 		promptRepo:  promptRepo,
-		logger:      logger.WithModule("handler.v1.prompt"),
+		logger:      logger.WithModule("handler.pro.prompt"),
 	}
 
 	// 注册路由
