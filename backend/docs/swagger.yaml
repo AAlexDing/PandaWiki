@@ -2993,7 +2993,11 @@ definitions:
       node_ids:
         items:
           type: string
+        minItems: 1
         type: array
+    required:
+    - kb_id
+    - node_ids
     type: object
   v1.NodeRestudyResp:
     type: object

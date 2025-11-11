@@ -8325,12 +8325,17 @@ const docTemplate = `{
         },
         "v1.NodeRestudyReq": {
             "type": "object",
+            "required": [
+                "kb_id",
+                "node_ids"
+            ],
             "properties": {
                 "kb_id": {
                     "type": "string"
                 },
                 "node_ids": {
                     "type": "array",
+                    "minItems": 1,
                     "items": {
                         "type": "string"
                     }

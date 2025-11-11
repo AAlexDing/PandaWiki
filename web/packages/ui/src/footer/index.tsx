@@ -121,7 +121,7 @@ const Footer = React.memo(
                         fontWeight: 'bold',
                         lineHeight: '32px',
                         fontSize: 24,
-                        color: 'white',
+                        color: 'text.primary',
                       }}
                     >
                       {footerSetting?.brand_name}
@@ -129,12 +129,12 @@ const Footer = React.memo(
                   </Stack>
                   {footerSetting?.brand_desc && (
                     <Box
-                      sx={{
+                      sx={theme => ({
                         fontSize: 12,
                         lineHeight: '26px',
                         mt: 2,
-                        color: 'rgba(255, 255, 255, 0.70)',
-                      }}
+                        color: alpha(theme.palette.text.primary, 0.7),
+                      })}
                     >
                       {footerSetting.brand_desc}
                     </Box>
@@ -193,7 +193,6 @@ const Footer = React.memo(
                                 <Stack
                                   direction={'column'}
                                   alignItems={'center'}
-                                  bgcolor={'#fff'}
                                   p={1.5}
                                   sx={theme => ({
                                     position: 'absolute',
@@ -222,7 +221,7 @@ const Footer = React.memo(
                                       sx={{
                                         fontSize: '12px',
                                         lineHeight: '16px',
-                                        color: '#21222D',
+                                        color: 'text.primary',
                                         maxWidth: '83px',
 
                                         textAlign: 'center',
@@ -263,7 +262,7 @@ const Footer = React.memo(
                         fontSize: 16,
                         lineHeight: '24px',
                         mb: 1,
-                        color: '#ffffff',
+                        color: 'text.primary',
                       }}
                     >
                       {group.name}
@@ -317,11 +316,11 @@ const Footer = React.memo(
             )}
             {!!footerSetting?.icp && (
               <Box
-                sx={{
+                sx={theme => ({
                   height: 40,
                   lineHeight: '40px',
-                  color: 'rgba(255, 255, 255, 0.30)',
-                }}
+                  color: alpha(theme.palette.text.primary, 0.3),
+                })}
               >
                 {footerSetting?.icp}
               </Box>
@@ -449,7 +448,6 @@ const Footer = React.memo(
           justifyContent: 'center',
           fontSize: '12px',
           zIndex: 1,
-          color: '#fff',
           bgcolor: alpha(theme.palette.text.primary, 0.05),
           '.MuiLink-root': {
             color: 'inherit',
@@ -578,7 +576,6 @@ const Footer = React.memo(
                                   className={'popup'}
                                   direction={'column'}
                                   alignItems={'center'}
-                                  bgcolor={'#fff'}
                                   p={1.5}
                                   sx={theme => ({
                                     position: 'absolute',
@@ -619,7 +616,6 @@ const Footer = React.memo(
                             {account.channel === 'phone' && account?.phone && (
                               <Stack
                                 className={'popup'}
-                                bgcolor={'#fff'}
                                 px={1.5}
                                 py={1}
                                 sx={theme => ({

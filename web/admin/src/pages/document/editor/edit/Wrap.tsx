@@ -3,6 +3,7 @@ import Emoji from '@/components/Emoji';
 import { postApiV1CreationTabComplete, putApiV1NodeDetail } from '@/request';
 import { V1NodeDetailResp } from '@/request/types';
 import { useAppSelector } from '@/store';
+import { completeIncompleteLinks } from '@/utils';
 import {
   EditorMarkdown,
   MarkdownEditorRef,
@@ -201,7 +202,8 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
         value = nodeDetail?.content || '';
       }
       if (!value) return;
-      const blob = new Blob([value], { type: `text/${type}` });
+      const content = completeIncompleteLinks(value);
+      const blob = new Blob([content], { type: `text/${type}` });
       const url = URL.createObjectURL(blob);
       const a = document.createElement('a');
       a.href = url;
