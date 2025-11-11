@@ -1,14 +1,13 @@
 import ErrorComponent from '@/components/error';
 import StoreProvider from '@/provider';
+import { ThemeStoreProvider } from '@/provider/themeStore';
 import { getShareV1AppWebInfo } from '@/request/ShareApp';
 import { getShareProV1AuthInfo } from '@/request/pro/ShareAuth';
-import { darkTheme, lightTheme } from '@/theme';
-import { ThemeProvider } from '@ctzhian/ui';
 import { Box } from '@mui/material';
 import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
-import { headers } from 'next/headers';
+import { headers, cookies } from 'next/headers';
 import { getSelectorsByUserAgent } from 'react-device-detect';
 import './globals.css';
 
@@ -62,11 +61,15 @@ const Layout = async ({
 }>) => {
   const headersList = await headers();
   const userAgent = headersList.get('user-agent');
+  const cookieStore = await cookies();
+  const themeMode = (cookieStore.get('theme_mode')?.value || 'light') as
+    | 'light'
+    | 'dark';
+
   let error: any = null;
 
   const [kbDetailResolve, authInfoResolve] = await Promise.allSettled([
     getShareV1AppWebInfo(),
-    // @ts-ignore
     getShareProV1AuthInfo({}),
   ]);
 
@@ -82,8 +85,6 @@ const Layout = async ({
     error = authInfoResolve.reason;
   }
 
-  const themeMode = kbDetail?.settings?.theme_mode || 'light';
-
   const { isMobile } = getSelectorsByUserAgent(userAgent || '') || {
     isMobile: false,
   };
@@ -94,7 +95,7 @@ const Layout = async ({
         className={`${gilory.variable} ${themeMode === 'dark' ? 'dark' : ''}`}
       >
         <AppRouterCacheProvider>
-          <ThemeProvider theme={themeMode === 'dark' ? darkTheme : lightTheme}>
+          <ThemeStoreProvider themeMode={themeMode}>
             <StoreProvider
               kbDetail={kbDetail}
               themeMode={themeMode || 'light'}
@@ -111,7 +112,7 @@ const Layout = async ({
                 {error ? <ErrorComponent error={error} /> : children}
               </Box>
             </StoreProvider>
-          </ThemeProvider>
+          </ThemeStoreProvider>
         </AppRouterCacheProvider>
       </body>
     </html>

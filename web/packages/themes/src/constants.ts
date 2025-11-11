@@ -5,39 +5,50 @@ import {
   blackPalette,
   deepTealPalette,
   redPalette,
-  whitePalette,
   electricBluePalette,
   darkDeepForestPalette,
+  darkGoldPalette,
+  purplePalette,
 } from './index';
 
 export const THEME_LIST = [
   {
-    label: '魅力蓝',
+    label: '很经典的蓝色',
     value: 'blue',
     palette: bluePalette,
   },
   {
-    label: '清新绿',
+    label: '土豪金',
+    value: 'darkGold',
+    palette: darkGoldPalette,
+  },
+  {
+    label: '像草原一样绿',
     value: 'green',
     palette: greenPalette,
   },
   {
-    label: '活力橙',
-    value: 'orange',
-    palette: orangePalette,
+    label: '基佬紫',
+    value: 'purple',
+    palette: purplePalette,
   },
   {
-    label: '纯净白',
-    value: 'black',
-    palette: blackPalette,
-  },
-  {
-    label: '幽静深蓝',
+    label: '灰不拉几的蓝',
     value: 'deepTeal',
     palette: deepTealPalette,
   },
   {
-    label: '热情红',
+    label: '果粒橙',
+    value: 'orange',
+    palette: orangePalette,
+  },
+  {
+    label: '钛合金灰',
+    value: 'black',
+    palette: blackPalette,
+  },
+  {
+    label: '小姑娘喜欢的粉红',
     value: 'red',
     palette: redPalette,
   },
@@ -46,11 +57,6 @@ export const THEME_LIST = [
     value: 'darkDeepForest',
     palette: darkDeepForestPalette,
   },
-  // {
-  //   label: '深邃黑',
-  //   value: 'white',
-  //   palette: whitePalette,
-  // },
   {
     label: '电光蓝',
     value: 'electricBlue',

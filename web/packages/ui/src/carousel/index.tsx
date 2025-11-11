@@ -125,7 +125,7 @@ const StyledTab = styled(Tab)(({ theme }) => ({
   },
   '&.Mui-selected': {
     backgroundColor: theme.palette.primary.main,
-    color: theme.palette.background.default,
+    color: theme.palette.primary.contrastText,
     fontWeight: 500,
   },
 }));
@@ -391,13 +391,15 @@ const Carousel = ({ title, items }: CarouselProps) => {
         {items?.map((item, index) => (
           <SwiperSlide key={item.id} style={{ position: 'relative' }}>
             <StyledSwiperSlideImg src={item.url} alt={item.title} />
-            <StyledSwiperSlideDesc
-              ref={el => {
-                descRefs.current[index] = el;
-              }}
-            >
-              {item.desc}
-            </StyledSwiperSlideDesc>
+            {item.desc && (
+              <StyledSwiperSlideDesc
+                ref={el => {
+                  descRefs.current[index] = el;
+                }}
+              >
+                {item.desc}
+              </StyledSwiperSlideDesc>
+            )}
           </SwiperSlide>
         ))}
       </Swiper>

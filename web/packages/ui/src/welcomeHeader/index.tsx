@@ -11,7 +11,10 @@ import {
   alpha,
   styled,
   lighten,
+  Menu,
+  MenuItem,
 } from '@mui/material';
+import MoreVertIcon from '@mui/icons-material/MoreVert';
 import NavBtns, { NavBtn } from './NavBtns';
 import { DocWidth } from '../constants';
 
@@ -22,6 +25,7 @@ const StyledButton = styled(Button)(({ theme }) => ({
   borderRadius: '6px',
   boxShadow: '0px 1px 2px 0px rgba(145,158,171,0.16)',
   backgroundColor: theme.palette.background.default,
+  color: theme.palette.text.primary,
 }));
 
 // 检测平台类型
@@ -68,9 +72,20 @@ const Header = React.memo(
     onQaClick,
   }: HeaderProps) => {
     const [ctrlKShortcut, setCtrlKShortcut] = useState('');
+    const [anchorEl, setAnchorEl] = useState<null | HTMLElement>(null);
+    const menuOpen = Boolean(anchorEl);
+
     useEffect(() => {
       setCtrlKShortcut(getKeyboardShortcut());
     }, []);
+
+    const handleMenuClick = (event: React.MouseEvent<HTMLElement>) => {
+      setAnchorEl(event.currentTarget);
+    };
+
+    const handleMenuClose = () => {
+      setAnchorEl(null);
+    };
 
     const [isAtTop, setIsAtTop] = useState(true);
     useEffect(() => {
@@ -133,11 +148,11 @@ const Header = React.memo(
           sx={{
             position: 'relative',
             width: '100%',
-            ...(isDocPage &&
-              !mobile &&
-              docWidth !== 'full' && {
-                width: `calc(${DocWidth[docWidth as keyof typeof DocWidth].value}px + ${catalogWidth}px + 192px + 240px)`,
-              }),
+            // ...(isDocPage &&
+            //   !mobile &&
+            //   docWidth !== 'full' && {
+            //     width: `calc(${DocWidth[docWidth as keyof typeof DocWidth].value}px + ${catalogWidth}px + 192px + 240px)`,
+            //   }),
           }}
         >
           <Link href={'/'}>
@@ -232,12 +247,7 @@ const Header = React.memo(
                         >
                           {ctrlKShortcut}
                         </Box>
-                        <StyledButton
-                          variant='contained'
-                          // @ts-ignore
-                          color='light'
-                          sx={{}}
-                        >
+                        <StyledButton variant='contained'>
                           智能问答
                         </StyledButton>
                       </Stack>
@@ -247,9 +257,9 @@ const Header = React.memo(
               />
             ))}
 
-          {!mobile && (
+          {!mobile && btns && btns.length > 0 && (
             <Stack direction='row' gap={2} alignItems='center'>
-              {btns?.map((item, index) => (
+              {btns.slice(0, Math.min(2, btns.length)).map((item, index) => (
                 <Link key={index} href={item.url} target={item.target}>
                   <Button
                     variant={item.variant}
@@ -284,6 +294,79 @@ const Header = React.memo(
                   </Button>
                 </Link>
               ))}
+              {btns.length > 2 && (
+                <>
+                  <IconButton
+                    onClick={handleMenuClick}
+                    sx={theme => ({
+                      width: 40,
+                      height: 40,
+                      '&:hover': {
+                        color: theme.palette.primary.main,
+                        bgcolor: alpha(theme.palette.primary.main, 0.04),
+                      },
+                    })}
+                  >
+                    <MoreVertIcon />
+                  </IconButton>
+                  <Menu
+                    anchorEl={anchorEl}
+                    open={menuOpen}
+                    onClose={handleMenuClose}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'right',
+                    }}
+                    transformOrigin={{
+                      vertical: 'top',
+                      horizontal: 'right',
+                    }}
+                    slotProps={{
+                      paper: {
+                        sx: {
+                          mt: 1,
+                          minWidth: 180,
+                          boxShadow: '0px 4px 20px rgba(0, 0, 0, 0.1)',
+                        },
+                      },
+                    }}
+                  >
+                    {btns.slice(2).map((item, index) => (
+                      <MenuItem
+                        key={index + 2}
+                        onClick={handleMenuClose}
+                        sx={{
+                          py: 1.5,
+                          px: 2,
+                        }}
+                      >
+                        <Link
+                          href={item.url}
+                          target={item.target}
+                          sx={{
+                            display: 'flex',
+                            alignItems: 'center',
+                            gap: 1,
+                            textDecoration: 'none',
+                            color: 'text.primary',
+                            width: '100%',
+                          }}
+                        >
+                          {item.showIcon && item.icon && (
+                            <img
+                              src={item.icon}
+                              alt='logo'
+                              width={20}
+                              height={20}
+                            />
+                          )}
+                          <Box sx={{ fontSize: 16 }}>{item.text}</Box>
+                        </Link>
+                      </MenuItem>
+                    ))}
+                  </Menu>
+                </>
+              )}
             </Stack>
           )}
           {mobile && <NavBtns logo={logo} title={title} btns={btns} />}

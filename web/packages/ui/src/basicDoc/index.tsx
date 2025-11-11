@@ -27,7 +27,7 @@ const StyledBasicDocItem = styled('div')(({ theme }) => ({
   alignItems: 'flex-start',
   justifyContent: 'space-between',
   gap: theme.spacing(2),
-  padding: theme.spacing(3.5, 2.5, 2),
+  padding: theme.spacing(3, 2),
   borderRadius: '8px',
   boxShadow: `0px 5px 20px 0px ${alpha(theme.palette.text.primary, 0.06)}`,
   border: `1px solid ${alpha(theme.palette.text.primary, 0.1)}`,

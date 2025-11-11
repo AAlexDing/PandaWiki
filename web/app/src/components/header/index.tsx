@@ -1,7 +1,7 @@
 'use client';
 
 import Logo from '@/assets/images/logo.png';
-
+import { Box } from '@mui/material';
 import { useStore } from '@/provider';
 import { usePathname } from 'next/navigation';
 import { useMemo } from 'react';
@@ -10,6 +10,7 @@ import {
   WelcomeHeader as WelcomeHeaderComponent,
 } from '@panda-wiki/ui';
 import QaModal from '../QaModal';
+import ThemeSwitch from './themeSwitch';
 interface HeaderProps {
   isDocPage?: boolean;
   isWelcomePage?: boolean;
@@ -54,6 +55,9 @@ const Header = ({ isDocPage = false, isWelcomePage = false }: HeaderProps) => {
       onSearch={handleSearch}
       onQaClick={() => setQaModalOpen?.(true)}
     >
+      <Box sx={{ ml: 2 }}>
+        <ThemeSwitch />
+      </Box>
       <QaModal />
     </CustomHeader>
   );
