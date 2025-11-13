@@ -37,10 +37,12 @@ const RagErrorReStart = ({
       const ragErrorData =
         res?.filter(
           item =>
+            item.type === 2 &&
             item.rag_info?.status &&
             [
               ConstsNodeRagInfoStatus.NodeRagStatusBasicFailed,
               ConstsNodeRagInfoStatus.NodeRagStatusEnhanceFailed,
+              ConstsNodeRagInfoStatus.NodeRagStatusBasicPending,
             ].includes(item.rag_info.status),
         ) || [];
       setList(ragErrorData);
@@ -60,14 +62,14 @@ const RagErrorReStart = ({
         kb_id,
         node_ids: [...selected],
       }).then(() => {
-        message.success('正在重新学习');
+        message.success('正在学习');
         setSelected([]);
         onClose();
         refresh();
       });
     } else {
       message.error(
-        list.length > 0 ? '请选择要重新学习的文档' : '暂无学习失败的文档',
+        list.length > 0 ? '请选择需要学习的文档' : '暂无需要学习的文档',
       );
     }
   };
@@ -83,7 +85,7 @@ const RagErrorReStart = ({
   }, [selected, list]);
 
   return (
-    <Modal title='重新学习' open={open} onCancel={onClose} onOk={onSubmit}>
+    <Modal title='学习文档' open={open} onCancel={onClose} onOk={onSubmit}>
       <Stack
         direction='row'
         component='label'
@@ -97,7 +99,7 @@ const RagErrorReStart = ({
         }}
       >
         <Box>
-          学习失败文档
+          未学习/学习失败文档
           <Box
             component='span'
             sx={{ color: 'text.tertiary', fontSize: 12, pl: 1 }}

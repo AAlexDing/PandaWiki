@@ -1565,6 +1565,41 @@ const docTemplate = `{
                 }
             }
         },
+        "/api/v1/model/mode-setting": {
+            "get": {
+                "description": "get current model mode setting including mode, API key and chat model",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "model"
+                ],
+                "summary": "get model mode setting",
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.ModelModeSetting"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/api/v1/model/provider/supported": {
             "post": {
                 "description": "get provider supported model list",
@@ -1602,6 +1637,52 @@ const docTemplate = `{
                                     "properties": {
                                         "data": {
                                             "$ref": "#/definitions/domain.GetProviderModelListResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
+        "/api/v1/model/switch-mode": {
+            "post": {
+                "description": "switch model mode between manual and auto",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "model"
+                ],
+                "summary": "switch mode",
+                "parameters": [
+                    {
+                        "description": "switch mode request",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.SwitchModeReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.SwitchModeResp"
                                         }
                                     }
                                 }
@@ -4004,6 +4085,17 @@ const docTemplate = `{
                 "LicenseEditionEnterprise"
             ]
         },
+        "consts.ModelSettingMode": {
+            "type": "string",
+            "enum": [
+                "manual",
+                "auto"
+            ],
+            "x-enum-varnames": [
+                "ModelSettingModeManual",
+                "ModelSettingModeAuto"
+            ]
+        },
         "consts.NodeAccessPerm": {
             "type": "string",
             "enum": [
@@ -6258,6 +6350,31 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.ModelModeSetting": {
+            "type": "object",
+            "properties": {
+                "auto_mode_api_key": {
+                    "description": "百智云 API Key",
+                    "type": "string"
+                },
+                "chat_model": {
+                    "description": "自定义对话模型名称",
+                    "type": "string"
+                },
+                "is_manual_embedding_updated": {
+                    "description": "手动模式下嵌入模型是否更新",
+                    "type": "boolean"
+                },
+                "mode": {
+                    "description": "模式: manual 或 auto",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/consts.ModelSettingMode"
+                        }
+                    ]
+                }
+            }
+        },
         "domain.ModelType": {
             "type": "string",
             "enum": [
@@ -7096,6 +7213,37 @@ const docTemplate = `{
                 "StatPageSceneChat",
                 "StatPageSceneLogin"
             ]
+        },
+        "domain.SwitchModeReq": {
+            "type": "object",
+            "required": [
+                "mode"
+            ],
+            "properties": {
+                "auto_mode_api_key": {
+                    "description": "百智云 API Key",
+                    "type": "string"
+                },
+                "chat_model": {
+                    "description": "自定义对话模型名称",
+                    "type": "string"
+                },
+                "mode": {
+                    "type": "string",
+                    "enum": [
+                        "manual",
+                        "auto"
+                    ]
+                }
+            }
+        },
+        "domain.SwitchModeResp": {
+            "type": "object",
+            "properties": {
+                "message": {
+                    "type": "string"
+                }
+            }
         },
         "domain.TextConfig": {
             "type": "object",

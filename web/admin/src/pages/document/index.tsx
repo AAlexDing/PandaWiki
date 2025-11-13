@@ -49,9 +49,9 @@ const Content = () => {
   const search = searchParams.get('search') || '';
   const [supportSelect, setBatchOpen] = useState(false);
 
-  const [ragErrorCount, setRagErrorCount] = useState(0);
-  const [ragErrorIds, setRagErrorIds] = useState<string[]>([]);
-  const [ragErrorOpen, setRagErrorOpen] = useState(false);
+  const [ragReStartCount, setRagStartCount] = useState(0);
+  const [ragIds, setRagIds] = useState<string[]>([]);
+  const [ragOpen, setRagOpen] = useState(false);
   const [publish, setPublish] = useState({
     // published: 0,
     unpublished: 0,
@@ -128,8 +128,8 @@ const Content = () => {
   };
 
   const handleRestudy = (item: ITreeItem) => {
-    setRagErrorOpen(true);
-    setRagErrorIds([item.id]);
+    setRagOpen(true);
+    setRagIds([item.id]);
   };
 
   const handleProperties = (item: ITreeItem) => {
@@ -265,23 +265,25 @@ const Content = () => {
             // },
           ]
         : []),
-      ...(item?.rag_status &&
+      ...(item.type === 2 &&
+      item.rag_status &&
       [
         ConstsNodeRagInfoStatus.NodeRagStatusBasicFailed,
         ConstsNodeRagInfoStatus.NodeRagStatusEnhanceFailed,
+        ConstsNodeRagInfoStatus.NodeRagStatusBasicPending,
       ].includes(item.rag_status)
         ? [
             {
-              label: '重新学习',
+              label:
+                item.rag_status ===
+                ConstsNodeRagInfoStatus.NodeRagStatusBasicPending
+                  ? '学习文档'
+                  : '重新学习',
               key: 'restudy',
               onClick: () => handleRestudy(item),
             },
           ]
         : []),
-      ...(!isEditing
-        ? [{ label: '重命名', key: 'rename', onClick: renameItem }]
-        : []),
-      { label: '删除', key: 'delete', onClick: () => handleDelete(item) },
       ...(item.type === 2
         ? [
             {
@@ -291,6 +293,10 @@ const Content = () => {
             },
           ]
         : []),
+      ...(!isEditing
+        ? [{ label: '重命名', key: 'rename', onClick: renameItem }]
+        : []),
+      { label: '删除', key: 'delete', onClick: () => handleDelete(item) },
     ];
   };
 
@@ -335,13 +341,15 @@ const Content = () => {
       setPublish({
         unpublished: res.filter(it => it.status === 1).length,
       });
-      setRagErrorCount(
+      setRagStartCount(
         res.filter(
           it =>
+            it.type === 2 &&
             it.rag_info?.status &&
             [
               ConstsNodeRagInfoStatus.NodeRagStatusBasicFailed,
               ConstsNodeRagInfoStatus.NodeRagStatusEnhanceFailed,
+              ConstsNodeRagInfoStatus.NodeRagStatusBasicPending,
             ].includes(it.rag_info.status),
         ).length,
       );
@@ -421,7 +429,7 @@ const Content = () => {
                 </Button>
               </>
             )}
-            {ragErrorCount > 0 && (
+            {ragReStartCount > 0 && (
               <>
                 <Box
                   sx={{
@@ -431,16 +439,16 @@ const Content = () => {
                     ml: 2,
                   }}
                 >
-                  {ragErrorCount} 个文档学习失败，
+                  {ragReStartCount} 个文档未学习，
                 </Box>
                 <Button
                   size='small'
                   sx={{ minWidth: 0, p: 0, fontSize: 12 }}
                   onClick={() => {
-                    setRagErrorOpen(true);
+                    setRagOpen(true);
                   }}
                 >
-                  重新学习
+                  去学习
                 </Button>
               </>
             )}
@@ -729,11 +737,11 @@ const Content = () => {
         refresh={getData}
       />
       <RagErrorReStart
-        open={ragErrorOpen}
-        defaultSelected={ragErrorIds}
+        open={ragOpen}
+        defaultSelected={ragIds}
         onClose={() => {
-          setRagErrorOpen(false);
-          setRagErrorIds([]);
+          setRagOpen(false);
+          setRagIds([]);
         }}
         refresh={getData}
       />

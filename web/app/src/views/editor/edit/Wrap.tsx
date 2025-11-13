@@ -179,10 +179,14 @@ const Wrap = ({ detail: defaultDetail = {} }: WrapProps) => {
         }}
       >
         <Header
-          edit={isEditing}
           detail={nodeDetail!}
-          updateDetail={updateDetail}
           handleSave={async () => {
+            if (!isMarkdown) {
+              const value = editorRef.getContent();
+              updateDetail({
+                content: value,
+              });
+            }
             if (checkRequiredFields()) {
               setConfirmModalOpen(true);
             }
@@ -299,6 +303,7 @@ const Wrap = ({ detail: defaultDetail = {} }: WrapProps) => {
                   ref={markdownEditorRef}
                   editor={editorRef.editor}
                   value={nodeDetail?.content || defaultDetail?.content || ''}
+                  placeholder='请输入文档内容'
                   onAceChange={value => {
                     updateDetail({
                       content: value,
@@ -351,12 +356,17 @@ const Wrap = ({ detail: defaultDetail = {} }: WrapProps) => {
         open={confirmModalOpen}
         onCancel={() => setConfirmModalOpen(false)}
         onOk={async (reason: string, token: string) => {
-          const value = editorRef.getContent();
-          updateDetail({
-            content: value,
-          });
-          await onSave(value, reason, token, isMarkdown ? 'md' : 'html');
-          setConfirmModalOpen(false);
+          if (editorRef) {
+            let value = nodeDetail?.content || '';
+            if (!isMarkdown) {
+              value = editorRef.getContent();
+              updateDetail({
+                content: value,
+              });
+            }
+            await onSave(value, reason, token, isMarkdown ? 'md' : 'html');
+            setConfirmModalOpen(false);
+          }
         }}
       />
     </>

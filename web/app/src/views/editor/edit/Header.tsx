@@ -8,19 +8,11 @@ import { useEffect, useRef } from 'react';
 import { useWrapContext } from '..';
 
 interface HeaderProps {
-  edit: boolean;
-  collaborativeUsers?: Array<{
-    id: string;
-    name: string;
-    color: string;
-  }>;
-  isSyncing?: boolean;
   detail: V1NodeDetailResp;
-  updateDetail: (detail: V1NodeDetailResp) => void;
   handleSave: () => void;
 }
 
-const Header = ({ edit, detail, handleSave }: HeaderProps) => {
+const Header = ({ detail, handleSave }: HeaderProps) => {
   const firstLoad = useRef(true);
 
   const { catalogOpen, nodeDetail, setCatalogOpen, saveLoading } =

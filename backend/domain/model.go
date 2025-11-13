@@ -165,3 +165,13 @@ type ProviderModelListItem struct {
 type ActivateModelReq struct {
 	ModelID string `json:"model_id" validate:"required"`
 }
+
+type SwitchModeReq struct {
+	Mode           string `json:"mode" validate:"required,oneof=manual auto"`
+	AutoModeAPIKey string `json:"auto_mode_api_key"` // 百智云 API Key
+	ChatModel      string `json:"chat_model"`        // 自定义对话模型名称
+}
+
+type SwitchModeResp struct {
+	Message string `json:"message"`
+}

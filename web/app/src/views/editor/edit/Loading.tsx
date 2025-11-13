@@ -1,4 +1,5 @@
 'use client';
+import { V1NodeDetailResp } from '@/request/types';
 import { useTiptap } from '@ctzhian/tiptap';
 import { Icon } from '@ctzhian/ui';
 import { Box, Skeleton, Stack } from '@mui/material';
@@ -35,14 +36,7 @@ const LoadingEditorWrap = () => {
           transition: 'left 0.3s ease-in-out',
         }}
       >
-        <Header
-          edit={false}
-          isSyncing={isSyncing}
-          collaborativeUsers={collaborativeUsers}
-          detail={{}}
-          updateDetail={() => {}}
-          handleSave={() => {}}
-        />
+        <Header detail={{} as V1NodeDetailResp} handleSave={() => {}} />
         {editorRef.editor && <Toolbar editorRef={editorRef} />}
       </Box>
       <Box>

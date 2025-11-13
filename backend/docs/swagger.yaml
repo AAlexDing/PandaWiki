@@ -131,6 +131,14 @@ definitions:
     - LicenseEditionFree
     - LicenseEditionContributor
     - LicenseEditionEnterprise
+  consts.ModelSettingMode:
+    enum:
+    - manual
+    - auto
+    type: string
+    x-enum-varnames:
+    - ModelSettingModeManual
+    - ModelSettingModeAuto
   consts.NodeAccessPerm:
     enum:
     - open
@@ -1628,6 +1636,22 @@ definitions:
       type:
         type: string
     type: object
+  domain.ModelModeSetting:
+    properties:
+      auto_mode_api_key:
+        description: 百智云 API Key
+        type: string
+      chat_model:
+        description: 自定义对话模型名称
+        type: string
+      is_manual_embedding_updated:
+        description: 手动模式下嵌入模型是否更新
+        type: boolean
+      mode:
+        allOf:
+        - $ref: '#/definitions/consts.ModelSettingMode'
+        description: '模式: manual 或 auto'
+    type: object
   domain.ModelType:
     enum:
     - chat
@@ -2178,6 +2202,27 @@ definitions:
     - StatPageSceneNodeDetail
     - StatPageSceneChat
     - StatPageSceneLogin
+  domain.SwitchModeReq:
+    properties:
+      auto_mode_api_key:
+        description: 百智云 API Key
+        type: string
+      chat_model:
+        description: 自定义对话模型名称
+        type: string
+      mode:
+        enum:
+        - manual
+        - auto
+        type: string
+    required:
+    - mode
+    type: object
+  domain.SwitchModeResp:
+    properties:
+      message:
+        type: string
+    type: object
   domain.TextConfig:
     properties:
       title:
@@ -4065,6 +4110,27 @@ paths:
       summary: get model list
       tags:
       - model
+  /api/v1/model/mode-setting:
+    get:
+      consumes:
+      - application/json
+      description: get current model mode setting including mode, API key and chat
+        model
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.ModelModeSetting'
+              type: object
+      summary: get model mode setting
+      tags:
+      - model
   /api/v1/model/provider/supported:
     post:
       consumes:
@@ -4090,6 +4156,33 @@ paths:
                   $ref: '#/definitions/domain.GetProviderModelListResp'
               type: object
       summary: get provider supported model list
+      tags:
+      - model
+  /api/v1/model/switch-mode:
+    post:
+      consumes:
+      - application/json
+      description: switch model mode between manual and auto
+      parameters:
+      - description: switch mode request
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.SwitchModeReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.SwitchModeResp'
+              type: object
+      summary: switch mode
       tags:
       - model
   /api/v1/node:

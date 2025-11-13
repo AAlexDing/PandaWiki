@@ -25,12 +25,6 @@ import DocDelete from '../../component/DocDelete';
 
 interface HeaderProps {
   edit: boolean;
-  collaborativeUsers?: Array<{
-    id: string;
-    name: string;
-    color: string;
-  }>;
-  isSyncing?: boolean;
   detail: V1NodeDetailResp;
   updateDetail: (detail: V1NodeDetailResp) => void;
   handleSave: () => void;
@@ -39,8 +33,6 @@ interface HeaderProps {
 
 const Header = ({
   edit,
-  collaborativeUsers = [],
-  isSyncing = false,
   detail,
   updateDetail,
   handleSave,
@@ -54,10 +46,6 @@ const Header = ({
   const { catalogOpen, nodeDetail, setCatalogOpen } =
     useOutletContext<WrapContext>();
 
-  // const docWidth = useMemo(() => {
-  //   return nodeDetail?.meta?.doc_width || 'full';
-  // }, [nodeDetail]);
-
   const [renameOpen, setRenameOpen] = useState(false);
   const [delOpen, setDelOpen] = useState(false);
   const [publishOpen, setPublishOpen] = useState(false);
@@ -67,22 +55,6 @@ const Header = ({
   const isEnterprise = useMemo(() => {
     return license.edition === 2;
   }, [license]);
-
-  // const updateDocWidth = (doc_width: string) => {
-  //   if (!nodeDetail) return;
-  //   putApiV1NodeDetail({
-  //     id: nodeDetail.id!,
-  //     kb_id,
-  //     doc_width,
-  //   }).then(() => {
-  //     updateDetail({
-  //       meta: {
-  //         ...nodeDetail.meta,
-  //         doc_width,
-  //       },
-  //     });
-  //   });
-  // };
 
   const handlePublish = useCallback(() => {
     if (nodeDetail?.status === 2 && !edit) {

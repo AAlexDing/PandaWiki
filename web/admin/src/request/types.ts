@@ -922,6 +922,15 @@ export interface DomainMetricsConfig {
   type?: string;
 }
 
+export interface DomainModelModeSetting {
+  /** 百智云 API Key */
+  auto_mode_api_key?: string;
+  /** 自定义对话模型名称 */
+  chat_model?: string;
+  /** 模式: manual 或 auto */
+  mode?: string;
+}
+
 export interface DomainMoveNodeReq {
   id: string;
   kb_id: string;
@@ -1193,6 +1202,18 @@ export interface DomainSocialMediaAccount {
 export interface DomainStatPageReq {
   node_id?: string;
   scene: 1 | 2 | 3 | 4;
+}
+
+export interface DomainSwitchModeReq {
+  /** 百智云 API Key */
+  auto_mode_api_key?: string;
+  /** 自定义对话模型名称 */
+  chat_model?: string;
+  mode: "manual" | "auto";
+}
+
+export interface DomainSwitchModeResp {
+  message?: string;
 }
 
 export interface DomainTextConfig {

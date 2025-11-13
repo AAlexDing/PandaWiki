@@ -40,7 +40,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
   const { license } = useAppSelector(state => state.config);
 
   const state = useLocation().state as { node?: V1NodeDetailResp };
-  const { catalogOpen, nodeDetail, setNodeDetail, onSave, docWidth } =
+  const { catalogOpen, setCatalogOpen, nodeDetail, setNodeDetail, onSave } =
     useOutletContext<WrapContext>();
 
   const storageTocOpen = localStorage.getItem('toc-open');
@@ -197,38 +197,41 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
 
   const handleExport = useCallback(
     async (type: string) => {
-      let value = editorRef?.getContent() || '';
-      if (isMarkdown) {
-        value = nodeDetail?.content || '';
+      if (editorRef) {
+        let value = nodeDetail?.content || '';
+        if (!isMarkdown) {
+          value = editorRef.getContent() || '';
+        }
+        if (!value) return;
+        const content = completeIncompleteLinks(value);
+        const blob = new Blob([content], { type: `text/${type}` });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `${nodeDetail?.name}.${type}`;
+        a.click();
+        URL.revokeObjectURL(url);
+        message.success('导出成功');
       }
-      if (!value) return;
-      const content = completeIncompleteLinks(value);
-      const blob = new Blob([content], { type: `text/${type}` });
-      const url = URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${nodeDetail?.name}.${type}`;
-      a.click();
-      URL.revokeObjectURL(url);
-      message.success('导出成功');
     },
     [editorRef, nodeDetail?.content, nodeDetail?.name, isMarkdown],
   );
 
   const checkIfEdited = useCallback(() => {
-    let currentContent = editorRef?.getContent() || '';
-    if (isMarkdown) {
-      currentContent = nodeDetail?.content || '';
+    if (editorRef) {
+      let value = nodeDetail?.content || '';
+      if (!isMarkdown) {
+        value = editorRef.getContent() || '';
+      }
+      const currentSummary = summary;
+      const currentEmoji = nodeDetail?.meta?.emoji || '';
+      const hasChanges =
+        value !== initialStateRef.current.content ||
+        currentSummary !== initialStateRef.current.summary ||
+        currentEmoji !== initialStateRef.current.emoji;
+
+      setIsEditing(hasChanges);
     }
-    const currentSummary = summary;
-    const currentEmoji = nodeDetail?.meta?.emoji || '';
-
-    const hasChanges =
-      currentContent !== initialStateRef.current.content ||
-      currentSummary !== initialStateRef.current.summary ||
-      currentEmoji !== initialStateRef.current.emoji;
-
-    setIsEditing(hasChanges);
   }, [
     editorRef,
     summary,
@@ -277,14 +280,18 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
     isMarkdown,
   ]);
 
-  const handleGlobalSave = useCallback(
+  const handleGlobalKeydown = useCallback(
     (event: KeyboardEvent) => {
       if ((event.ctrlKey || event.metaKey) && event.key === 's') {
         event.preventDefault();
         changeCatalogItem();
       }
+      if ((event.ctrlKey || event.metaKey) && event.key === 'b') {
+        event.preventDefault();
+        setCatalogOpen(!catalogOpen);
+      }
     },
-    [changeCatalogItem],
+    [changeCatalogItem, catalogOpen, setCatalogOpen],
   );
 
   const renderEditorTitleEmojiSummary = () => {
@@ -522,11 +529,11 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
   }, [defaultDetail]);
 
   useEffect(() => {
-    document.addEventListener('keydown', handleGlobalSave);
+    document.addEventListener('keydown', handleGlobalKeydown);
     return () => {
-      document.removeEventListener('keydown', handleGlobalSave);
+      document.removeEventListener('keydown', handleGlobalKeydown);
     };
-  }, [handleGlobalSave]);
+  }, [handleGlobalKeydown]);
 
   useEffect(() => {
     if (state && state.node && editorRef.editor) {
@@ -633,17 +640,22 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
           detail={nodeDetail!}
           updateDetail={updateDetail}
           handleSave={async () => {
-            const content = editorRef?.getContent() || '';
-            updateDetail({
-              content: content,
-            });
-            await onSave(content);
-            initialStateRef.current = {
-              content: content,
-              summary: summary,
-              emoji: nodeDetail?.meta?.emoji || '',
-            };
-            setIsEditing(false);
+            if (editorRef) {
+              let content = nodeDetail?.content || '';
+              if (!isMarkdown) {
+                content = editorRef.getContent();
+                updateDetail({
+                  content: content,
+                });
+              }
+              await onSave(content);
+              initialStateRef.current = {
+                content: content,
+                summary: summary,
+                emoji: nodeDetail?.meta?.emoji || '',
+              };
+              setIsEditing(false);
+            }
           }}
           handleExport={handleExport}
         />
@@ -651,7 +663,10 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
           <Toolbar editorRef={editorRef} handleAiGenerate={handleAiGenerate} />
         )}
       </Box>
-      <Box sx={{ ...(fixedToc && { display: 'flex' }) }}>
+      <Box
+        sx={{ ...(fixedToc && { display: 'flex' }) }}
+        onKeyDown={event => event.stopPropagation()}
+      >
         {isMarkdown ? (
           <Box
             sx={{
@@ -667,12 +682,13 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
               editor={editorRef.editor}
               value={nodeDetail?.content || ''}
               onUpload={handleUpload}
+              placeholder='请输入文档内容'
               onAceChange={value => {
                 updateDetail({
                   content: value,
                 });
               }}
-              height='calc(100vh - 360px)'
+              height='calc(100vh - 103px)'
             />
           </Box>
         ) : (
