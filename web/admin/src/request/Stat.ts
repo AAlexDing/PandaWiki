@@ -279,3 +279,84 @@ export const getApiV1StatRefererHosts = (
     format: "json",
     ...params,
   });
+
+/**
+ * @description 获取系统状态
+ *
+ * @tags system
+ * @name GetApiV1System
+ * @summary 获取系统状态
+ * @request GET:/api/v1/system
+ * @secure
+ * @response `200` `(DomainPWResponse & {
+    data?: V1SystemResp,
+
+})` OK
+ */
+
+export interface GetApiV1SystemParams {
+  kb_id: string;
+}
+
+export interface V1SystemResp {
+  document: {
+    current_count: number;
+    new_in_24h: number;
+    learning_succeeded: number;
+    learning_failed: number;
+  };
+  learning: {
+    basic_processing: {
+      pending: number;
+      running: number;
+      total: number;
+      progress: number;
+    };
+    basic_failed: number;
+    enhance_processing: {
+      pending: number;
+      running: number;
+      total: number;
+      progress: number;
+    };
+    enhance_failed: number;
+    basic_failed_docs: Array<{
+      node_id: string;
+      node_name: string;
+      reason: string;
+    }>;
+    enhance_failed_docs: Array<{
+      node_id: string;
+      node_name: string;
+      reason: string;
+    }>;
+  };
+  system: {
+    components: Array<{
+      name: string;
+      status: string;
+      image: string;
+      ports: string;
+      health: string;
+      log_status: string;
+    }>;
+  };
+}
+
+export const getApiV1System = (
+  query: GetApiV1SystemParams,
+  params: RequestParams = {},
+) =>
+  httpRequest<
+    DomainPWResponse & {
+      data?: V1SystemResp;
+    }
+  >({
+    path: `/api/v1/system`,
+    method: "GET",
+    query: query,
+    secure: true,
+    type: ContentType.Json,
+    format: "json",
+    ...params,
+  });

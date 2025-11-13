@@ -1152,3 +1152,166 @@ func (r *NodeRepository) GetNodeIdsByDocIds(ctx context.Context, docIds []string
 
 	return docToNodeMap, nil
 }
+
+// GetStatusDocumentStats 获取文档统计信息
+func (r *NodeRepository) GetStatusDocumentStats(ctx context.Context, kbID string) (currentCount, newIn24h, learningSucceeded, learningFailed int64, err error) {
+	// 当前文档数
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ?", kbID, domain.NodeTypeDocument).
+		Count(&currentCount).Error; err != nil {
+		return 0, 0, 0, 0, err
+	}
+
+	// 24h新增文档数
+	twentyFourHoursAgo := time.Now().Add(-24 * time.Hour)
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND created_at >= ?", kbID, domain.NodeTypeDocument, twentyFourHoursAgo).
+		Count(&newIn24h).Error; err != nil {
+		return 0, 0, 0, 0, err
+	}
+
+	// 学习成功数量 (基础处理和增强处理都成功)
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceSucceeded).
+		Count(&learningSucceeded).Error; err != nil {
+		return 0, 0, 0, 0, err
+	}
+
+	// 学习失败数量 (基础处理失败或增强处理失败)
+	var basicFailed, enhanceFailed int64
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicFailed).
+		Count(&basicFailed).Error; err != nil {
+		return 0, 0, 0, 0, err
+	}
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceFailed).
+		Count(&enhanceFailed).Error; err != nil {
+		return 0, 0, 0, 0, err
+	}
+	learningFailed = basicFailed + enhanceFailed
+
+	return currentCount, newIn24h, learningSucceeded, learningFailed, nil
+}
+
+// GetStatusLearningStats 获取学习状态统计信息
+func (r *NodeRepository) GetStatusLearningStats(ctx context.Context, kbID string) (
+	basicPending, basicRunning, basicFailed int64,
+	enhancePending, enhanceRunning, enhanceFailed int64,
+	basicFailedDocs, enhanceFailedDocs []struct {
+		NodeID   string
+		NodeName string
+		Reason   string
+	},
+	err error,
+) {
+	// 基础处理统计
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicPending).
+		Count(&basicPending).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicRunning).
+		Count(&basicRunning).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicFailed).
+		Count(&basicFailed).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	// 增强处理统计
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhancePending).
+		Count(&enhancePending).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceRunning).
+		Count(&enhanceRunning).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceFailed).
+		Count(&enhanceFailed).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	// 基础处理失败文档详情
+	type FailedDocResult struct {
+		ID      string `gorm:"column:id"`
+		Name    string `gorm:"column:name"`
+		Message string `gorm:"column:message"`
+	}
+	var basicFailedResults []FailedDocResult
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Select("id, name, rag_info->>'message' as message").
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicFailed).
+		Find(&basicFailedResults).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	basicFailedDocs = make([]struct {
+		NodeID   string
+		NodeName string
+		Reason   string
+	}, len(basicFailedResults))
+	for i, doc := range basicFailedResults {
+		basicFailedDocs[i] = struct {
+			NodeID   string
+			NodeName string
+			Reason   string
+		}{
+			NodeID:   doc.ID,
+			NodeName: doc.Name,
+			Reason:   doc.Message,
+		}
+	}
+
+	// 增强处理失败文档详情
+	var enhanceFailedResults []FailedDocResult
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Select("id, name, rag_info->>'message' as message").
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceFailed).
+		Find(&enhanceFailedResults).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	enhanceFailedDocs = make([]struct {
+		NodeID   string
+		NodeName string
+		Reason   string
+	}, len(enhanceFailedResults))
+	for i, doc := range enhanceFailedResults {
+		enhanceFailedDocs[i] = struct {
+			NodeID   string
+			NodeName string
+			Reason   string
+		}{
+			NodeID:   doc.ID,
+			NodeName: doc.Name,
+			Reason:   doc.Message,
+		}
+	}
+
+	return basicPending, basicRunning, basicFailed, enhancePending, enhanceRunning, enhanceFailed, basicFailedDocs, enhanceFailedDocs, nil
+}

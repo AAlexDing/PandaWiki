@@ -132,6 +132,8 @@ func createApp() (*App, error) {
 	statRepository := pg2.NewStatRepository(db, cacheCache)
 	statUseCase := usecase.NewStatUseCase(statRepository, nodeRepository, conversationRepository, appRepository, ipAddressRepo, geoRepo, authRepo, knowledgeBaseRepository, logger)
 	statHandler := v1.NewStatHandler(baseHandler, echo, statUseCase, logger, authMiddleware)
+	systemUseCase := usecase.NewSystemUseCase(nodeRepository, logger)
+	systemHandler := v1.NewSystemHandler(baseHandler, echo, systemUseCase, logger, authMiddleware)
 	commentRepository := pg2.NewCommentRepository(db, logger)
 	commentUsecase := usecase.NewCommentUsecase(commentRepository, logger, nodeRepository, ipAddressRepo, authRepo)
 	commentHandler := v1.NewCommentHandler(echo, baseHandler, logger, authMiddleware, commentUsecase)
@@ -164,6 +166,7 @@ func createApp() (*App, error) {
 		CrawlerHandler:       crawlerHandler,
 		CreationHandler:      creationHandler,
 		StatHandler:          statHandler,
+		SystemHandler:        systemHandler,
 		CommentHandler:       commentHandler,
 		AuthV1Handler:        authV1Handler,
 		LicenseHandler:       licenseHandler,

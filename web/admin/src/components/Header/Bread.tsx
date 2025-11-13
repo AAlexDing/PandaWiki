@@ -14,6 +14,7 @@ const OtherBread = {
   application: { title: '设置', to: '/setting' },
   release: { title: '发布', to: '/release' },
   contribution: { title: '贡献', to: '/contribution' },
+  system: { title: '系统', to: '/system' },
 };
 
 const Bread = () => {

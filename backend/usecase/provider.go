@@ -30,6 +30,7 @@ var ProviderSet = wire.NewSet(
 	NewFileUsecase,
 	NewSitemapUsecase,
 	NewStatUseCase,
+	NewSystemUseCase,
 	NewCommentUsecase,
 	NewWechatUsecase,
 	NewWecomUsecase,

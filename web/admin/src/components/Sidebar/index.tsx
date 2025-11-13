@@ -82,6 +82,14 @@ const MENUS = [
     show: true,
     perms: [ConstsUserKBPermission.UserKBPermissionFullControl],
   },
+  {
+    label: '系统',
+    value: '/system',
+    pathname: 'system',
+    icon: 'icon-PCduan',
+    show: true,
+    perms: [ConstsUserKBPermission.UserKBPermissionFullControl],
+  },
 ];
 
 const Sidebar = () => {

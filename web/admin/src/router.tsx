@@ -70,6 +70,12 @@ const router = [
         ),
       },
       {
+        path: '/system',
+        element: createElement(
+          LazyLoadable(lazy(() => import('./pages/status'))),
+        ),
+      },
+      {
         path: '/conversation',
         element: createElement(
           LazyLoadable(lazy(() => import('./pages/conversation'))),
