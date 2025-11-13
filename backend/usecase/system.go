@@ -119,3 +119,39 @@ func (u *SystemUseCase) GetSystem(ctx context.Context, kbID string) (*v1.SystemR
 		},
 	}, nil
 }
+
+// GetContainerLogs 获取容器日志
+func (u *SystemUseCase) GetContainerLogs(ctx context.Context, containerName string, page, limit int) (*v1.ContainerLogsResp, error) {
+	// 设置默认值
+	if page <= 0 {
+		page = 1
+	}
+	if limit <= 0 {
+		limit = 100
+	}
+
+	// 获取分页日志
+	logs, hasMore, err := utilsDocker.GetContainerLogsPaginated(ctx, containerName, page, limit)
+	if err != nil {
+		u.logger.Error("failed to get container logs",
+			log.String("container", containerName),
+			log.Error(err))
+		return nil, fmt.Errorf("failed to get container logs: %w", err)
+	}
+
+	// 转换日志格式
+	logEntries := make([]v1.LogEntry, len(logs))
+	for i, log := range logs {
+		logEntries[i] = v1.LogEntry{
+			Timestamp: log.Timestamp,
+			Message:   log.Message,
+			Level:     log.Level,
+		}
+	}
+
+	return &v1.ContainerLogsResp{
+		Logs:   logEntries,
+		HasMore: hasMore,
+		Total:  int64(len(logEntries)),
+	}, nil
+}

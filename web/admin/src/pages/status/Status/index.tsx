@@ -11,11 +11,14 @@ import Nodata from '@/assets/images/nodata.png';
 import { useEffect, useState } from 'react';
 import { V1SystemResp } from '@/request/Stat';
 import SvgIcon from '@/components/SvgIcon';
+import ContainerLogsDialog from './ContainerLogsDialog';
 
 const System = () => {
   const { kb_id = '' } = useAppSelector(state => state.config);
   const [data, setData] = useState<V1SystemResp | null>(null);
   const [loading, setLoading] = useState(false);
+  const [selectedContainer, setSelectedContainer] = useState<V1SystemResp['system']['components'][0] | null>(null);
+  const [logsDialogOpen, setLogsDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!kb_id) return;
@@ -142,6 +145,18 @@ const System = () => {
     return nameLower.includes('raglite') || nameLower.includes('qdrant');
   };
 
+  // 处理容器卡片点击
+  const handleContainerClick = (comp: V1SystemResp['system']['components'][0]) => {
+    setSelectedContainer(comp);
+    setLogsDialogOpen(true);
+  };
+
+  // 关闭日志对话框
+  const handleLogsDialogClose = () => {
+    setLogsDialogOpen(false);
+    setSelectedContainer(null);
+  };
+
   return (
     <Box sx={{ p: 2 }}>
       {/* 容器状态 */}
@@ -177,12 +192,18 @@ const System = () => {
               return (
                 <Card
                   key={idx}
+                  onClick={() => handleContainerClick(comp)}
                   sx={{
                     p: 2,
                     boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
                     transition: 'all 0.3s ease',
+                    cursor: 'pointer',
                     '&:hover': {
                       boxShadow: '0px 6px 16px rgba(0, 0, 0, 0.15)',
+                      transform: 'translateY(-2px)',
+                    },
+                    '&:active': {
+                      transform: 'translateY(0)',
                     },
                   }}
                 >
@@ -320,31 +341,69 @@ const System = () => {
         {/* 第一行：队列进度和失败数 */}
         <Stack direction={'row'} gap={2} sx={{ mb: 2 }}>
           {/* 基础处理队列进度 */}
-          <Card sx={{ flex: 1, p: 2, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
-            <Box sx={{ fontSize: 14, fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
-              基础处理队列进度
-            </Box>
-            <Box sx={{ fontSize: 24, fontWeight: 700, mb: 1, color: 'primary.main' }}>
+          <Card
+            sx={{
+              flex: 1,
+              p: 2,
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+              position: 'relative',
+              color: '#021D70',
+              background: 'linear-gradient( 180deg, #D7EBFD 0%, #BEDDFD 100%)',
+            }}
+          >
+            <Box
+              sx={{
+                fontSize: 32,
+                fontWeight: 700,
+                lineHeight: '28px',
+                height: 28,
+                mb: 2,
+              }}
+            >
               {data.learning.basic_processing.progress}%
             </Box>
+            <Box
+              sx={{
+                fontSize: 12,
+                lineHeight: '20px',
+                color: addOpacityToColor('#021D70', 0.5),
+              }}
+            >
+              基础处理队列进度
+            </Box>
+            <Box
+              sx={{
+                height: 80,
+                width: 158,
+                position: 'absolute',
+                bottom: 0,
+                zIndex: 1,
+                right: 0,
+                backgroundSize: 'cover',
+                backgroundImage: `url(${BlueCard})`,
+              }}
+            ></Box>
             <Box
               sx={{
                 height: 8,
                 mb: 1,
                 borderRadius: '4px',
-                bgcolor: 'background.paper3',
+                bgcolor: 'rgba(255, 255, 255, 0.3)',
+                position: 'relative',
+                zIndex: 2,
               }}
             >
               <Box
                 sx={{
                   height: 8,
-                  background: 'linear-gradient( 90deg, #3248F2 0%, #9E68FC 100%)',
+                  background: 'linear-gradient( 90deg, #021D70 0%, #0A3EBB 100%)',
                   width: `${data.learning.basic_processing.progress}%`,
                   borderRadius: '4px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                 }}
               ></Box>
             </Box>
-            <Stack direction="row" justifyContent="space-between" sx={{ fontSize: 12, color: 'text.secondary' }}>
+            <Stack direction="row" justifyContent="space-between" sx={{ fontSize: 12, color: addOpacityToColor('#021D70', 0.6), position: 'relative', zIndex: 2 }}>
               <span>等待: {data.learning.basic_processing.pending}</span>
               <span>运行: {data.learning.basic_processing.running}</span>
               <span>总数: {data.learning.basic_processing.total}</span>
@@ -352,41 +411,114 @@ const System = () => {
           </Card>
 
           {/* 基础处理失败数 */}
-          <Card sx={{ flex: 1, p: 2, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
-            <Box sx={{ fontSize: 14, fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
-              基础处理失败数
-            </Box>
-            <Box sx={{ fontSize: 32, fontWeight: 700, color: 'error.main' }}>
+          <Card
+            sx={{
+              flex: 1,
+              p: 2,
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+              position: 'relative',
+              color: '#260A7A',
+              background: 'linear-gradient( 180deg, #F0DDFF 0%, #E6C8FF 100%)',
+            }}
+          >
+            <Box
+              sx={{
+                fontSize: 32,
+                fontWeight: 700,
+                lineHeight: '28px',
+                height: 28,
+                mb: 2,
+              }}
+            >
               {data.learning.basic_failed}
             </Box>
+            <Box
+              sx={{
+                fontSize: 12,
+                lineHeight: '20px',
+                color: addOpacityToColor('#260A7A', 0.5),
+              }}
+            >
+              基础处理失败数
+            </Box>
+            <Box
+              sx={{
+                height: 80,
+                width: 158,
+                position: 'absolute',
+                bottom: 0,
+                zIndex: 1,
+                right: 0,
+                backgroundSize: 'cover',
+                backgroundImage: `url(${PurpleCard})`,
+              }}
+            ></Box>
           </Card>
 
           {/* 增强处理队列进度 */}
-          <Card sx={{ flex: 1, p: 2, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
-            <Box sx={{ fontSize: 14, fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
-              增强处理队列进度
-            </Box>
-            <Box sx={{ fontSize: 24, fontWeight: 700, mb: 1, color: 'primary.main' }}>
+          <Card
+            sx={{
+              flex: 1,
+              p: 2,
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+              position: 'relative',
+              color: '#021D70',
+              background: 'linear-gradient( 180deg, #D7EBFD 0%, #BEDDFD 100%)',
+            }}
+          >
+            <Box
+              sx={{
+                fontSize: 32,
+                fontWeight: 700,
+                lineHeight: '28px',
+                height: 28,
+                mb: 2,
+              }}
+            >
               {data.learning.enhance_processing.progress}%
             </Box>
+            <Box
+              sx={{
+                fontSize: 12,
+                lineHeight: '20px',
+                color: addOpacityToColor('#021D70', 0.5),
+              }}
+            >
+              增强处理队列进度
+            </Box>
+            <Box
+              sx={{
+                height: 80,
+                width: 158,
+                position: 'absolute',
+                bottom: 0,
+                zIndex: 1,
+                right: 0,
+                backgroundSize: 'cover',
+                backgroundImage: `url(${BlueCard})`,
+              }}
+            ></Box>
             <Box
               sx={{
                 height: 8,
                 mb: 1,
                 borderRadius: '4px',
-                bgcolor: 'background.paper3',
+                bgcolor: 'rgba(255, 255, 255, 0.3)',
+                position: 'relative',
+                zIndex: 2,
               }}
             >
               <Box
                 sx={{
                   height: 8,
-                  background: 'linear-gradient( 90deg, #3248F2 0%, #9E68FC 100%)',
+                  background: 'linear-gradient( 90deg, #021D70 0%, #0A3EBB 100%)',
                   width: `${data.learning.enhance_processing.progress}%`,
                   borderRadius: '4px',
+                  boxShadow: '0 1px 3px rgba(0,0,0,0.2)',
                 }}
               ></Box>
             </Box>
-            <Stack direction="row" justifyContent="space-between" sx={{ fontSize: 12, color: 'text.secondary' }}>
+            <Stack direction="row" justifyContent="space-between" sx={{ fontSize: 12, color: addOpacityToColor('#021D70', 0.6), position: 'relative', zIndex: 2 }}>
               <span>等待: {data.learning.enhance_processing.pending}</span>
               <span>运行: {data.learning.enhance_processing.running}</span>
               <span>总数: {data.learning.enhance_processing.total}</span>
@@ -394,13 +526,48 @@ const System = () => {
           </Card>
 
           {/* 增强处理失败数 */}
-          <Card sx={{ flex: 1, p: 2, boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)' }}>
-            <Box sx={{ fontSize: 14, fontWeight: 600, mb: 1.5, color: 'text.primary' }}>
-              增强处理失败数
-            </Box>
-            <Box sx={{ fontSize: 32, fontWeight: 700, color: 'error.main' }}>
+          <Card
+            sx={{
+              flex: 1,
+              p: 2,
+              boxShadow: '0px 4px 8px rgba(0, 0, 0, 0.1)',
+              position: 'relative',
+              color: '#260A7A',
+              background: 'linear-gradient( 180deg, #F0DDFF 0%, #E6C8FF 100%)',
+            }}
+          >
+            <Box
+              sx={{
+                fontSize: 32,
+                fontWeight: 700,
+                lineHeight: '28px',
+                height: 28,
+                mb: 2,
+              }}
+            >
               {data.learning.enhance_failed}
             </Box>
+            <Box
+              sx={{
+                fontSize: 12,
+                lineHeight: '20px',
+                color: addOpacityToColor('#260A7A', 0.5),
+              }}
+            >
+              增强处理失败数
+            </Box>
+            <Box
+              sx={{
+                height: 80,
+                width: 158,
+                position: 'absolute',
+                bottom: 0,
+                zIndex: 1,
+                right: 0,
+                backgroundSize: 'cover',
+                backgroundImage: `url(${PurpleCard})`,
+              }}
+            ></Box>
           </Card>
         </Stack>
 
@@ -508,6 +675,12 @@ const System = () => {
         </Stack>
       </Box>
 
+      {/* 容器日志对话框 */}
+      <ContainerLogsDialog
+        open={logsDialogOpen}
+        onClose={handleLogsDialogClose}
+        container={selectedContainer}
+      />
     </Box>
   );
 };

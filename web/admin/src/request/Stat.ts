@@ -360,3 +360,54 @@ export const getApiV1System = (
     format: "json",
     ...params,
   });
+
+/**
+ * @description 获取容器日志
+ *
+ * @tags system
+ * @name GetApiV1SystemLogsContainerName
+ * @summary 获取容器日志
+ * @request GET:/api/v1/system/logs/{containerName}
+ * @secure
+ * @response `200` `(DomainPWResponse & {
+ *   data?: V1ContainerLogsResp,
+ *
+ * })` OK
+ */
+
+export interface GetApiV1SystemLogsContainerNameParams {
+  containerName: string;
+  page?: number;
+  limit?: number;
+}
+
+export interface V1ContainerLogsResp {
+  logs: Array<{
+    timestamp: string;
+    message: string;
+    level: string;
+  }>;
+  has_more: boolean;
+  total: number;
+}
+
+export const getApiV1SystemLogsContainerName = (
+  params: GetApiV1SystemLogsContainerNameParams,
+  queryParams: RequestParams = {},
+) =>
+  httpRequest<
+    DomainPWResponse & {
+      data?: V1ContainerLogsResp;
+    }
+  >({
+    path: `/api/v1/system/logs/${params.containerName}`,
+    method: "GET",
+    query: {
+      page: params.page || 1,
+      limit: params.limit || 100,
+    },
+    secure: true,
+    type: ContentType.Json,
+    format: "json",
+    ...queryParams,
+  });

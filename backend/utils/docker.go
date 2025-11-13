@@ -4,6 +4,7 @@ import (
 	"context"
 	"fmt"
 	"io"
+	"regexp"
 	"strings"
 	"time"
 
@@ -316,4 +317,143 @@ func stripDockerLogHeaders(logs string) string {
 	}
 
 	return strings.Join(cleanLines, "\n")
+}
+
+// LogEntry 日志条目结构
+type LogEntry struct {
+	Timestamp string
+	Message   string
+	Level     string
+}
+
+// GetContainerLogsPaginated 获取分页的容器日志
+func GetContainerLogsPaginated(ctx context.Context, containerName string, page, limit int) ([]LogEntry, bool, error) {
+	// 创建 Docker 客户端
+	cli, err := client.NewClientWithOpts(client.FromEnv, client.WithAPIVersionNegotiation())
+	if err != nil {
+		return nil, false, fmt.Errorf("failed to create docker client: %w", err)
+	}
+	defer cli.Close()
+
+	// 获取容器 ID
+	containerID, err := findContainerIDByName(ctx, cli, containerName)
+	if err != nil {
+		return nil, false, fmt.Errorf("failed to find container: %w", err)
+	}
+
+	// 计算偏移量
+	offset := (page - 1) * limit
+	totalLogs := offset + limit + 100 // 多获取一些以判断是否还有更多
+
+	// 获取容器日志
+	options := container.LogsOptions{
+		ShowStdout: true,
+		ShowStderr: true,
+		Tail:       fmt.Sprintf("%d", totalLogs),
+		Timestamps: true,
+	}
+
+	reader, err := cli.ContainerLogs(ctx, containerID, options)
+	if err != nil {
+		return nil, false, fmt.Errorf("failed to get container logs: %w", err)
+	}
+	defer reader.Close()
+
+	// 读取日志内容
+	logBytes, err := io.ReadAll(reader)
+	if err != nil {
+		return nil, false, fmt.Errorf("failed to read logs: %w", err)
+	}
+
+	// 去除 Docker 日志的 header
+	logs := stripDockerLogHeaders(string(logBytes))
+	lines := strings.Split(logs, "\n")
+
+	// 处理日志行
+	var logEntries []LogEntry
+	for i := len(lines) - 1; i >= 0 && len(logEntries) < limit+offset; i-- {
+		line := strings.TrimSpace(lines[i])
+		if line == "" {
+			continue
+		}
+
+		// 解析日志行
+		entry := parseLogLine(line)
+		logEntries = append(logEntries, entry)
+	}
+
+	// 获取当前页的日志
+	var pageLogs []LogEntry
+	if offset < len(logEntries) {
+		end := offset + limit
+		if end > len(logEntries) {
+			end = len(logEntries)
+		}
+		pageLogs = logEntries[offset:end]
+	}
+
+	// 检查是否还有更多日志
+	hasMore := len(lines) >= totalLogs
+
+	return pageLogs, hasMore, nil
+}
+
+// findContainerIDByName 根据容器名称查找容器 ID
+func findContainerIDByName(ctx context.Context, cli *client.Client, containerName string) (string, error) {
+	containers, err := cli.ContainerList(ctx, container.ListOptions{All: true})
+	if err != nil {
+		return "", err
+	}
+
+	for _, c := range containers {
+		// 获取容器名称（去掉前导斜杠）
+		name := strings.TrimPrefix(c.Names[0], "/")
+
+		// 精确匹配容器名称或包含匹配
+		if name == containerName ||
+		   strings.Contains(name, containerName) ||
+		   strings.Contains(containerName, name) {
+			return c.ID, nil
+		}
+	}
+
+	return "", fmt.Errorf("container not found: %s", containerName)
+}
+
+// parseLogLine 解析单行日志
+func parseLogLine(line string) LogEntry {
+	// 默认日志级别
+	level := "info"
+	timestamp := time.Now().Format("2006-01-02 15:04:05")
+	message := line
+
+	// 尝试提取时间戳（Docker 日志格式）
+	if len(line) > 30 {
+		// Docker 日志时间戳格式：2023-11-13T01:11:11.837372923Z
+		timestampRegex := `^(\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d+Z)\s*(.*)`
+		re := regexp.MustCompile(timestampRegex)
+		matches := re.FindStringSubmatch(line)
+		if len(matches) == 3 {
+			timestamp = matches[1]
+			message = strings.TrimSpace(matches[2])
+		}
+	}
+
+	// 检测日志级别
+	lowerMessage := strings.ToLower(message)
+	if strings.Contains(lowerMessage, "error") || strings.Contains(lowerMessage, "fatal") {
+		level = "error"
+	} else if strings.Contains(lowerMessage, "warn") || strings.Contains(lowerMessage, "warning") {
+		level = "warn"
+	} else if strings.Contains(lowerMessage, "debug") {
+		level = "debug"
+	} else if strings.Contains(lowerMessage, "info") {
+		level = "info"
+	}
+
+	return LogEntry{
+		Timestamp: timestamp,
+		Message:   message,
+		Level:     level,
+	}
 }

@@ -51,3 +51,24 @@ type ComponentStatus struct {
 	Health    string `json:"health"`     // 健康状态 (仅RAGLite和Qdrant)
 	LogStatus string `json:"log_status"` // 日志解析状态 (仅RAGLite和Qdrant)
 }
+
+// 容器日志请求
+type ContainerLogsReq struct {
+	ContainerName string `json:"container_name" query:"container_name" validate:"required"`
+	Page          int    `json:"page" query:"page"`           // 页码，从1开始
+	Limit         int    `json:"limit" query:"limit"`         // 每页大小，默认100
+}
+
+// 容器日志响应
+type ContainerLogsResp struct {
+	Logs   []LogEntry `json:"logs"`    // 日志条目
+	HasMore bool      `json:"has_more"` // 是否还有更多日志
+	Total  int64     `json:"total"`    // 总日志数
+}
+
+// 日志条目
+type LogEntry struct {
+	Timestamp string `json:"timestamp"` // 时间戳
+	Message   string `json:"message"`   // 日志消息
+	Level     string `json:"level"`     // 日志级别 (info, warn, error, debug)
+}
