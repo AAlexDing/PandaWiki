@@ -26,6 +26,8 @@ import {
   GetApiV1NodeListParams,
   GetApiV1NodeRecommendNodesParams,
   V1NodeDetailResp,
+  V1NodeRestudyReq,
+  V1NodeRestudyResp,
 } from "./types";
 
 /**
@@ -257,6 +259,38 @@ export const getApiV1NodeRecommendNodes = (
     path: `/api/v1/node/recommend_nodes`,
     method: "GET",
     query: query,
+    secure: true,
+    type: ContentType.Json,
+    format: "json",
+    ...params,
+  });
+
+/**
+ * @description 文档重新学习
+ *
+ * @tags Node
+ * @name PostApiV1NodeRestudy
+ * @summary 文档重新学习
+ * @request POST:/api/v1/node/restudy
+ * @secure
+ * @response `200` `(DomainResponse & {
+    data?: V1NodeRestudyResp,
+
+})` OK
+ */
+
+export const postApiV1NodeRestudy = (
+  param: V1NodeRestudyReq,
+  params: RequestParams = {},
+) =>
+  httpRequest<
+    DomainResponse & {
+      data?: V1NodeRestudyResp;
+    }
+  >({
+    path: `/api/v1/node/restudy`,
+    method: "POST",
+    body: param,
     secure: true,
     type: ContentType.Json,
     format: "json",

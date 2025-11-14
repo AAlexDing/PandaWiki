@@ -4,6 +4,7 @@ import (
 	"context"
 	"errors"
 	"fmt"
+	"slices"
 	"sort"
 	"strconv"
 
@@ -67,12 +68,12 @@ func (u *StatUseCase) ValidateStatDay(statDay consts.StatDay, edition consts.Lic
 	case consts.StatDay1:
 		return nil
 	case consts.StatDay7:
-		if edition < consts.LicenseEditionContributor {
+		if edition == consts.LicenseEditionFree {
 			return domain.ErrPermissionDenied
 		}
 		return nil
 	case consts.StatDay30, consts.StatDay90:
-		if edition < consts.LicenseEditionEnterprise {
+		if !slices.Contains([]consts.LicenseEdition{consts.LicenseEditionBusiness, consts.LicenseEditionEnterprise}, edition) {
 			return domain.ErrPermissionDenied
 		}
 		return nil

@@ -1,5 +1,6 @@
 import { KnowledgeBaseListItem } from '@/api';
 import { useURLSearchParams } from '@/hooks';
+import { useFeatureValue } from '@/hooks';
 import { ConstsUserRole } from '@/request/types';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setKbC, setKbId } from '@/store/slices/config';
@@ -23,13 +24,13 @@ const KBSelect = () => {
 
   const dispatch = useAppDispatch();
   const [_, setSearchParams] = useURLSearchParams();
-  const { kb_id, kbList, license, user } = useAppSelector(
-    state => state.config,
-  );
+  const { kb_id, kbList, user } = useAppSelector(state => state.config);
 
   const [modifyOpen, setModifyOpen] = useState(false);
   const [deleteOpen, setDeleteOpen] = useState(false);
   const [opraData, setOpraData] = useState<KnowledgeBaseListItem | null>(null);
+
+  const wikiCount = useFeatureValue('wikiCount');
 
   return (
     <>
@@ -121,8 +122,7 @@ const KBSelect = () => {
             }}
             fullWidth
             disabled={
-              (license.edition === 0 && (kbList || []).length >= 1) ||
-              (license.edition === 1 && (kbList || []).length >= 3) ||
+              (kbList || []).length >= wikiCount ||
               user.role === ConstsUserRole.UserRoleUser
             }
             onClick={event => {

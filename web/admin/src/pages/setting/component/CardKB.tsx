@@ -38,6 +38,10 @@ import { Controller, useForm } from 'react-hook-form';
 import { useDispatch } from 'react-redux';
 import AddRole from './AddRole';
 import { Form, FormItem, SettingCardItem } from './Common';
+import {
+  PROFESSION_VERSION_PERMISSION,
+  BUSINESS_VERSION_PERMISSION,
+} from '@/constant/version';
 
 type ApiTokenPermission =
   GithubComChaitinPandaWikiProApiTokenV1CreateAPITokenReq['permission'];
@@ -69,8 +73,8 @@ const ApiToken = () => {
       perm: ConstsUserKBPermission.UserKBPermissionFullControl,
     },
   });
-  const isEnterprise = useMemo(() => {
-    return license.edition === 2;
+  const isBusiness = useMemo(() => {
+    return BUSINESS_VERSION_PERMISSION.includes(license.edition!);
   }, [license]);
 
   const onDeleteApiToken = (id: string, name: string) => {
@@ -131,9 +135,9 @@ const ApiToken = () => {
   };
 
   useEffect(() => {
-    if (!kb_id) return;
+    if (!kb_id || !isBusiness) return;
     getApiTokenList();
-  }, [kb_id]);
+  }, [kb_id, isBusiness]);
 
   useEffect(() => {
     if (!addOpen) reset();
@@ -142,27 +146,17 @@ const ApiToken = () => {
   return (
     <SettingCardItem
       title='API Token'
+      permission={BUSINESS_VERSION_PERMISSION}
       extra={
         <Stack direction={'row'} alignItems={'center'}>
           <Button
             color='primary'
             size='small'
-            disabled={!isEnterprise}
             onClick={() => setAddOpen(true)}
             sx={{ textTransform: 'none' }}
           >
             创建 API Token
           </Button>
-
-          <Tooltip title={'企业版可用'} placement='top' arrow>
-            <InfoIcon
-              sx={{
-                color: 'text.secondary',
-                fontSize: 14,
-                display: !isEnterprise ? 'block' : 'none',
-              }}
-            />
-          </Tooltip>
         </Stack>
       }
     >
@@ -232,7 +226,7 @@ const ApiToken = () => {
                 size='small'
                 sx={{ width: 120 }}
                 value={it.permission}
-                disabled={!isEnterprise || user.role !== 'admin'}
+                disabled={!isBusiness || user.role !== 'admin'}
                 onChange={e =>
                   onUpdateApiToken(it.id!, e.target.value as ApiTokenPermission)
                 }
@@ -259,7 +253,7 @@ const ApiToken = () => {
                   kbDetail?.perm !==
                   ConstsUserKBPermission.UserKBPermissionFullControl
                     ? '权限不足'
-                    : '企业版可用'
+                    : '商业版可用'
                 }
                 placement='top'
                 arrow
@@ -270,7 +264,7 @@ const ApiToken = () => {
                     fontSize: 14,
                     ml: 1,
                     visibility:
-                      !isEnterprise ||
+                      !isBusiness ||
                       kbDetail?.perm !==
                         ConstsUserKBPermission.UserKBPermissionFullControl
                         ? 'visible'
@@ -285,13 +279,13 @@ const ApiToken = () => {
                 type='icon-icon_tool_close'
                 sx={{
                   cursor:
-                    !isEnterprise ||
+                    !isBusiness ||
                     kbDetail?.perm !==
                       ConstsUserKBPermission.UserKBPermissionFullControl
                       ? 'not-allowed'
                       : 'pointer',
                   color:
-                    !isEnterprise ||
+                    !isBusiness ||
                     kbDetail?.perm !==
                       ConstsUserKBPermission.UserKBPermissionFullControl
                       ? 'text.disabled'
@@ -299,7 +293,7 @@ const ApiToken = () => {
                 }}
                 onClick={() => {
                   if (
-                    !isEnterprise ||
+                    !isBusiness ||
                     kbDetail?.perm !==
                       ConstsUserKBPermission.UserKBPermissionFullControl
                   )
@@ -367,17 +361,16 @@ const ApiToken = () => {
                     >
                       完全控制
                     </MenuItem>
+
                     <MenuItem
-                      disabled={!isEnterprise}
                       value={ConstsUserKBPermission.UserKBPermissionDocManage}
                     >
-                      文档管理 {isEnterprise ? '' : '(企业版可用)'}
+                      文档管理
                     </MenuItem>
                     <MenuItem
-                      disabled={!isEnterprise}
                       value={ConstsUserKBPermission.UserKBPermissionDataOperate}
                     >
-                      数据运营 {isEnterprise ? '' : '(企业版可用)'}
+                      数据运营
                     </MenuItem>
                   </Select>
                 );
@@ -405,9 +398,9 @@ const CardKB = () => {
     });
   };
 
-  const isEnterprise = useMemo(() => {
-    return license.edition === 2;
-  }, [license]);
+  const isPro = useMemo(() => {
+    return PROFESSION_VERSION_PERMISSION.includes(license.edition!);
+  }, [license.edition]);
 
   useEffect(() => {
     if (!kb_id) return;
@@ -513,7 +506,7 @@ const CardKB = () => {
                   size='small'
                   sx={{ width: 180 }}
                   value={it.perms}
-                  disabled={!isEnterprise || it.role === 'admin'}
+                  disabled={!isPro || it.role === 'admin'}
                   onChange={e =>
                     onUpdateUserPermission(
                       it.id!,
@@ -542,7 +535,7 @@ const CardKB = () => {
                   title={
                     it.role === 'admin'
                       ? '超级管理员不可被修改权限'
-                      : '企业版可用'
+                      : '专业版可用'
                   }
                   placement='top'
                   arrow
@@ -553,9 +546,7 @@ const CardKB = () => {
                       fontSize: 14,
                       ml: 1,
                       visibility:
-                        !isEnterprise || it.role === 'admin'
-                          ? 'visible'
-                          : 'hidden',
+                        !isPro || it.role === 'admin' ? 'visible' : 'hidden',
                     }}
                   />
                 </Tooltip>

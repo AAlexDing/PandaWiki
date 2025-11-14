@@ -175,10 +175,12 @@ export enum ConstsNodeAccessPerm {
 export enum ConstsLicenseEdition {
   /** 开源版 */
   LicenseEditionFree = 0,
-  /** 联创版 */
-  LicenseEditionContributor = 1,
+  /** 专业版 */
+  LicenseEditionProfession = 1,
   /** 企业版 */
   LicenseEditionEnterprise = 2,
+  /** 商业版 */
+  LicenseEditionBusiness = 3,
 }
 
 export enum ConstsHomePageSetting {
@@ -1645,8 +1647,9 @@ export interface V1NodePermissionResp {
 }
 
 export interface V1NodeRestudyReq {
-  kb_id?: string;
-  node_ids?: string[];
+  kb_id: string;
+  /** @minItems 1 */
+  node_ids: string[];
 }
 
 export type V1NodeRestudyResp = Record<string, any>;

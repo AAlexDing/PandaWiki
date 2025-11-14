@@ -91,11 +91,7 @@ func (h *KnowledgeBaseHandler) CreateKnowledgeBase(c echo.Context) error {
 		return h.NewResponseWithError(c, "ports is required", nil)
 	}
 
-	req.MaxKB = 1
-	maxKB := c.Get("max_kb")
-	if maxKB != nil {
-		req.MaxKB = maxKB.(int)
-	}
+	req.MaxKB = domain.GetBaseEditionLimitation(c.Request().Context()).MaxKb
 
 	did, err := h.usecase.CreateKnowledgeBase(c.Request().Context(), &req)
 	if err != nil {

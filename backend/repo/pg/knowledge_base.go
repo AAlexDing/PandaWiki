@@ -341,11 +341,12 @@ func (r *KnowledgeBaseRepository) CreateKnowledgeBase(ctx context.Context, maxKB
 			Name: kb.Name,
 			Type: domain.AppTypeWeb,
 			Settings: domain.AppSettings{
-				Title:      kb.Name,
-				Desc:       kb.Name,
-				Keyword:    kb.Name,
-				Icon:       domain.DefaultPandaWikiIconB64,
-				WelcomeStr: fmt.Sprintf("欢迎使用%s", kb.Name),
+				Title:       kb.Name,
+				Desc:        kb.Name,
+				Keyword:     kb.Name,
+				AutoSitemap: true,
+				Icon:        domain.DefaultPandaWikiIconB64,
+				WelcomeStr:  fmt.Sprintf("欢迎使用%s", kb.Name),
 				Btns: []any{
 					AppBtn{
 						ID:       uuid.New().String(),

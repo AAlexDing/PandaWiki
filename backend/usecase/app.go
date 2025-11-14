@@ -88,34 +88,38 @@ func NewAppUsecase(
 }
 
 func (u *AppUsecase) ValidateUpdateApp(ctx context.Context, id string, req *domain.UpdateAppReq, edition consts.LicenseEdition) error {
-	switch edition {
-	case consts.LicenseEditionFree:
-		app, err := u.repo.GetAppDetail(ctx, id)
-		if err != nil {
-			return err
-		}
-		if app.Settings.WatermarkContent != req.Settings.WatermarkContent ||
-			app.Settings.WatermarkSetting != req.Settings.WatermarkSetting ||
-			app.Settings.ContributeSettings != req.Settings.ContributeSettings ||
-			app.Settings.CopySetting != req.Settings.CopySetting {
-			return domain.ErrPermissionDenied
-		}
-	case consts.LicenseEditionContributor:
-		app, err := u.repo.GetAppDetail(ctx, id)
-		if err != nil {
-			return err
-		}
-		if app.Settings.WatermarkContent != req.Settings.WatermarkContent ||
-			app.Settings.WatermarkSetting != req.Settings.WatermarkSetting ||
-			app.Settings.CopySetting != req.Settings.CopySetting {
-			return domain.ErrPermissionDenied
-		}
-	case consts.LicenseEditionEnterprise:
-		return nil
-	default:
-		return fmt.Errorf("unsupported license type: %d", edition)
+	app, err := u.repo.GetAppDetail(ctx, id)
+	if err != nil {
+		return err
 	}
 
+	limitation := domain.GetBaseEditionLimitation(ctx)
+	if !limitation.AllowCopyProtection && app.Settings.CopySetting != req.Settings.CopySetting {
+		return domain.ErrPermissionDenied
+	}
+
+	if !limitation.AllowWatermark {
+		if app.Settings.WatermarkSetting != req.Settings.WatermarkSetting || app.Settings.WatermarkContent != req.Settings.WatermarkContent {
+			return domain.ErrPermissionDenied
+		}
+	}
+
+	if !limitation.AllowAdvancedBot {
+		if !slices.Equal(app.Settings.WechatServiceContainKeywords, req.Settings.WechatServiceContainKeywords) ||
+			!slices.Equal(app.Settings.WechatServiceEqualKeywords, req.Settings.WechatServiceEqualKeywords) {
+			return domain.ErrPermissionDenied
+		}
+	}
+
+	if !limitation.AllowCommentAudit && app.Settings.WebAppCommentSettings.ModerationEnable != req.Settings.WebAppCommentSettings.ModerationEnable {
+		return domain.ErrPermissionDenied
+	}
+
+	if !limitation.AllowOpenAIBotSettings {
+		if app.Settings.OpenAIAPIBotSettings.IsEnabled != req.Settings.OpenAIAPIBotSettings.IsEnabled || app.Settings.OpenAIAPIBotSettings.SecretKey != req.Settings.OpenAIAPIBotSettings.SecretKey {
+			return domain.ErrPermissionDenied
+		}
+	}
 	return nil
 }
 
@@ -618,8 +622,8 @@ func (u *AppUsecase) ShareGetWebAppInfo(ctx context.Context, kbID string, authId
 	}
 	showBrand := true
 	defaultDisclaimer := "本回答由 PandaWiki 基于 AI 生成，仅供参考。"
-	licenseEdition, _ := ctx.Value(consts.ContextKeyEdition).(consts.LicenseEdition)
-	if licenseEdition < consts.LicenseEditionEnterprise {
+
+	if !domain.GetBaseEditionLimitation(ctx).AllowCustomCopyright {
 		appInfo.Settings.WebAppCustomSettings.ShowBrandInfo = &showBrand
 		appInfo.Settings.DisclaimerSettings.Content = &defaultDisclaimer
 	} else {

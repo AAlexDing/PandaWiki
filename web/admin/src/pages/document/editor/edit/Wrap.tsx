@@ -29,6 +29,7 @@ import Header from './Header';
 import Summary from './Summary';
 import Toc from './Toc';
 import Toolbar from './Toolbar';
+import { BUSINESS_VERSION_PERMISSION } from '@/constant/version';
 
 interface WrapProps {
   detail: V1NodeDetailResp;
@@ -72,8 +73,8 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
     emoji: defaultDetail.meta?.emoji || '',
   });
 
-  const isEnterprise = useMemo(() => {
-    return license.edition === 2;
+  const isBusiness = useMemo(() => {
+    return BUSINESS_VERSION_PERMISSION.includes(license.edition!);
   }, [license]);
 
   const debouncedUpdateSummary = useCallback(
@@ -383,7 +384,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
               </Stack>
             </Tooltip>
           )}
-          <Tooltip arrow title={isEnterprise ? '查看历史版本' : ''}>
+          <Tooltip arrow title={isBusiness ? '查看历史版本' : ''}>
             <Stack
               direction={'row'}
               alignItems={'center'}
@@ -391,13 +392,13 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
               sx={{
                 fontSize: 12,
                 color: 'text.tertiary',
-                cursor: isEnterprise ? 'pointer' : 'text',
+                cursor: isBusiness ? 'pointer' : 'text',
                 ':hover': {
-                  color: isEnterprise ? 'primary.main' : 'text.tertiary',
+                  color: isBusiness ? 'primary.main' : 'text.tertiary',
                 },
               }}
               onClick={() => {
-                if (isEnterprise) {
+                if (isBusiness) {
                   navigate(`/doc/editor/history/${defaultDetail.id}`);
                 }
               }}

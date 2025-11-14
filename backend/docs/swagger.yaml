@@ -117,20 +117,24 @@ definitions:
     - 0
     - 1
     - 2
+    - 3
     format: int32
     type: integer
     x-enum-comments:
-      LicenseEditionContributor: 联创版
+      LicenseEditionBusiness: 商业版
       LicenseEditionEnterprise: 企业版
       LicenseEditionFree: 开源版
+      LicenseEditionProfession: 专业版
     x-enum-descriptions:
     - 开源版
-    - 联创版
+    - 专业版
     - 企业版
+    - 商业版
     x-enum-varnames:
     - LicenseEditionFree
-    - LicenseEditionContributor
+    - LicenseEditionProfession
     - LicenseEditionEnterprise
+    - LicenseEditionBusiness
   consts.ModelSettingMode:
     enum:
     - manual

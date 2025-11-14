@@ -407,7 +407,7 @@ func (u *NodeUsecase) GetNodePermissionsByID(ctx context.Context, id, kbID strin
 }
 
 func (u *NodeUsecase) ValidateNodePermissionsEdit(req v1.NodePermissionEditReq, edition consts.LicenseEdition) error {
-	if edition != consts.LicenseEditionEnterprise {
+	if !slices.Contains([]consts.LicenseEdition{consts.LicenseEditionBusiness, consts.LicenseEditionEnterprise}, edition) {
 		if req.Permissions.Answerable == consts.NodeAccessPermPartial || req.Permissions.Visitable == consts.NodeAccessPermPartial || req.Permissions.Visible == consts.NodeAccessPermPartial {
 			return domain.ErrPermissionDenied
 		}

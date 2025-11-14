@@ -52,10 +52,12 @@ export enum ConstsSourceType {
 export enum ConstsLicenseEdition {
   /** 开源版 */
   LicenseEditionFree = 0,
-  /** 联创版 */
-  LicenseEditionContributor = 1,
+  /** 专业版 */
+  LicenseEditionProfession = 1,
   /** 企业版 */
   LicenseEditionEnterprise = 2,
+  /** 商业版 */
+  LicenseEditionBusiness = 3,
 }
 
 export enum ConstsContributeType {
@@ -465,6 +467,7 @@ export interface GithubComChaitinPandaWikiProApiShareV1AuthOAuthResp {
 }
 
 export interface GithubComChaitinPandaWikiProApiShareV1AuthWecomReq {
+  is_app?: boolean;
   kb_id?: string;
   redirect_url?: string;
 }
@@ -668,8 +671,6 @@ export interface GetApiProV1TokenListParams {
 }
 
 export interface PostApiV1LicensePayload {
-  /** license edition */
-  license_edition: "contributor" | "enterprise";
   /** license type */
   license_type: "file" | "code";
   /**

@@ -144,7 +144,7 @@ const Config: React.FC<ConfigProps> = ({ setIsEdit, id }) => {
       callback();
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [subscribe]);
+  }, [subscribe, appPreviewData, id]);
 
   return (
     <StyledCommonWrapper>

@@ -2,7 +2,6 @@ package v1
 
 import (
 	"errors"
-	"math"
 
 	"github.com/labstack/echo/v4"
 
@@ -82,15 +81,13 @@ func (h *NodeHandler) CreateNode(c echo.Context) error {
 	if err := c.Validate(req); err != nil {
 		return h.NewResponseWithError(c, "validate request body failed", err)
 	}
-	req.MaxNode = math.MaxInt
-	if maxNode := c.Get("max_node"); maxNode != nil {
-		req.MaxNode = maxNode.(int)
-	}
+
+	req.MaxNode = domain.GetBaseEditionLimitation(ctx).MaxNode
 
 	id, err := h.usecase.Create(c.Request().Context(), req, authInfo.UserId)
 	if err != nil {
 		if errors.Is(err, domain.ErrMaxNodeLimitReached) {
-			return h.NewResponseWithError(c, "已达到最大文档数量限制，请升级到联创版或企业版", nil)
+			return h.NewResponseWithError(c, "已达到最大文档数量限制，请升级到更高版本", nil)
 		}
 		return h.NewResponseWithError(c, "create node failed", err)
 	}

@@ -4067,22 +4067,26 @@ const docTemplate = `{
             "enum": [
                 0,
                 1,
-                2
+                2,
+                3
             ],
             "x-enum-comments": {
-                "LicenseEditionContributor": "联创版",
+                "LicenseEditionBusiness": "商业版",
                 "LicenseEditionEnterprise": "企业版",
-                "LicenseEditionFree": "开源版"
+                "LicenseEditionFree": "开源版",
+                "LicenseEditionProfession": "专业版"
             },
             "x-enum-descriptions": [
                 "开源版",
-                "联创版",
-                "企业版"
+                "专业版",
+                "企业版",
+                "商业版"
             ],
             "x-enum-varnames": [
                 "LicenseEditionFree",
-                "LicenseEditionContributor",
-                "LicenseEditionEnterprise"
+                "LicenseEditionProfession",
+                "LicenseEditionEnterprise",
+                "LicenseEditionBusiness"
             ]
         },
         "consts.ModelSettingMode": {

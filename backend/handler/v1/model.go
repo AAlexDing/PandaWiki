@@ -46,7 +46,7 @@ func NewModelHandler(echo *echo.Echo, baseHandler *handler.BaseHandler, logger *
 	return handler
 }
 
-// get model list
+// GetModelList
 //
 //	@Summary		get model list
 //	@Description	get model list
@@ -66,7 +66,7 @@ func (h *ModelHandler) GetModelList(c echo.Context) error {
 	return h.NewResponseWithData(c, models)
 }
 
-// create model
+// CreateModel
 //
 //	@Summary		create model
 //	@Description	create model
@@ -85,9 +85,6 @@ func (h *ModelHandler) CreateModel(c echo.Context) error {
 		return h.NewResponseWithError(c, "invalid request", err)
 	}
 
-	if consts.GetLicenseEdition(c) == consts.LicenseEditionContributor && req.Provider != domain.ModelProviderBrandBaiZhiCloud {
-		return h.NewResponseWithError(c, "联创版只能使用百智云模型哦~", nil)
-	}
 	ctx := c.Request().Context()
 
 	param := domain.ModelParam{}
@@ -112,7 +109,7 @@ func (h *ModelHandler) CreateModel(c echo.Context) error {
 	return h.NewResponseWithData(c, model)
 }
 
-// update model
+// UpdateModel
 //
 //	@Description	update model
 //	@Tags			model
@@ -130,9 +127,6 @@ func (h *ModelHandler) UpdateModel(c echo.Context) error {
 		return h.NewResponseWithError(c, "invalid request", err)
 	}
 
-	if consts.GetLicenseEdition(c) == consts.LicenseEditionContributor && req.Provider != domain.ModelProviderBrandBaiZhiCloud {
-		return h.NewResponseWithError(c, "联创版只能使用百智云模型哦~", nil)
-	}
 	ctx := c.Request().Context()
 	if err := h.usecase.Update(ctx, &req); err != nil {
 		return h.NewResponseWithError(c, "update model failed", err)
@@ -140,7 +134,7 @@ func (h *ModelHandler) UpdateModel(c echo.Context) error {
 	return h.NewResponseWithData(c, nil)
 }
 
-// check model
+// CheckModel
 //
 //	@Summary		check model
 //	@Description	check model

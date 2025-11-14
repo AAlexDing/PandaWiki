@@ -28,6 +28,7 @@ import {
   ButtonBase,
 } from '@mui/material';
 import { Ellipsis, Table, Modal, Icon, message } from '@ctzhian/ui';
+import { PROFESSION_VERSION_PERMISSION } from '@/constant/version';
 import dayjs from 'dayjs';
 import { useEffect, useState, useMemo } from 'react';
 
@@ -162,8 +163,8 @@ const Comments = ({
     useState<DomainWebAppCommentSettings | null>(null);
 
   const isEnableReview = useMemo(() => {
-    return !!(license.edition === 1 || license.edition === 2);
-  }, [license]);
+    return PROFESSION_VERSION_PERMISSION.includes(license.edition!);
+  }, [license.edition]);
 
   useEffect(() => {
     setShowCommentsFilter(isEnableReview);

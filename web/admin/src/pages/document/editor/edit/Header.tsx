@@ -22,6 +22,8 @@ import { useNavigate, useOutletContext } from 'react-router-dom';
 import { WrapContext } from '..';
 import DocAddByCustomText from '../../component/DocAddByCustomText';
 import DocDelete from '../../component/DocDelete';
+import { BUSINESS_VERSION_PERMISSION } from '@/constant/version';
+import { VersionCanUse } from '@/components/VersionMask';
 
 interface HeaderProps {
   edit: boolean;
@@ -52,8 +54,8 @@ const Header = ({
 
   const [showSaveTip, setShowSaveTip] = useState(false);
 
-  const isEnterprise = useMemo(() => {
-    return license.edition === 2;
+  const isBusiness = useMemo(() => {
+    return BUSINESS_VERSION_PERMISSION.includes(license.edition!);
   }, [license]);
 
   const handlePublish = useCallback(() => {
@@ -309,6 +311,7 @@ const Header = ({
               // },
               {
                 key: 'copy',
+                textSx: { flex: 1 },
                 label: <StyledMenuSelect>复制</StyledMenuSelect>,
                 onClick: () => {
                   if (kb_id) {
@@ -328,26 +331,22 @@ const Header = ({
               },
               {
                 key: 'version',
+                textSx: { flex: 1 },
                 label: (
-                  <StyledMenuSelect disabled={!isEnterprise}>
-                    历史版本{' '}
-                    {!isEnterprise && (
-                      <Tooltip title='企业版可用' placement='top' arrow>
-                        <InfoIcon
-                          sx={{ color: 'text.secondary', fontSize: 14 }}
-                        />
-                      </Tooltip>
-                    )}
+                  <StyledMenuSelect disabled={!isBusiness}>
+                    历史版本
+                    <VersionCanUse permission={BUSINESS_VERSION_PERMISSION} />
                   </StyledMenuSelect>
                 ),
                 onClick: () => {
-                  if (isEnterprise) {
+                  if (isBusiness) {
                     navigate(`/doc/editor/history/${detail.id}`);
                   }
                 },
               },
               {
                 key: 'rename',
+                textSx: { flex: 1 },
                 label: <StyledMenuSelect>重命名</StyledMenuSelect>,
                 onClick: () => {
                   setRenameOpen(true);
@@ -355,6 +354,7 @@ const Header = ({
               },
               {
                 key: 'delete',
+                textSx: { flex: 1 },
                 label: <StyledMenuSelect>删除</StyledMenuSelect>,
                 onClick: () => {
                   setDelOpen(true);
@@ -566,7 +566,7 @@ const StyledMenuSelect = styled('div')<{ disabled?: boolean }>(
     padding: theme.spacing(0, 2),
     lineHeight: '40px',
     height: 40,
-    width: 106,
+    minWidth: 106,
     borderRadius: '5px',
     color: disabled ? theme.palette.text.secondary : theme.palette.text.primary,
     cursor: disabled ? 'not-allowed' : 'pointer',

@@ -3,27 +3,20 @@ import {
   getApiV1License,
   deleteApiV1License,
 } from '@/request/pro/License';
-import { PostApiV1LicensePayload } from '@/request/pro/types';
 import HelpCenter from '@/assets/json/help-center.json';
 import Takeoff from '@/assets/json/takeoff.json';
 import error from '@/assets/json/error.json';
 import IconUpgrade from '@/assets/json/upgrade.json';
 import Upload from '@/components/UploadFile/Drag';
-import { EditionType } from '@/constant/enums';
+import { useVersionInfo } from '@/hooks';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setLicense } from '@/store/slices/config';
-import {
-  Box,
-  Button,
-  IconButton,
-  MenuItem,
-  Stack,
-  TextField,
-} from '@mui/material';
+import { Box, Button, IconButton, Stack, TextField } from '@mui/material';
 import { CusTabs, Icon, message, Modal } from '@ctzhian/ui';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import LottieIcon from '../LottieIcon';
+import { ConstsLicenseEdition } from '@/request/types';
 
 interface AuthTypeModalProps {
   open: boolean;
@@ -42,10 +35,9 @@ const AuthTypeModal = ({
   const { license } = useAppSelector(state => state.config);
 
   const [selected, setSelected] = useState<'file' | 'code'>(
-    license.edition === 2 ? 'file' : 'code',
-  );
-  const [authVersion, setAuthVersion] = useState<'contributor' | 'enterprise'>(
-    license.edition === 2 ? 'enterprise' : 'contributor',
+    license.edition === ConstsLicenseEdition.LicenseEditionEnterprise
+      ? 'file'
+      : 'code',
   );
   const [updateOpen, setUpdateOpen] = useState(false);
   const [code, setCode] = useState('');
@@ -53,16 +45,15 @@ const AuthTypeModal = ({
   const [file, setFile] = useState<File | undefined>(undefined);
   const [unbindLoading, setUnbindLoading] = useState(false);
 
+  const versionInfo = useVersionInfo();
+
   const handleSubmit = () => {
-    const params: PostApiV1LicensePayload = {
-      license_edition: authVersion,
+    setLoading(true);
+    postApiV1License({
       license_type: selected,
       license_code: code,
       license_file: file,
-    };
-    setLoading(true);
-
-    postApiV1License(params)
+    })
       .then(() => {
         message.success('激活成功');
         setUpdateOpen(false);
@@ -148,10 +139,8 @@ const AuthTypeModal = ({
           <Stack direction={'row'} alignItems={'center'}>
             <Box sx={{ width: 120, flexShrink: 0 }}>产品型号</Box>
             <Stack direction={'row'} alignItems={'center'} gap={2}>
-              <Box sx={{ minWidth: 50 }}>
-                {EditionType[license.edition as keyof typeof EditionType].text}
-              </Box>
-              {license.edition === 0 ? (
+              <Box sx={{ minWidth: 50 }}>{versionInfo.label}</Box>
+              {license.edition === ConstsLicenseEdition.LicenseEditionFree ? (
                 <Stack direction={'row'} gap={2}>
                   <Button
                     size='small'
@@ -240,7 +229,7 @@ const AuthTypeModal = ({
               )}
             </Stack>
           </Stack>
-          {license.edition! > 0 && (
+          {license.edition! !== ConstsLicenseEdition.LicenseEditionFree && (
             <Box>
               <Stack direction={'row'} alignItems={'center'}>
                 <Box sx={{ width: 120, flexShrink: 0 }}>授权时间</Box>
@@ -288,18 +277,6 @@ const AuthTypeModal = ({
           value={selected}
           change={(v: string) => setSelected(v as 'file' | 'code')}
         />
-        <TextField
-          select
-          fullWidth
-          sx={{ mt: 2 }}
-          value={authVersion}
-          onChange={e =>
-            setAuthVersion(e.target.value as 'contributor' | 'enterprise')
-          }
-        >
-          <MenuItem value='contributor'>联创版</MenuItem>
-          <MenuItem value='enterprise'>企业版</MenuItem>
-        </TextField>
         {selected === 'code' && (
           <TextField
             sx={{ mt: 2 }}

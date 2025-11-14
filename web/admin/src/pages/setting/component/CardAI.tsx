@@ -1,5 +1,6 @@
 import { getApiProV1Prompt, postApiProV1Prompt } from '@/request/pro/Prompt';
 import { DomainKnowledgeBaseDetail } from '@/request/types';
+import { PROFESSION_VERSION_PERMISSION } from '@/constant/version';
 import { useAppSelector } from '@/store';
 import { message } from '@ctzhian/ui';
 import { Box, Slider, TextField } from '@mui/material';
@@ -33,11 +34,12 @@ const CardAI = ({ kb }: CardAIProps) => {
   });
 
   const isPro = useMemo(() => {
-    return license.edition === 1 || license.edition === 2;
+    return PROFESSION_VERSION_PERMISSION.includes(license.edition!);
   }, [license]);
 
   useEffect(() => {
-    if (!kb.id || !isPro) return;
+    if (!kb.id || !PROFESSION_VERSION_PERMISSION.includes(license.edition!))
+      return;
     getApiProV1Prompt({ kb_id: kb.id! }).then(res => {
       setValue('content', res.content || '');
     });
@@ -54,7 +56,7 @@ const CardAI = ({ kb }: CardAIProps) => {
       <SettingCardItem title='智能问答' isEdit={isEdit} onSubmit={onSubmit}>
         <FormItem
           vertical
-          tooltip={!isPro && '联创版和企业版可用'}
+          permission={PROFESSION_VERSION_PERMISSION}
           extra={
             <Box
               sx={{

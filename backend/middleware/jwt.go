@@ -6,6 +6,7 @@ import (
 	"encoding/json"
 	"io"
 	"net/http"
+	"slices"
 	"strings"
 
 	"github.com/golang-jwt/jwt/v5"
@@ -194,7 +195,7 @@ func (m *JWTMiddleware) ValidateKBUserPerm(perm consts.UserKBPermission) echo.Mi
 	}
 }
 
-func (m *JWTMiddleware) ValidateLicenseEdition(needEdition consts.LicenseEdition) echo.MiddlewareFunc {
+func (m *JWTMiddleware) ValidateLicenseEdition(needEditions ...consts.LicenseEdition) echo.MiddlewareFunc {
 	return func(next echo.HandlerFunc) echo.HandlerFunc {
 		return func(c echo.Context) error {
 
@@ -206,7 +207,7 @@ func (m *JWTMiddleware) ValidateLicenseEdition(needEdition consts.LicenseEdition
 				})
 			}
 
-			if edition < needEdition {
+			if !slices.Contains(needEditions, edition) {
 				return c.JSON(http.StatusForbidden, domain.PWResponse{
 					Success: false,
 					Message: "Unauthorized ValidateLicenseEdition",

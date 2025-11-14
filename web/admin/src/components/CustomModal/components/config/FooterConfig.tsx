@@ -10,6 +10,8 @@ import { setAppPreviewData } from '@/store/slices/config';
 import { DomainSocialMediaAccount } from '@/request/types';
 import Switch from '../basicComponents/Switch';
 import DragSocialInfo from '../basicComponents/DragSocialInfo';
+import VersionMask from '@/components/VersionMask';
+import { PROFESSION_VERSION_PERMISSION } from '@/constant/version';
 
 interface FooterConfigProps {
   data?: AppDetail | null;
@@ -75,9 +77,6 @@ const FooterConfig = ({ data, setIsEdit, isEdit }: FooterConfigProps) => {
   );
   const footer_show_intro = watch('footer_show_intro');
 
-  const isEnterprise = useMemo(() => {
-    return license.edition === 2;
-  }, [license]);
   useEffect(() => {
     if (isEdit && appPreviewData) {
       setValue(
@@ -506,29 +505,33 @@ const FooterConfig = ({ data, setIsEdit, isEdit }: FooterConfigProps) => {
             )}
           />
         </Stack>
-        {isEnterprise && (
-          <Stack direction={'column'} gap={2}>
-            <Box
-              sx={{
-                fontSize: 14,
-                lineHeight: '22px',
-                flexShrink: 0,
-                display: 'flex',
-                alignItems: 'center',
-                fontWeight: 600,
-                '&::before': {
-                  content: '""',
-                  display: 'inline-block',
-                  width: 4,
-                  height: 12,
-                  bgcolor: '#3248F2',
-                  borderRadius: '2px',
-                  mr: 1,
-                },
-              }}
-            >
-              PandaWiki 版权信息
-            </Box>
+
+        <Stack direction={'column'} gap={2}>
+          <Box
+            sx={{
+              fontSize: 14,
+              lineHeight: '22px',
+              flexShrink: 0,
+              display: 'flex',
+              alignItems: 'center',
+              fontWeight: 600,
+              '&::before': {
+                content: '""',
+                display: 'inline-block',
+                width: 4,
+                height: 12,
+                bgcolor: '#3248F2',
+                borderRadius: '2px',
+                mr: 1,
+              },
+            }}
+          >
+            PandaWiki 版权信息
+          </Box>
+          <VersionMask
+            permission={PROFESSION_VERSION_PERMISSION}
+            sx={{ inset: '-8px 0' }}
+          >
             <Controller
               control={control}
               name='show_brand_info'
@@ -548,7 +551,6 @@ const FooterConfig = ({ data, setIsEdit, isEdit }: FooterConfigProps) => {
                   <Switch
                     sx={{ marginLeft: 'auto' }}
                     {...field}
-                    disabled={!isEnterprise}
                     checked={field?.value === false ? false : true}
                     onChange={e => {
                       field.onChange(e.target.checked);
@@ -558,8 +560,8 @@ const FooterConfig = ({ data, setIsEdit, isEdit }: FooterConfigProps) => {
                 </Stack>
               )}
             />
-          </Stack>
-        )}
+          </VersionMask>
+        </Stack>
       </Stack>
     </>
   );

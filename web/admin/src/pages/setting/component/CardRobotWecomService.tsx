@@ -19,6 +19,8 @@ import {
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { FormItem, SettingCardItem } from './Common';
+import VersionMask from '@/components/VersionMask';
+import { PROFESSION_VERSION_PERMISSION } from '@/constant/version';
 
 const CardRobotWecomService = ({
   kb,
@@ -262,38 +264,40 @@ const CardRobotWecomService = ({
             <Icon type='icon-jinggao' sx={{ fontSize: 18 }} />
             人工客服转接配置：当用户触发以下场景时，会自动转接人工客服
           </Stack>
-          <FormItem
-            label={
-              <Box>
-                提问
-                <Box component={'span'} sx={{ fontWeight: 600 }}>
-                  包含特定
+          <VersionMask permission={PROFESSION_VERSION_PERMISSION}>
+            <FormItem
+              label={
+                <Box>
+                  提问
+                  <Box component={'span'} sx={{ fontWeight: 600 }}>
+                    包含特定
+                  </Box>
+                  关键词
                 </Box>
-                关键词
-              </Box>
-            }
-          >
-            <FreeSoloAutocomplete
-              placeholder='回车确认，填写下一个'
-              {...containKeywordsField}
-            />
-          </FormItem>
-          <FormItem
-            label={
-              <Box>
-                提问
-                <Box component={'span'} sx={{ fontWeight: 600 }}>
-                  完全匹配
+              }
+            >
+              <FreeSoloAutocomplete
+                placeholder='回车确认，填写下一个'
+                {...containKeywordsField}
+              />
+            </FormItem>
+            <FormItem
+              label={
+                <Box>
+                  提问
+                  <Box component={'span'} sx={{ fontWeight: 600 }}>
+                    完全匹配
+                  </Box>
+                  关键词
                 </Box>
-                关键词
-              </Box>
-            }
-          >
-            <FreeSoloAutocomplete
-              placeholder='回车确认，填写下一个'
-              {...equalKeywordsField}
-            />
-          </FormItem>
+              }
+            >
+              <FreeSoloAutocomplete
+                placeholder='回车确认，填写下一个'
+                {...equalKeywordsField}
+              />
+            </FormItem>
+          </VersionMask>
         </>
       )}
     </SettingCardItem>

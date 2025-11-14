@@ -683,7 +683,7 @@ func (r *NodeRepository) GetNodeReleaseListByKBID(ctx context.Context, kbID stri
 		Where("kb_release_node_releases.kb_id = ?", kbID).
 		Where("kb_release_node_releases.release_id = ?", kbRelease.ID).
 		Where("nodes.permissions->>'visible' != ?", consts.NodeAccessPermClosed).
-		Select("node_releases.node_id as id, node_releases.name, node_releases.type, node_releases.parent_id, node_releases.position, node_releases.meta->>'emoji' as emoji, node_releases.updated_at, nodes.permissions").
+		Select("node_releases.node_id as id, node_releases.name, node_releases.type, node_releases.parent_id, nodes.position, node_releases.meta->>'emoji' as emoji, node_releases.updated_at, nodes.permissions").
 		Find(&nodes).Error; err != nil {
 		return nil, err
 	}

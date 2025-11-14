@@ -25,6 +25,7 @@ import {
   IconButton,
   Stack,
   useTheme,
+  ButtonBase,
 } from '@mui/material';
 import { useCallback, useEffect, useRef, useState } from 'react';
 import VersionPublish from '../release/components/VersionPublish';
@@ -418,15 +419,19 @@ const Content = () => {
                 >
                   {publish.unpublished} 个 文档/文件夹未发布，
                 </Box>
-                <Button
-                  size='small'
-                  sx={{ minWidth: 0, p: 0, fontSize: 12 }}
+                <ButtonBase
+                  disableRipple
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 400,
+                    color: 'primary.main',
+                  }}
                   onClick={() => {
                     setPublishOpen(true);
                   }}
                 >
                   去发布
-                </Button>
+                </ButtonBase>
               </>
             )}
             {ragReStartCount > 0 && (

@@ -82,6 +82,8 @@ export interface ConversationItem {
   message_id: string;
   source: 'history' | 'chat';
   chunk_result: ChunkResultItem[];
+  result_expend: boolean;
+  thinking_expend: boolean;
   thinking_content: string;
   id: string;
 }
@@ -382,6 +384,8 @@ const AiQaContent: React.FC<{
       const solution = await cap.solve();
       token = solution.token;
     } catch (error) {
+      setLoading(false);
+      setThinking(4);
       message.error('验证失败');
       console.log(error, 'error---------');
       return;
@@ -465,6 +469,8 @@ const AiQaContent: React.FC<{
                 if (lastConversation) {
                   lastConversation.a = answerContent;
                   lastConversation.thinking_content = thinkingContent;
+                  lastConversation.result_expend = false;
+                  lastConversation.thinking_expend = false;
                 }
                 return newConversation;
               });
@@ -513,6 +519,8 @@ const AiQaContent: React.FC<{
       source: 'chat',
       chunk_result: [],
       thinking_content: '',
+      result_expend: true,
+      thinking_expend: true,
       id: uuidv4(),
     });
     messageIdRef.current = '';
@@ -631,6 +639,8 @@ const AiQaContent: React.FC<{
                   source: 'history',
                   chunk_result: [],
                   thinking_content: '',
+                  result_expend: true,
+                  thinking_expend: true,
                   id: uuidv4(),
                 });
               }
@@ -667,6 +677,8 @@ const AiQaContent: React.FC<{
               chunk_result: [],
               thinking_content: '',
               id: uuidv4(),
+              result_expend: true,
+              thinking_expend: true,
             });
           }
         }
@@ -791,7 +803,16 @@ const AiQaContent: React.FC<{
               <StyledAiBubble>
                 {/* 搜索结果 */}
                 {item.chunk_result.length > 0 && (
-                  <StyledChunkAccordion defaultExpanded>
+                  <StyledChunkAccordion
+                    expanded={item.result_expend}
+                    onChange={(event, expanded) => {
+                      setConversation(prev => {
+                        const newConversation = [...prev];
+                        newConversation[index].result_expend = expanded;
+                        return newConversation;
+                      });
+                    }}
+                  >
                     <StyledChunkAccordionSummary
                       expandIcon={<ExpandMoreIcon sx={{ fontSize: 16 }} />}
                     >
@@ -837,7 +858,16 @@ const AiQaContent: React.FC<{
 
                 {/* 思考过程 */}
                 {!!item.thinking_content && (
-                  <StyledThinkingAccordion defaultExpanded>
+                  <StyledThinkingAccordion
+                    expanded={item.thinking_expend}
+                    onChange={(event, expanded) => {
+                      setConversation(prev => {
+                        const newConversation = [...prev];
+                        newConversation[index].thinking_expend = expanded;
+                        return newConversation;
+                      });
+                    }}
+                  >
                     <StyledThinkingAccordionSummary
                       expandIcon={<ExpandMoreIcon sx={{ fontSize: 16 }} />}
                     >
@@ -929,6 +959,9 @@ const AiQaContent: React.FC<{
                         </>
                       )}
                     </Stack>
+                    <Box>
+                      {kbDetail?.settings?.disclaimer_settings?.content}
+                    </Box>
                   </StyledActionStack>
                 )}
               </StyledAiBubble>
