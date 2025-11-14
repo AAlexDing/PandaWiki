@@ -4,7 +4,7 @@ import { ThemeStoreProvider } from '@/provider/themeStore';
 import { getShareV1AppWebInfo } from '@/request/ShareApp';
 import { getShareProV1AuthInfo } from '@/request/pro/ShareAuth';
 import { Box } from '@mui/material';
-import { AppRouterCacheProvider } from '@mui/material-nextjs/v15-appRouter';
+import { AppRouterCacheProvider } from '@mui/material-nextjs/v16-appRouter';
 import type { Metadata, Viewport } from 'next';
 import localFont from 'next/font/local';
 import { headers, cookies } from 'next/headers';
@@ -92,7 +92,7 @@ const Layout = async ({
   return (
     <html lang='en'>
       <body
-        className={`${gilory.variable} ${themeMode === 'dark' ? 'dark' : ''}`}
+        className={`${gilory.variable} ${themeMode === 'dark' ? 'dark' : 'light'}`}
       >
         <AppRouterCacheProvider>
           <ThemeStoreProvider themeMode={themeMode}>

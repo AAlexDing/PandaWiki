@@ -15,11 +15,7 @@ import React, {
   useState,
 } from 'react';
 import { useSmartScroll } from '@/hooks';
-import {
-  clearImageBlobCache,
-  createImageRenderer,
-  getImageBlobUrl,
-} from './imageRenderer';
+import { clearImageBlobCache, createImageRenderer } from './imageRenderer';
 import { incrementalRender } from './incrementalRenderer';
 import { createMermaidRenderer } from './mermaidRenderer';
 import {
@@ -88,7 +84,8 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
   const lastContentRef = useRef<string>('');
   const mdRef = useRef<MarkdownIt | null>(null);
   const mermaidSuccessIdRef = useRef<Map<number, string>>(new Map());
-  const imageRenderCacheRef = useRef<Map<number, string>>(new Map()); // 图片渲染缓存
+  const imageRenderCacheRef = useRef<Map<number, string>>(new Map()); // 图片渲染缓存（HTML）
+  const imageBlobCacheRef = useRef<Map<string, string>>(new Map()); // 图片 blob URL 缓存
 
   // 使用智能滚动 hook
   const { scrollToBottom } = useSmartScroll({
@@ -125,13 +122,8 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
       createImageRenderer({
         onImageLoad: handleImageLoad,
         onImageError: handleImageError,
-        onImageClick: (src: string) => {
-          // 尝试获取缓存的 blob URL，如果不存在则使用原始 src
-          const blobUrl = getImageBlobUrl(src);
-          setPreviewImgBlobUrl(blobUrl || src);
-          setPreviewOpen(true);
-        },
         imageRenderCache: imageRenderCacheRef.current,
+        imageBlobCache: imageBlobCacheRef.current,
       }),
     [handleImageLoad, handleImageError],
   );
@@ -158,6 +150,7 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
       const originalFenceRender = md.renderer.rules.fence;
       // 自定义图片渲染
       let imageCount = 0;
+      let htmlImageCount = 0; // HTML 标签图片计数
       let mermaidCount = 0;
       md.renderer.rules.image = (tokens, idx) => {
         imageCount++;
@@ -240,6 +233,38 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
           );
         };
 
+        // 解析 HTML img 标签并提取属性
+        const parseImgTag = (
+          html: string,
+        ): {
+          src: string;
+          alt: string;
+          attrs: [string, string][];
+        } | null => {
+          // 匹配 <img> 标签（支持自闭合和普通标签）
+          const imgMatch = html.match(/<img\s+([^>]*?)\/?>/i);
+          if (!imgMatch) return null;
+
+          const attrsString = imgMatch[1];
+          const attrs: [string, string][] = [];
+          let src = '';
+          let alt = '';
+
+          // 解析属性：匹配 name="value" 或 name='value' 或 name=value
+          const attrRegex =
+            /(\w+)(?:=["']([^"']*)["']|=(?:["'])?([^\s>]+)(?:["'])?)?/g;
+          let attrMatch;
+          while ((attrMatch = attrRegex.exec(attrsString)) !== null) {
+            const name = attrMatch[1].toLowerCase();
+            const value = attrMatch[2] || attrMatch[3] || '';
+            attrs.push([name, value]);
+            if (name === 'src') src = value;
+            if (name === 'alt') alt = value;
+          }
+
+          return { src, alt, attrs };
+        };
+
         md.renderer.rules.html_block = (
           tokens,
           idx,
@@ -278,6 +303,21 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
           if (content.includes('<error>')) return '<span class="chat-error">';
           if (content.includes('</error>')) return '</span>';
 
+          // 处理 img 标签
+          if (content.includes('<img')) {
+            const imgData = parseImgTag(content);
+            if (imgData && imgData.src) {
+              const imageIndex = imageCount + htmlImageCount;
+              htmlImageCount++;
+              return renderImage(
+                imgData.src,
+                imgData.alt,
+                imgData.attrs,
+                imageIndex,
+              );
+            }
+          }
+
           // 🔒 安全检查：不在白名单的标签，转义输出
           if (!isAllowedTag(content)) {
             return md.utils.escapeHtml(content);
@@ -300,6 +340,21 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
 
           if (content.includes('<error>')) return '<span class="chat-error">';
           if (content.includes('</error>')) return '</span>';
+
+          // 处理 img 标签
+          if (content.includes('<img')) {
+            const imgData = parseImgTag(content);
+            if (imgData && imgData.src) {
+              const imageIndex = imageCount + htmlImageCount;
+              htmlImageCount++;
+              return renderImage(
+                imgData.src,
+                imgData.alt,
+                imgData.attrs,
+                imageIndex,
+              );
+            }
+          }
 
           // 🔒 安全检查：不在白名单的标签，转义输出
           if (!isAllowedTag(content)) {
@@ -352,13 +407,28 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
     }
   }, [content, customizeRenderer, scrollToBottom]);
 
-  // 添加代码块点击复制功能
+  // 添加代码块点击复制和图片点击预览功能（事件代理）
   useEffect(() => {
     const container = containerRef.current;
     if (!container) return;
 
     const handleClick = (e: MouseEvent) => {
       const target = e.target as HTMLElement;
+
+      // 检查是否点击了图片
+      const imgElement = target.closest(
+        'img.markdown-image',
+      ) as HTMLImageElement;
+      if (imgElement) {
+        const originalSrc = imgElement.getAttribute('data-original-src');
+        if (originalSrc) {
+          // 尝试获取缓存的 blob URL，如果不存在则使用原始 src
+          const blobUrl = imageBlobCacheRef.current.get(originalSrc);
+          setPreviewImgBlobUrl(blobUrl || originalSrc);
+          setPreviewOpen(true);
+        }
+        return;
+      }
 
       // 检查是否点击了代码块
       const preElement = target.closest('pre.hljs');
@@ -368,6 +438,7 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
           const code = codeElement.textContent || '';
           copyText(code.replace(/\n$/, ''));
         }
+        return;
       }
 
       // 检查是否点击了行内代码
@@ -380,7 +451,7 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
     container.addEventListener('click', handleClick);
 
     return () => {
-      clearImageBlobCache();
+      clearImageBlobCache(imageBlobCacheRef.current);
       container.removeEventListener('click', handleClick);
     };
   }, []);
@@ -405,6 +476,9 @@ const MarkDown2: React.FC<MarkDown2Props> = ({
     '.image-container': {
       position: 'relative',
       display: 'inline-block',
+    },
+    '.markdown-image': {
+      cursor: 'pointer',
     },
     '.image-error': {
       display: 'flex',

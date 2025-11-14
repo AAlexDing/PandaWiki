@@ -1365,6 +1365,13 @@ export interface DomainWidgetBotSettings {
   recommend_node_ids?: string[];
   recommend_questions?: string[];
   theme_mode?: string;
+  btn_style?: string;
+  btn_id?: string;
+  btn_position?: string;
+  modal_position?: string;
+  search_mode?: string;
+  placeholder?: string;
+  disclaimer?: string;
 }
 
 export interface GithubComChaitinPandaWikiApiAuthV1AuthGetResp {
@@ -1735,23 +1742,23 @@ export interface DeleteApiV1AuthDeleteParams {
 export interface GetApiV1AuthGetParams {
   kb_id?: string;
   source_type:
-    | "dingtalk"
-    | "feishu"
-    | "wecom"
-    | "oauth"
-    | "github"
-    | "cas"
-    | "ldap"
-    | "widget"
-    | "dingtalk_bot"
-    | "feishu_bot"
-    | "lark_bot"
-    | "wechat_bot"
-    | "wecom_ai_bot"
-    | "wechat_service_bot"
-    | "discord_bot"
-    | "wechat_official_account"
-    | "openai_api";
+  | "dingtalk"
+  | "feishu"
+  | "wecom"
+  | "oauth"
+  | "github"
+  | "cas"
+  | "ldap"
+  | "widget"
+  | "dingtalk_bot"
+  | "feishu_bot"
+  | "lark_bot"
+  | "wechat_bot"
+  | "wecom_ai_bot"
+  | "wechat_service_bot"
+  | "discord_bot"
+  | "wechat_official_account"
+  | "openai_api";
 }
 
 export interface GetApiV1CommentParams {

@@ -2492,12 +2492,24 @@ definitions:
     type: object
   domain.WidgetBotSettings:
     properties:
+      btn_id:
+        type: string
       btn_logo:
+        type: string
+      btn_position:
+        type: string
+      btn_style:
         type: string
       btn_text:
         type: string
+      disclaimer:
+        type: string
       is_open:
         type: boolean
+      modal_position:
+        type: string
+      placeholder:
+        type: string
       recommend_node_ids:
         items:
           type: string
@@ -2506,6 +2518,8 @@ definitions:
         items:
           type: string
         type: array
+      search_mode:
+        type: string
       theme_mode:
         type: string
     type: object
@@ -5300,7 +5314,7 @@ paths:
             $ref: '#/definitions/domain.Response'
       summary: ChatWidget
       tags:
-      - share_chat
+      - Widget
   /share/v1/comment:
     post:
       consumes:
@@ -5551,6 +5565,33 @@ paths:
       summary: RecordPage
       tags:
       - share_stat
+  /share/v1/widget/search:
+    post:
+      consumes:
+      - application/json
+      description: WidgetSearch
+      parameters:
+      - description: Comment
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ChatSearchReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.ChatSearchResp'
+              type: object
+      summary: WidgetSearch
+      tags:
+      - Widget
 securityDefinitions:
   bearerAuth:
     description: Type "Bearer" + a space + your token to authorize

@@ -3478,7 +3478,7 @@ const docTemplate = `{
                     "application/json"
                 ],
                 "tags": [
-                    "share_chat"
+                    "Widget"
                 ],
                 "summary": "ChatWidget",
                 "parameters": [
@@ -3909,6 +3909,52 @@ const docTemplate = `{
                         "description": "OK",
                         "schema": {
                             "$ref": "#/definitions/domain.Response"
+                        }
+                    }
+                }
+            }
+        },
+        "/share/v1/widget/search": {
+            "post": {
+                "description": "WidgetSearch",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "Widget"
+                ],
+                "summary": "WidgetSearch",
+                "parameters": [
+                    {
+                        "description": "Comment",
+                        "name": "request",
+                        "in": "body",
+                        "required": true,
+                        "schema": {
+                            "$ref": "#/definitions/domain.ChatSearchReq"
+                        }
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/domain.ChatSearchResp"
+                                        }
+                                    }
+                                }
+                            ]
                         }
                     }
                 }
@@ -7651,14 +7697,32 @@ const docTemplate = `{
         "domain.WidgetBotSettings": {
             "type": "object",
             "properties": {
+                "btn_id": {
+                    "type": "string"
+                },
                 "btn_logo": {
+                    "type": "string"
+                },
+                "btn_position": {
+                    "type": "string"
+                },
+                "btn_style": {
                     "type": "string"
                 },
                 "btn_text": {
                     "type": "string"
                 },
+                "disclaimer": {
+                    "type": "string"
+                },
                 "is_open": {
                     "type": "boolean"
+                },
+                "modal_position": {
+                    "type": "string"
+                },
+                "placeholder": {
+                    "type": "string"
                 },
                 "recommend_node_ids": {
                     "type": "array",
@@ -7671,6 +7735,9 @@ const docTemplate = `{
                     "items": {
                         "type": "string"
                     }
+                },
+                "search_mode": {
+                    "type": "string"
                 },
                 "theme_mode": {
                     "type": "string"

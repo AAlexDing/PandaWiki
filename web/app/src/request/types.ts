@@ -171,14 +171,21 @@ export enum ConstsNodeAccessPerm {
   NodeAccessPermClosed = "closed",
 }
 
+export enum ConstsModelSettingMode {
+  ModelSettingModeManual = "manual",
+  ModelSettingModeAuto = "auto",
+}
+
 /** @format int32 */
 export enum ConstsLicenseEdition {
   /** 开源版 */
   LicenseEditionFree = 0,
-  /** 联创版 */
-  LicenseEditionContributor = 1,
+  /** 专业版 */
+  LicenseEditionProfession = 1,
   /** 企业版 */
   LicenseEditionEnterprise = 2,
+  /** 商业版 */
+  LicenseEditionBusiness = 3,
 }
 
 export enum ConstsHomePageSetting {
@@ -922,6 +929,17 @@ export interface DomainMetricsConfig {
   type?: string;
 }
 
+export interface DomainModelModeSetting {
+  /** 百智云 API Key */
+  auto_mode_api_key?: string;
+  /** 自定义对话模型名称 */
+  chat_model?: string;
+  /** 手动模式下嵌入模型是否更新 */
+  is_manual_embedding_updated?: boolean;
+  /** 模式: manual 或 auto */
+  mode?: ConstsModelSettingMode;
+}
+
 export interface DomainMoveNodeReq {
   id: string;
   kb_id: string;
@@ -1195,6 +1213,18 @@ export interface DomainStatPageReq {
   scene: 1 | 2 | 3 | 4;
 }
 
+export interface DomainSwitchModeReq {
+  /** 百智云 API Key */
+  auto_mode_api_key?: string;
+  /** 自定义对话模型名称 */
+  chat_model?: string;
+  mode: "manual" | "auto";
+}
+
+export interface DomainSwitchModeResp {
+  message?: string;
+}
+
 export interface DomainTextConfig {
   title?: string;
   type?: string;
@@ -1336,11 +1366,18 @@ export interface DomainWecomAIBotSettings {
 }
 
 export interface DomainWidgetBotSettings {
+  btn_id?: string;
   btn_logo?: string;
+  btn_position?: string;
+  btn_style?: string;
   btn_text?: string;
+  disclaimer?: string;
   is_open?: boolean;
+  modal_position?: string;
+  placeholder?: string;
   recommend_node_ids?: string[];
   recommend_questions?: string[];
+  search_mode?: string;
   theme_mode?: string;
 }
 

@@ -405,6 +405,13 @@ type WidgetBotSettings struct {
 	BtnLogo            string   `json:"btn_logo,omitempty"`
 	RecommendQuestions []string `json:"recommend_questions,omitempty"`
 	RecommendNodeIDs   []string `json:"recommend_node_ids,omitempty"`
+	BtnStyle           string   `json:"btn_style,omitempty"`
+	BtnID              string   `json:"btn_id,omitempty"`
+	BtnPosition        string   `json:"btn_position,omitempty"`
+	ModalPosition      string   `json:"modal_position,omitempty"`
+	SearchMode         string   `json:"search_mode,omitempty"`
+	Placeholder        string   `json:"placeholder,omitempty"`
+	Disclaimer         string   `json:"disclaimer,omitempty"`
 }
 
 type BrandGroup struct {

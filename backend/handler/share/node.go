@@ -91,5 +91,15 @@ func (h *ShareNodeHandler) GetNodeDetail(c echo.Context) error {
 	if err != nil {
 		return h.NewResponseWithError(c, "failed to get node detail", err)
 	}
+
+	// If the node is a folder, return the list of child nodes
+	if node.Type == domain.NodeTypeFolder {
+		childNodes, err := h.usecase.GetNodeReleaseListByParentID(c.Request().Context(), kbID, id, domain.GetAuthID(c))
+		if err != nil {
+			return h.NewResponseWithError(c, "failed to get child nodes", err)
+		}
+		node.List = childNodes
+	}
+
 	return h.NewResponseWithData(c, node)
 }

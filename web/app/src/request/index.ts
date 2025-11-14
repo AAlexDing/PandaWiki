@@ -10,5 +10,6 @@ export * from './ShareNode'
 export * from './ShareOpenapi'
 export * from './ShareStat'
 export * from './Wechat'
+export * from './Widget'
 export * from './types'
 

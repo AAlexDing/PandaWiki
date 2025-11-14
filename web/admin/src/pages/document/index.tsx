@@ -446,15 +446,19 @@ const Content = () => {
                 >
                   {ragReStartCount} 个文档未学习，
                 </Box>
-                <Button
-                  size='small'
-                  sx={{ minWidth: 0, p: 0, fontSize: 12 }}
+                <ButtonBase
+                  disableRipple
+                  sx={{
+                    fontSize: 12,
+                    fontWeight: 400,
+                    color: 'primary.main',
+                  }}
                   onClick={() => {
                     setRagOpen(true);
                   }}
                 >
                   去学习
-                </Button>
+                </ButtonBase>
               </>
             )}
           </Stack>

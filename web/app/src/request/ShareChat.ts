@@ -18,7 +18,6 @@ import {
   DomainOpenAICompletionsResponse,
   DomainResponse,
   PostShareV1ChatMessageParams,
-  PostShareV1ChatWidgetParams,
 } from "./types";
 
 /**
@@ -85,31 +84,6 @@ export const postShareV1ChatMessage = (
 ) =>
   httpRequest<DomainResponse>({
     path: `/share/v1/chat/message`,
-    method: "POST",
-    query: query,
-    body: request,
-    type: ContentType.Json,
-    format: "json",
-    ...params,
-  });
-
-/**
- * @description ChatWidget
- *
- * @tags share_chat
- * @name PostShareV1ChatWidget
- * @summary ChatWidget
- * @request POST:/share/v1/chat/widget
- * @response `200` `DomainResponse` OK
- */
-
-export const postShareV1ChatWidget = (
-  query: PostShareV1ChatWidgetParams,
-  request: DomainChatRequest,
-  params: RequestParams = {},
-) =>
-  httpRequest<DomainResponse>({
-    path: `/share/v1/chat/widget`,
     method: "POST",
     query: query,
     body: request,

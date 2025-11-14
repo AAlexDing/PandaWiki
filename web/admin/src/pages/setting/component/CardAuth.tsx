@@ -873,7 +873,7 @@ const CardAuth = ({ kb, refresh }: CardAuthProps) => {
                     MenuProps={{
                       sx: {
                         '.Mui-disabled': {
-                          opacity: 1,
+                          opacity: '1 !important',
                           color: 'text.disabled',
                         },
                       },

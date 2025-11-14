@@ -350,6 +350,56 @@ func (u *NodeUsecase) GetNodeReleaseListByKBID(ctx context.Context, kbID string,
 	return items, nil
 }
 
+func (u *NodeUsecase) GetNodeReleaseListByParentID(ctx context.Context, kbID, parentID string, authId uint) ([]*domain.ShareNodeListItemResp, error) {
+	// 一次性查询所有节点
+	allNodes, err := u.nodeRepo.GetNodeReleaseListByKBID(ctx, kbID)
+	if err != nil {
+		return nil, err
+	}
+
+	nodeGroupIds, err := u.GetNodeIdsByAuthId(ctx, authId, consts.NodePermNameVisible)
+	if err != nil {
+		return nil, err
+	}
+
+	// 先过滤权限
+	visibleNodes := make([]*domain.ShareNodeListItemResp, 0)
+	for i, node := range allNodes {
+		switch node.Permissions.Visible {
+		case consts.NodeAccessPermOpen:
+			visibleNodes = append(visibleNodes, allNodes[i])
+		case consts.NodeAccessPermPartial:
+			if slices.Contains(nodeGroupIds, node.ID) {
+				visibleNodes = append(visibleNodes, allNodes[i])
+			}
+		}
+	}
+
+	// 构建父子关系映射
+	childrenMap := make(map[string][]*domain.ShareNodeListItemResp)
+	for _, node := range visibleNodes {
+		childrenMap[node.ParentID] = append(childrenMap[node.ParentID], node)
+	}
+
+	// 递归收集所有后代节点
+	result := make([]*domain.ShareNodeListItemResp, 0)
+	u.collectDescendants(parentID, childrenMap, &result)
+
+	return result, nil
+}
+
+// collectDescendants 递归收集所有后代节点
+func (u *NodeUsecase) collectDescendants(parentID string, childrenMap map[string][]*domain.ShareNodeListItemResp, result *[]*domain.ShareNodeListItemResp) {
+	children := childrenMap[parentID]
+	for _, child := range children {
+		*result = append(*result, child)
+		// 如果是文件夹，递归收集其子节点
+		if child.Type == domain.NodeTypeFolder {
+			u.collectDescendants(child.ID, childrenMap, result)
+		}
+	}
+}
+
 func (u *NodeUsecase) GetNodeIdsByAuthId(ctx context.Context, authId uint, PermName consts.NodePermName) ([]string, error) {
 	authGroups, err := u.authRepo.GetAuthGroupWithParentsByAuthId(ctx, authId)
 	if err != nil {

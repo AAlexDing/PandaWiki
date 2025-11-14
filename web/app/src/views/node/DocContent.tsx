@@ -117,7 +117,7 @@ const DocContent = ({
         setCommentImages([]);
         message.success(
           appDetail?.web_app_comment_settings?.moderation_enable
-            ? '正在审核中...'
+            ? '评论已提交，请耐心等待审核'
             : '评论成功',
         );
       } catch (error: any) {

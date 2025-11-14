@@ -4,12 +4,12 @@ import React, { useState, useEffect } from 'react';
 import { createRoot } from 'react-dom/client';
 import { styled, SvgIcon, SvgIconProps } from '@mui/material';
 
-// ==================== 图片数据缓存 ====================
-// 全局图片 blob URL 缓存，避免重复请求 OSS
-const imageBlobCache = new Map<string, string>();
-
+// ==================== 图片数据缓存工具函数 ====================
 // 下载图片并转换为 blob URL
-const fetchImageAsBlob = async (src: string): Promise<string> => {
+const fetchImageAsBlob = async (
+  src: string,
+  imageBlobCache: Map<string, string>,
+): Promise<string> => {
   // 检查缓存
   if (imageBlobCache.has(src)) {
     return imageBlobCache.get(src)!;
@@ -39,12 +39,8 @@ const fetchImageAsBlob = async (src: string): Promise<string> => {
   }
 };
 
-// 导出获取图片 blob URL 的函数
-export const getImageBlobUrl = (src: string): string | null => {
-  return imageBlobCache.get(src) || null;
-};
-
-export const clearImageBlobCache = () => {
+// 清理图片 blob 缓存
+export const clearImageBlobCache = (imageBlobCache: Map<string, string>) => {
   imageBlobCache.forEach(url => {
     URL.revokeObjectURL(url);
   });
@@ -54,7 +50,7 @@ export const clearImageBlobCache = () => {
 const StyledErrorContainer = styled('div')(({ theme }) => ({
   display: 'flex',
   flexDirection: 'column',
-  padding: theme.spacing(2),
+  padding: theme.spacing(1, 6),
   alignItems: 'center',
   justifyContent: 'center',
   gap: '8px',
@@ -71,7 +67,7 @@ const StyledErrorContainer = styled('div')(({ theme }) => ({
 
 const StyledErrorText = styled('div')(() => ({
   fontSize: '12px',
-  marginBottom: 16,
+  marginBottom: 10,
 }));
 
 export const ImageErrorIcon = (props: SvgIconProps) => {
@@ -102,7 +98,7 @@ export const ImageErrorIcon = (props: SvgIconProps) => {
 const ImageErrorDisplay: React.FC = () => (
   <StyledErrorContainer>
     <ImageErrorIcon
-      sx={{ color: 'var(--mui-palette-text-tertiary)', fontSize: 160 }}
+      sx={{ color: 'var(--mui-palette-text-tertiary)', fontSize: 140 }}
     />
     <StyledErrorText>图片加载失败</StyledErrorText>
   </StyledErrorContainer>
@@ -116,7 +112,7 @@ interface ImageComponentProps {
   imageIndex: number;
   onLoad: (index: number, html: string) => void;
   onError: (index: number, html: string) => void;
-  onImageClick: (src: string) => void;
+  imageBlobCache: Map<string, string>;
 }
 
 // ==================== 图片组件 ====================
@@ -127,7 +123,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({
   imageIndex,
   onLoad,
   onError,
-  onImageClick,
+  imageBlobCache,
 }) => {
   const [status, setStatus] = useState<'loading' | 'success' | 'error'>(
     'loading',
@@ -149,7 +145,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({
   // 获取图片 blob URL
   useEffect(() => {
     let mounted = true;
-    fetchImageAsBlob(src)
+    fetchImageAsBlob(src, imageBlobCache)
       .then(url => {
         if (mounted) {
           setBlobUrl(url);
@@ -166,7 +162,7 @@ const ImageComponent: React.FC<ImageComponentProps> = ({
     return () => {
       mounted = false;
     };
-  }, [src]);
+  }, [src, imageBlobCache]);
 
   // 解析自定义样式
   const parseStyleString = (styleStr: string) => {
@@ -238,7 +234,8 @@ const ImageComponent: React.FC<ImageComponentProps> = ({
           referrerPolicy='no-referrer'
           onLoad={handleLoad}
           onError={handleError}
-          onClick={() => onImageClick(src)} // 传递原始 src 用于预览
+          data-original-src={src}
+          className='markdown-image'
           {...getOtherProps()}
         />
       ) : (
@@ -264,12 +261,13 @@ const ImageComponent: React.FC<ImageComponentProps> = ({
 export interface ImageRendererOptions {
   onImageLoad: (index: number, html: string) => void;
   onImageError: (index: number, html: string) => void;
-  onImageClick: (src: string) => void;
   imageRenderCache: Map<number, string>;
+  imageBlobCache: Map<string, string>;
 }
 
 export const createImageRenderer = (options: ImageRendererOptions) => {
-  const { onImageLoad, onImageError, imageRenderCache, onImageClick } = options;
+  const { onImageLoad, onImageError, imageRenderCache, imageBlobCache } =
+    options;
   return (
     src: string,
     alt: string,
@@ -279,29 +277,6 @@ export const createImageRenderer = (options: ImageRendererOptions) => {
     // 检查缓存
     const cached = imageRenderCache.get(imageIndex);
     if (cached) {
-      // 下一帧对已缓存的DOM绑定原生点击事件，避免事件丢失且不引起重渲染
-      requestAnimationFrame(() => {
-        const container = document.querySelector(
-          `.image-container-${imageIndex}`,
-        ) as HTMLElement | null;
-        if (!container) return;
-        const img = container.querySelector('img') as HTMLImageElement | null;
-        if (!img) return;
-        const alreadyBound = (img as HTMLElement).getAttribute(
-          'data-click-bound',
-        );
-        if (!alreadyBound) {
-          (img as HTMLElement).setAttribute('data-click-bound', '1');
-          img.style.cursor = img.style.cursor || 'pointer';
-          img.addEventListener('click', () => {
-            try {
-              onImageClick(img.src);
-            } catch {
-              // noop
-            }
-          });
-        }
-      });
       return cached;
     }
 
@@ -323,7 +298,7 @@ export const createImageRenderer = (options: ImageRendererOptions) => {
             imageIndex={imageIndex}
             onLoad={onImageLoad}
             onError={onImageError}
-            onImageClick={onImageClick}
+            imageBlobCache={imageBlobCache}
           />,
         );
       } else {

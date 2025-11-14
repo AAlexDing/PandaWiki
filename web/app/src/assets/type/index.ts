@@ -109,10 +109,19 @@ export type WidgetInfo = {
     search_placeholder: string;
     recommend_questions: string[];
     widget_bot_settings: {
-      btn_logo: string;
-      btn_text: string;
-      is_open: boolean;
-      theme_mode: 'light' | 'dark';
+      btn_logo?: string;
+      btn_text?: string;
+      btn_style?: string;
+      btn_id?: string;
+      btn_position?: string;
+      modal_position?: string;
+      is_open?: boolean;
+      recommend_node_ids?: string[];
+      recommend_questions?: string[];
+      theme_mode?: string;
+      search_mode?: string;
+      placeholder?: string;
+      disclaimer?: string;
     };
   };
 };

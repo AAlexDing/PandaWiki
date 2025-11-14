@@ -1,10 +1,14 @@
 'use client';
 
 import Logo from '@/assets/images/logo.png';
-import { Box } from '@mui/material';
+import { Stack, Box, IconButton, alpha, Tooltip } from '@mui/material';
+import { postShareProV1AuthLogout } from '@/request/pro/ShareAuth';
+import { IconDengchu } from '@panda-wiki/icons';
 import { useStore } from '@/provider';
 import { usePathname } from 'next/navigation';
-import { useMemo } from 'react';
+import { useMemo, useState } from 'react';
+import ErrorIcon from '@mui/icons-material/Error';
+import { Modal } from '@ctzhian/ui';
 import {
   Header as CustomHeader,
   WelcomeHeader as WelcomeHeaderComponent,
@@ -16,8 +20,53 @@ interface HeaderProps {
   isWelcomePage?: boolean;
 }
 
+const LogoutButton = () => {
+  const [open, setOpen] = useState(false);
+  const handleLogout = () => {
+    return postShareProV1AuthLogout().then(() => {
+      window.location.href = '/auth/login';
+    });
+  };
+  return (
+    <>
+      <Modal
+        title={
+          <Stack direction='row' alignItems='center' gap={1}>
+            <ErrorIcon sx={{ fontSize: 24, color: 'warning.main' }} />
+            <Box sx={{ mt: '2px' }}>提示</Box>
+          </Stack>
+        }
+        open={open}
+        onCancel={() => setOpen(false)}
+        onOk={handleLogout}
+        closable={false}
+      >
+        <Box sx={{ pl: 4 }}>确定要退出登录吗？</Box>
+      </Modal>
+      <Tooltip title='退出登录' arrow>
+        <IconButton size='small' onClick={() => setOpen(true)}>
+          <IconDengchu
+            sx={theme => ({
+              cursor: 'pointer',
+              color: alpha(theme.palette.text.primary, 0.65),
+              fontSize: 24,
+              '&:hover': { color: theme.palette.primary.main },
+            })}
+          />
+        </IconButton>
+      </Tooltip>
+    </>
+  );
+};
+
 const Header = ({ isDocPage = false, isWelcomePage = false }: HeaderProps) => {
-  const { mobile = false, kbDetail, catalogWidth, setQaModalOpen } = useStore();
+  const {
+    mobile = false,
+    kbDetail,
+    catalogWidth,
+    setQaModalOpen,
+    authInfo,
+  } = useStore();
   const pathname = usePathname();
   const docWidth = useMemo(() => {
     if (isWelcomePage) return 'full';
@@ -55,16 +104,23 @@ const Header = ({ isDocPage = false, isWelcomePage = false }: HeaderProps) => {
       onSearch={handleSearch}
       onQaClick={() => setQaModalOpen?.(true)}
     >
-      <Box sx={{ ml: 2 }}>
+      <Stack sx={{ ml: 2 }} direction='row' alignItems='center' gap={1}>
         <ThemeSwitch />
-      </Box>
+        {!!authInfo && <LogoutButton />}
+      </Stack>
       <QaModal />
     </CustomHeader>
   );
 };
 
 export const WelcomeHeader = () => {
-  const { mobile = false, kbDetail, catalogWidth, setQaModalOpen } = useStore();
+  const {
+    mobile = false,
+    kbDetail,
+    catalogWidth,
+    setQaModalOpen,
+    authInfo,
+  } = useStore();
   const handleSearch = (value?: string, type: 'chat' | 'search' = 'chat') => {
     if (value?.trim()) {
       if (type === 'chat') {
@@ -91,6 +147,7 @@ export const WelcomeHeader = () => {
       onSearch={handleSearch}
       onQaClick={() => setQaModalOpen?.(true)}
     >
+      <Box sx={{ ml: 2 }}>{!!authInfo && <LogoutButton />}</Box>
       <QaModal />
     </WelcomeHeaderComponent>
   );
