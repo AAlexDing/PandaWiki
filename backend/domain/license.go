@@ -3,6 +3,7 @@ package domain
 import (
 	"context"
 	"encoding/json"
+	"math"
 )
 
 const ContextKeyEditionLimitation contextKey = "edition_limitation"
@@ -22,9 +23,17 @@ type BaseEditionLimitation struct {
 }
 
 var baseEditionLimitationDefault = BaseEditionLimitation{
-	MaxKb:    1,
-	MaxAdmin: 1,
-	MaxNode:  300,
+	MaxKb:                  math.MaxInt,
+	MaxAdmin:               math.MaxInt,
+	MaxNode:                math.MaxInt,
+	MaxSSOUser:             math.MaxInt,
+	AllowAdminPerm:         true,
+	AllowCustomCopyright:   true,
+	AllowCommentAudit:      true,
+	AllowAdvancedBot:       true,
+	AllowWatermark:         true,
+	AllowCopyProtection:    true,
+	AllowOpenAIBotSettings: true,
 }
 
 func GetBaseEditionLimitation(c context.Context) BaseEditionLimitation {

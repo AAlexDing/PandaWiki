@@ -7,7 +7,7 @@
 CONTAINER_NAME=${1:-panda-wiki-nginx}
 
 # 设置版本号（应该与后端版本一致）
-export VITE_APP_VERSION="3.39.2"
+export VITE_APP_VERSION="3.42.0"
 
 echo "开始构建前端代码..."
 echo "版本号: ${VITE_APP_VERSION}"
