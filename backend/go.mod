@@ -50,7 +50,7 @@ require (
 	github.com/sbzhu/weworkapi_golang v0.0.0-20210525081115-1799804a7c8d
 	github.com/silenceper/wechat/v2 v2.1.9
 	github.com/spf13/viper v1.20.1
-	github.com/stretchr/testify v1.10.0
+	github.com/stretchr/testify v1.11.1
 	github.com/swaggo/echo-swagger v1.4.1
 	github.com/swaggo/swag v1.16.5
 	github.com/tidwall/gjson v1.14.1
@@ -101,8 +101,8 @@ require (
 	github.com/cloudwego/eino-ext/components/model/openai v0.0.0-20250710065240-482d48888f25 // indirect
 	github.com/cloudwego/eino-ext/libs/acl/openai v0.0.0-20250626133421-3c142631c961 // indirect
 	github.com/cohesion-org/deepseek-go v1.2.8 // indirect
-	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/containerd/log v0.1.0 // indirect
+	github.com/davecgh/go-spew v1.1.1 // indirect
 	github.com/dgryski/go-rendezvous v0.0.0-20200823014737-9f7001d12a5f // indirect
 	github.com/distribution/reference v0.6.0 // indirect
 	github.com/dlclark/regexp2 v1.11.4 // indirect
