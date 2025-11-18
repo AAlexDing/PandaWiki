@@ -2,7 +2,7 @@
   'use strict';
 
   const defaultModalPosition = 'follow';
-  const defaultBtnPosition = 'bottom_left';
+  const defaultBtnPosition = 'bottom_right';
   const defaultBtnStyle = 'side_sticky';
 
   // 获取当前脚本的域名
@@ -96,16 +96,6 @@
         widgetButton.classList.remove('loading');
       }
     }
-  }
-
-  // 创建两行文字（每行两个字）
-  function createTwoLineText(text) {
-    const chars = text.split('').filter(it => !!it.trim());
-    const lines = [];
-    for (let i = 0; i < chars.length; i += 2) {
-      lines.push(chars.slice(i, i + 2).join(''));
-    }
-    return lines.map(line => `<span>${line}</span>`).join('');
   }
 
   // 应用按钮位置
