@@ -16,23 +16,50 @@ import ContainerLogsDialog from './ContainerLogsDialog';
 const System = () => {
   const { kb_id = '' } = useAppSelector(state => state.config);
   const [data, setData] = useState<V1SystemResp | null>(null);
-  const [loading, setLoading] = useState(false);
+  const [loading, setLoading] = useState(true); // 初始加载设为true
+  const [isRefreshing, setIsRefreshing] = useState(false); // 新增刷新状态
   const [selectedContainer, setSelectedContainer] = useState<V1SystemResp['system']['components'][0] | null>(null);
   const [logsDialogOpen, setLogsDialogOpen] = useState(false);
 
   useEffect(() => {
     if (!kb_id) return;
-    setLoading(true);
-    getApiV1System({ kb_id })
-      .then(res => {
-        setData(res || null);
-      })
-      .catch(err => {
-        console.error('Failed to get system:', err);
-      })
-      .finally(() => {
-        setLoading(false);
-      });
+
+    // 获取系统状态数据的函数
+    const fetchSystemData = (isInitial = false) => {
+      if (isInitial) {
+        setLoading(true);
+      } else {
+        setIsRefreshing(true);
+      }
+
+      getApiV1System({ kb_id })
+        .then(res => {
+          setData(res || null);
+        })
+        .catch(err => {
+          console.error('Failed to get system:', err);
+        })
+        .finally(() => {
+          if (isInitial) {
+            setLoading(false);
+          } else {
+            setIsRefreshing(false);
+          }
+        });
+    };
+
+    // 立即执行一次（初始加载）
+    fetchSystemData(true);
+
+    // 设置每10秒更新一次的定时器（刷新时不需要loading状态）
+    const interval = setInterval(() => {
+      fetchSystemData(false);
+    }, 10000);
+
+    // 清理函数：组件卸载时清除定时器
+    return () => {
+      clearInterval(interval);
+    };
   }, [kb_id]);
 
   if (loading) {
@@ -159,6 +186,40 @@ const System = () => {
 
   return (
     <Box sx={{ p: 2 }}>
+      {/* 自动刷新指示器 */}
+      <Box sx={{ mb: 2, display: 'flex', alignItems: 'center', justifyContent: 'space-between' }}>
+        <Typography variant="h6" sx={{ fontWeight: 'bold' }}>
+          系统状态
+        </Typography>
+        <Box sx={{ display: 'flex', alignItems: 'center', gap: 1 }}>
+          {isRefreshing && (
+            <>
+              <Box
+                sx={{
+                  width: 12,
+                  height: 12,
+                  borderRadius: '50%',
+                  border: '2px solid',
+                  borderColor: 'primary.main',
+                  borderTopColor: 'transparent',
+                  animation: 'spin 1s linear infinite',
+                  '@keyframes spin': {
+                    '0%': { transform: 'rotate(0deg)' },
+                    '100%': { transform: 'rotate(360deg)' },
+                  },
+                }}
+              />
+              <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+                更新中...
+              </Typography>
+            </>
+          )}
+          <Typography variant="caption" sx={{ color: 'text.secondary' }}>
+            每10秒自动刷新
+          </Typography>
+        </Box>
+      </Box>
+
       {/* 容器状态 */}
       <Box sx={{ mb: 3 }}>
         <Typography variant="h6" sx={{ mb: 2, fontWeight: 'bold' }}>

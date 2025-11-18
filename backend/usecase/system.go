@@ -31,23 +31,23 @@ func (u *SystemUseCase) GetSystem(ctx context.Context, kbID string) (*v1.SystemR
 	}
 
 	// 获取学习状态统计
-	basicPending, basicRunning, basicFailed, enhancePending, enhanceRunning, enhanceFailed, basicFailedDocs, enhanceFailedDocs, err := u.nodeRepo.GetStatusLearningStats(ctx, kbID)
+	basicPending, basicRunning, basicFailed, basicSucceeded, enhancePending, enhanceRunning, enhanceFailed, enhanceSucceeded, basicFailedDocs, enhanceFailedDocs, err := u.nodeRepo.GetStatusLearningStats(ctx, kbID)
 	if err != nil {
 		return nil, fmt.Errorf("failed to get learning stats: %w", err)
 	}
 
-	// 计算基础处理队列进度
-	basicTotal := basicPending + basicRunning + basicFailed
-	basicProgress := 0
-	if basicTotal > 0 {
-		basicProgress = int((basicTotal - basicPending) * 100 / basicTotal)
-	}
-
-	// 计算增强处理队列进度
-	enhanceTotal := enhancePending + enhanceRunning + enhanceFailed
+	// 计算增强处理队列进度（不使用时间限制）
+	enhanceTotal := enhancePending + enhanceRunning + enhanceFailed + enhanceSucceeded
 	enhanceProgress := 0
 	if enhanceTotal > 0 {
-		enhanceProgress = int((enhanceTotal - enhancePending) * 100 / enhanceTotal)
+		enhanceProgress = int((enhanceTotal - enhancePending - enhanceRunning - enhanceFailed) * 100 / enhanceTotal)
+	}
+
+	// 计算基础处理队列进度（不使用时间限制）
+	basicTotal := basicPending + basicRunning + basicFailed + basicSucceeded + enhanceTotal
+	basicProgress := 0
+	if basicTotal > 0 {
+		basicProgress = int((basicTotal - basicPending - basicRunning - basicFailed) * 100 / basicTotal)
 	}
 
 	// 转换失败文档格式
@@ -150,8 +150,8 @@ func (u *SystemUseCase) GetContainerLogs(ctx context.Context, containerName stri
 	}
 
 	return &v1.ContainerLogsResp{
-		Logs:   logEntries,
+		Logs:    logEntries,
 		HasMore: hasMore,
-		Total:  int64(len(logEntries)),
+		Total:   int64(len(logEntries)),
 	}, nil
 }

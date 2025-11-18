@@ -1175,7 +1175,8 @@ func (r *NodeRepository) GetStatusDocumentStats(ctx context.Context, kbID string
 	// 学习成功数量 (基础处理和增强处理都成功)
 	if err := r.db.WithContext(ctx).
 		Model(&domain.Node{}).
-		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceSucceeded).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' IN (?, ?)",
+			kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicSucceeded, consts.NodeRagStatusEnhanceSucceeded).
 		Count(&learningSucceeded).Error; err != nil {
 		return 0, 0, 0, 0, err
 	}
@@ -1201,8 +1202,8 @@ func (r *NodeRepository) GetStatusDocumentStats(ctx context.Context, kbID string
 
 // GetStatusLearningStats 获取学习状态统计信息
 func (r *NodeRepository) GetStatusLearningStats(ctx context.Context, kbID string) (
-	basicPending, basicRunning, basicFailed int64,
-	enhancePending, enhanceRunning, enhanceFailed int64,
+	basicPending, basicRunning, basicFailed, basicSucceeded int64,
+	enhancePending, enhanceRunning, enhanceFailed, enhanceSucceeded int64,
 	basicFailedDocs, enhanceFailedDocs []struct {
 		NodeID   string
 		NodeName string
@@ -1215,21 +1216,28 @@ func (r *NodeRepository) GetStatusLearningStats(ctx context.Context, kbID string
 		Model(&domain.Node{}).
 		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicPending).
 		Count(&basicPending).Error; err != nil {
-		return 0, 0, 0, 0, 0, 0, nil, nil, err
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
 	}
 
 	if err := r.db.WithContext(ctx).
 		Model(&domain.Node{}).
 		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicRunning).
 		Count(&basicRunning).Error; err != nil {
-		return 0, 0, 0, 0, 0, 0, nil, nil, err
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
 	}
 
 	if err := r.db.WithContext(ctx).
 		Model(&domain.Node{}).
 		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicFailed).
 		Count(&basicFailed).Error; err != nil {
-		return 0, 0, 0, 0, 0, 0, nil, nil, err
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicSucceeded).
+		Count(&basicSucceeded).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
 	}
 
 	// 增强处理统计
@@ -1237,21 +1245,28 @@ func (r *NodeRepository) GetStatusLearningStats(ctx context.Context, kbID string
 		Model(&domain.Node{}).
 		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhancePending).
 		Count(&enhancePending).Error; err != nil {
-		return 0, 0, 0, 0, 0, 0, nil, nil, err
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
 	}
 
 	if err := r.db.WithContext(ctx).
 		Model(&domain.Node{}).
 		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceRunning).
 		Count(&enhanceRunning).Error; err != nil {
-		return 0, 0, 0, 0, 0, 0, nil, nil, err
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
 	}
 
 	if err := r.db.WithContext(ctx).
 		Model(&domain.Node{}).
 		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceFailed).
 		Count(&enhanceFailed).Error; err != nil {
-		return 0, 0, 0, 0, 0, 0, nil, nil, err
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
+	}
+
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Node{}).
+		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceSucceeded).
+		Count(&enhanceSucceeded).Error; err != nil {
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
 	}
 
 	// 基础处理失败文档详情
@@ -1266,7 +1281,7 @@ func (r *NodeRepository) GetStatusLearningStats(ctx context.Context, kbID string
 		Select("id, name, rag_info->>'message' as message").
 		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusBasicFailed).
 		Find(&basicFailedResults).Error; err != nil {
-		return 0, 0, 0, 0, 0, 0, nil, nil, err
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
 	}
 
 	basicFailedDocs = make([]struct {
@@ -1293,7 +1308,7 @@ func (r *NodeRepository) GetStatusLearningStats(ctx context.Context, kbID string
 		Select("id, name, rag_info->>'message' as message").
 		Where("kb_id = ? AND type = ? AND rag_info->>'status' = ?", kbID, domain.NodeTypeDocument, consts.NodeRagStatusEnhanceFailed).
 		Find(&enhanceFailedResults).Error; err != nil {
-		return 0, 0, 0, 0, 0, 0, nil, nil, err
+		return 0, 0, 0, 0, 0, 0, 0, 0, nil, nil, err
 	}
 
 	enhanceFailedDocs = make([]struct {
@@ -1313,5 +1328,5 @@ func (r *NodeRepository) GetStatusLearningStats(ctx context.Context, kbID string
 		}
 	}
 
-	return basicPending, basicRunning, basicFailed, enhancePending, enhanceRunning, enhanceFailed, basicFailedDocs, enhanceFailedDocs, nil
+	return basicPending, basicRunning, basicFailed, basicSucceeded, enhancePending, enhanceRunning, enhanceFailed, enhanceSucceeded, basicFailedDocs, enhanceFailedDocs, nil
 }
