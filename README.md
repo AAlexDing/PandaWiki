@@ -110,3 +110,8 @@ SUCCESS    密码: **********************
 ## Star History
 
 [![Star History Chart](https://api.star-history.com/svg?repos=chaitin/PandaWiki&type=Date)](https://www.star-history.com/#chaitin/PandaWiki&Date)
+
+
+## 注意
+
+UNRAID系统需要将qdrant放在/mnt/cache/而不是/mnt/user/里，qdrant不支持fuse类系统
