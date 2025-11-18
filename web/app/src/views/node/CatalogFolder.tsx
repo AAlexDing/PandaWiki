@@ -1,9 +1,9 @@
 import { ITreeItem } from '@/assets/type';
 import { IconArrowDown, IconFile, IconFolder } from '@/components/icons';
 import { useStore } from '@/provider';
-import { addOpacityToColor, highlightText } from '@/utils';
+import { addOpacityToColor } from '@/utils';
 import { Ellipsis } from '@ctzhian/ui';
-import { Box, Stack, useTheme } from '@mui/material';
+import { Box, Stack, useTheme, IconButton } from '@mui/material';
 import Link from 'next/link';
 import { useParams, useRouter } from 'next/navigation';
 
@@ -22,7 +22,6 @@ const CatalogFolder = ({
   const { themeMode = 'light', setTree } = useStore();
   const params = useParams() || {};
   const activeId = params.id as string;
-  const router = useRouter();
 
   return (
     <Stack key={item.id} gap={0.5}>
@@ -53,13 +52,6 @@ const CatalogFolder = ({
           },
         }}
         id={`catalog-item-${item.id}`}
-        onClick={() => {
-          if (item.type === 1) {
-            item.expanded = !item.expanded;
-            setTree?.(tree => [...(tree || [])]);
-            return;
-          }
-        }}
       >
         {item.type === 2 ? (
           <Box sx={{ flex: 1 }}>
@@ -72,7 +64,7 @@ const CatalogFolder = ({
                     <IconFile sx={{ flexShrink: 0, fontSize: 12 }} />
                   )}
                   <Ellipsis sx={{ flex: 1, width: 0, pr: 1 }}>
-                    {highlightText(item.name, searchTerm)}
+                    {item.name}
                   </Ellipsis>
                 </Stack>
               </Box>
@@ -85,39 +77,61 @@ const CatalogFolder = ({
             justifyContent={'space-between'}
             sx={{ flex: 1, pl: depth * 2, pr: 1 }}
           >
-            <Stack direction='row' alignItems='center' gap={1} sx={{ flex: 1 }}>
-              {item.emoji ? (
-                <Box sx={{ flexShrink: 0, fontSize: 12 }}>{item.emoji}</Box>
-              ) : item.type === 1 ? (
-                <IconFolder sx={{ flexShrink: 0, fontSize: 12 }} />
-              ) : (
-                <IconFile sx={{ flexShrink: 0, fontSize: 12 }} />
-              )}
-              <Ellipsis sx={{ flex: 1, width: 0, pr: 1 }}>
-                {highlightText(item.name, searchTerm)}
-              </Ellipsis>
-            </Stack>
-            <IconArrowDown
+            <Link
+              href={`/node/${item.id}`}
+              prefetch={false}
+              style={{ flex: 1 }}
+            >
+              <Stack
+                direction='row'
+                alignItems='center'
+                gap={1}
+                sx={{ flex: 1 }}
+              >
+                {item.emoji ? (
+                  <Box sx={{ flexShrink: 0, fontSize: 12 }}>{item.emoji}</Box>
+                ) : item.type === 1 ? (
+                  <IconFolder sx={{ flexShrink: 0, fontSize: 12 }} />
+                ) : (
+                  <IconFile sx={{ flexShrink: 0, fontSize: 12 }} />
+                )}
+                <Ellipsis sx={{ flex: 1, width: 0, pr: 1 }}>
+                  {item.name}
+                </Ellipsis>
+              </Stack>
+            </Link>
+
+            <IconButton
+              size='small'
               sx={{
-                color: 'text.disabled',
-                flexShrink: 0,
-                fontSize: 16,
-                transform: item.expanded ? 'none' : 'rotate(-90deg)',
-                transition: 'transform 0.2s',
+                '&:hover': {
+                  color: 'primary.main',
+                },
               }}
-            />
+              onClick={() => {
+                if (item.type === 1) {
+                  item.expanded = !item.expanded;
+                  setTree?.(tree => [...(tree || [])]);
+                  return;
+                }
+              }}
+            >
+              <IconArrowDown
+                sx={{
+                  flexShrink: 0,
+                  fontSize: 16,
+                  transform: item.expanded ? 'none' : 'rotate(-90deg)',
+                  transition: 'transform 0.2s',
+                }}
+              />
+            </IconButton>
           </Stack>
         )}
       </Stack>
       {item.children && item.children.length > 0 && item.expanded && (
         <Stack gap={0.5}>
           {item.children.map(child => (
-            <CatalogFolder
-              key={child.id}
-              depth={depth + 1}
-              item={child}
-              searchTerm={searchTerm}
-            />
+            <CatalogFolder key={child.id} depth={depth + 1} item={child} />
           ))}
         </Stack>
       )}

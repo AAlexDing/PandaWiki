@@ -1,11 +1,11 @@
 'use client';
 
-import { NodeDetail } from '@/assets/type';
 import CommentInput, {
   CommentInputRef,
   ImageItem,
 } from '@/components/commentInput';
 import { IconFile, IconFolder } from '@/components/icons';
+import FolderList from './folderList';
 import { DocWidth } from '@/constant';
 import { useStore } from '@/provider';
 import {
@@ -21,6 +21,7 @@ import relativeTime from 'dayjs/plugin/relativeTime';
 import { useParams } from 'next/navigation';
 import React, { useEffect, useRef, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { V1ShareNodeDetailResp } from '@/request/types';
 import { PhotoProvider, PhotoView } from 'react-photo-view';
 
 dayjs.extend(relativeTime);
@@ -34,7 +35,7 @@ const DocContent = ({
   characterCount,
 }: {
   docWidth?: string;
-  info?: NodeDetail;
+  info?: V1ShareNodeDetailResp;
   editorRef: UseTiptapReturn;
   commentList?: any[];
   characterCount?: number;
@@ -277,7 +278,10 @@ const DocContent = ({
           },
         }}
       >
-        {editorRef.editor && <Editor editor={editorRef.editor} />}
+        {info.type === 2 && editorRef.editor && (
+          <Editor editor={editorRef.editor} />
+        )}
+        {info.type === 1 && <FolderList list={info.list} />}
       </Box>
       {appDetail?.web_app_comment_settings?.is_enable && (
         <>

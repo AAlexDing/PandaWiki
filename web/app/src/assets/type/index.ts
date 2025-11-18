@@ -122,6 +122,8 @@ export type WidgetInfo = {
       search_mode?: string;
       placeholder?: string;
       disclaimer?: string;
+      copyright_hide_enabled?: boolean;
+      copyright_info?: string;
     };
   };
 };

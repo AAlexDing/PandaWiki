@@ -48,16 +48,16 @@ export const postShareV1ChatWidget = (
  * @description WidgetSearch
  *
  * @tags Widget
- * @name PostShareV1WidgetSearch
+ * @name PostShareV1ChatWidgetSearch
  * @summary WidgetSearch
- * @request POST:/share/v1/widget/search
+ * @request POST:/share/v1/chat/widget/search
  * @response `200` `(DomainResponse & {
     data?: DomainChatSearchResp,
 
 })` OK
  */
 
-export const postShareV1WidgetSearch = (
+export const postShareV1ChatWidgetSearch = (
   request: DomainChatSearchReq,
   params: RequestParams = {},
 ) =>
@@ -66,7 +66,7 @@ export const postShareV1WidgetSearch = (
       data?: DomainChatSearchResp;
     }
   >({
-    path: `/share/v1/widget/search`,
+    path: `/share/v1/chat/widget/search`,
     method: "POST",
     body: request,
     type: ContentType.Json,

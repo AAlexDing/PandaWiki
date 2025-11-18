@@ -28,6 +28,8 @@ func NewHTML2MDConverter() *converter.Converter {
 	conv.Register.RendererFor("span", converter.TagTypeInline, renderAttachment, converter.PriorityEarly)
 	// task list
 	conv.Register.RendererFor("ul", converter.TagTypeBlock, renderTaskList, converter.PriorityEarly)
+	// flowchart/diagram to mermaid code block
+	conv.Register.RendererFor("div", converter.TagTypeBlock, renderFlowchart, converter.PriorityEarly)
 	return conv
 }
 
@@ -125,4 +127,41 @@ func getTextFromTaskItem(node *html.Node) string {
 
 	extractText(node)
 	return strings.TrimSpace(textContent.String())
+}
+
+// renderFlowchart 将流程图 div 转换为 Mermaid 代码块
+func renderFlowchart(ctx converter.Context, w converter.Writer, node *html.Node) converter.RenderStatus {
+	if node.Type != html.ElementNode || node.Data != "div" {
+		return converter.RenderTryNext
+	}
+
+	// 仅处理 data-type="flow" 的 div
+	dataType, ok := dom.GetAttribute(node, "data-type")
+	if !ok || dataType != "flow" {
+		return converter.RenderTryNext
+	}
+
+	// 提取 data-code 属性
+	code, hasCode := dom.GetAttribute(node, "data-code")
+	if !hasCode || strings.TrimSpace(code) == "" {
+		return converter.RenderTryNext
+	}
+
+	// 解码 HTML 实体
+	code = html.UnescapeString(code)
+	// 处理转义的换行符
+	code = strings.ReplaceAll(code, "\\n", "\n")
+
+	// 写入 Mermaid 代码块
+	if _, err := w.WriteString("\n```mermaid\n"); err != nil {
+		return converter.RenderTryNext
+	}
+	if _, err := w.WriteString(code); err != nil {
+		return converter.RenderTryNext
+	}
+	if _, err := w.WriteString("\n```\n\n"); err != nil {
+		return converter.RenderTryNext
+	}
+
+	return converter.RenderSuccess
 }

@@ -1,10 +1,9 @@
 'use client';
-import { useMemo, useEffect } from 'react';
-import Cookies from 'js-cookie';
-import { useState, createContext, useContext } from 'react';
-import { createTheme } from '@mui/material';
 import { darkTheme, lightTheme } from '@/theme';
 import { ThemeProvider } from '@ctzhian/ui';
+import { createTheme } from '@mui/material';
+import Cookies from 'js-cookie';
+import { createContext, useContext, useEffect, useMemo, useState } from 'react';
 
 const ThemeContext = createContext<{
   themeMode: 'light' | 'dark';
@@ -35,9 +34,6 @@ export const ThemeStoreProvider = ({
   useEffect(() => {
     Cookies.set('theme_mode', themeMode, { expires: 365 * 10 });
   }, [themeMode]);
-
-  console.log('themeMode-------', themeMode);
-  console.log('themeMode-------', theme);
 
   return (
     <ThemeContext.Provider value={{ themeMode, setThemeMode }}>

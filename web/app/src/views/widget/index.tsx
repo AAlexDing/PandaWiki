@@ -108,7 +108,6 @@ const Widget = () => {
       })}
       onClick={e => e.stopPropagation()}
     >
-      {/* 顶部标签栏 */}
       <Box
         sx={{
           display: 'flex',
@@ -192,30 +191,33 @@ const Widget = () => {
       >
         <SearchDocContent inputRef={inputRef} placeholder={placeholder} />
       </Box>
-
-      {/* 底部AI生成提示 */}
-      <Box
-        sx={{
-          px: 3,
-          pt: widget?.settings?.widget_bot_settings?.disclaimer ? 2 : 0,
-          display: 'flex',
-          alignItems: 'center',
-          justifyContent: 'center',
-        }}
-      >
-        <Typography
-          variant='caption'
+      {!widget?.settings?.widget_bot_settings?.copyright_hide_enabled && (
+        <Box
           sx={{
-            color: 'text.disabled',
-            fontSize: 12,
+            px: 3,
+            pt: 2,
             display: 'flex',
             alignItems: 'center',
-            gap: 1,
+            justifyContent: 'center',
           }}
         >
-          <Box>本网站由 PandaWiki 提供技术支持</Box>
-        </Typography>
-      </Box>
+          <Typography
+            variant='caption'
+            sx={{
+              color: 'text.disabled',
+              fontSize: 12,
+              display: 'flex',
+              alignItems: 'center',
+              gap: 1,
+            }}
+          >
+            <Box>
+              {widget?.settings?.widget_bot_settings?.copyright_info ||
+                '本网站由 PandaWiki 提供技术支持'}
+            </Box>
+          </Typography>
+        </Box>
+      )}
     </Box>
   );
 };

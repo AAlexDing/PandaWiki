@@ -1614,6 +1614,8 @@ definitions:
       url:
         type: string
     type: object
+  domain.MessageContent:
+    type: object
   domain.MessageFrom:
     enum:
     - 1
@@ -1875,6 +1877,8 @@ definitions:
         type: array
       stream:
         type: boolean
+      stream_options:
+        $ref: '#/definitions/domain.OpenAIStreamOptions'
       temperature:
         type: number
       tool_choice:
@@ -1956,7 +1960,7 @@ definitions:
   domain.OpenAIMessage:
     properties:
       content:
-        type: string
+        $ref: '#/definitions/domain.MessageContent'
       name:
         type: string
       role:
@@ -1976,6 +1980,11 @@ definitions:
         type: string
     required:
     - type
+    type: object
+  domain.OpenAIStreamOptions:
+    properties:
+      include_usage:
+        type: boolean
     type: object
   domain.OpenAITool:
     properties:
@@ -2149,6 +2158,31 @@ definitions:
         type: string
       role:
         $ref: '#/definitions/schema.RoleType'
+    type: object
+  domain.ShareNodeDetailItem:
+    properties:
+      children:
+        items:
+          $ref: '#/definitions/domain.ShareNodeDetailItem'
+        type: array
+      emoji:
+        type: string
+      id:
+        type: string
+      meta:
+        $ref: '#/definitions/domain.NodeMeta'
+      name:
+        type: string
+      parent_id:
+        type: string
+      permissions:
+        $ref: '#/definitions/domain.NodePermissions'
+      position:
+        type: number
+      type:
+        $ref: '#/definitions/domain.NodeType'
+      updated_at:
+        type: string
     type: object
   domain.SimpleAuth:
     properties:
@@ -2501,6 +2535,10 @@ definitions:
       btn_style:
         type: string
       btn_text:
+        type: string
+      copyright_hide_enabled:
+        type: boolean
+      copyright_info:
         type: string
       disclaimer:
         type: string
@@ -3093,6 +3131,10 @@ definitions:
         type: string
       kb_id:
         type: string
+      list:
+        items:
+          $ref: '#/definitions/domain.ShareNodeDetailItem'
+        type: array
       meta:
         $ref: '#/definitions/domain.NodeMeta'
       name:
@@ -5315,6 +5357,33 @@ paths:
       summary: ChatWidget
       tags:
       - Widget
+  /share/v1/chat/widget/search:
+    post:
+      consumes:
+      - application/json
+      description: WidgetSearch
+      parameters:
+      - description: Comment
+        in: body
+        name: request
+        required: true
+        schema:
+          $ref: '#/definitions/domain.ChatSearchReq'
+      produces:
+      - application/json
+      responses:
+        "200":
+          description: OK
+          schema:
+            allOf:
+            - $ref: '#/definitions/domain.Response'
+            - properties:
+                data:
+                  $ref: '#/definitions/domain.ChatSearchResp'
+              type: object
+      summary: WidgetSearch
+      tags:
+      - Widget
   /share/v1/comment:
     post:
       consumes:
@@ -5565,33 +5634,6 @@ paths:
       summary: RecordPage
       tags:
       - share_stat
-  /share/v1/widget/search:
-    post:
-      consumes:
-      - application/json
-      description: WidgetSearch
-      parameters:
-      - description: Comment
-        in: body
-        name: request
-        required: true
-        schema:
-          $ref: '#/definitions/domain.ChatSearchReq'
-      produces:
-      - application/json
-      responses:
-        "200":
-          description: OK
-          schema:
-            allOf:
-            - $ref: '#/definitions/domain.Response'
-            - properties:
-                data:
-                  $ref: '#/definitions/domain.ChatSearchResp'
-              type: object
-      summary: WidgetSearch
-      tags:
-      - Widget
 securityDefinitions:
   bearerAuth:
     description: Type "Bearer" + a space + your token to authorize

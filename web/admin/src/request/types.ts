@@ -171,6 +171,11 @@ export enum ConstsNodeAccessPerm {
   NodeAccessPermClosed = "closed",
 }
 
+export enum ConstsModelSettingMode {
+  ModelSettingModeManual = "manual",
+  ModelSettingModeAuto = "auto",
+}
+
 /** @format int32 */
 export enum ConstsLicenseEdition {
   /** 开源版 */
@@ -914,6 +919,8 @@ export interface DomainLink {
   url?: string;
 }
 
+export type DomainMessageContent = Record<string, any>;
+
 export interface DomainMetricsConfig {
   list?: {
     id?: string;
@@ -929,8 +936,10 @@ export interface DomainModelModeSetting {
   auto_mode_api_key?: string;
   /** 自定义对话模型名称 */
   chat_model?: string;
+  /** 手动模式下嵌入模型是否更新 */
+  is_manual_embedding_updated?: boolean;
   /** 模式: manual 或 auto */
-  mode?: string;
+  mode?: ConstsModelSettingMode;
 }
 
 export interface DomainMoveNodeReq {
@@ -1031,6 +1040,7 @@ export interface DomainOpenAICompletionsRequest {
   response_format?: DomainOpenAIResponseFormat;
   stop?: string[];
   stream?: boolean;
+  stream_options?: DomainOpenAIStreamOptions;
   temperature?: number;
   tool_choice?: DomainOpenAIToolChoice;
   tools?: DomainOpenAITool[];
@@ -1074,7 +1084,7 @@ export interface DomainOpenAIFunctionChoice {
 }
 
 export interface DomainOpenAIMessage {
-  content?: string;
+  content?: DomainMessageContent;
   name?: string;
   role: string;
   tool_call_id?: string;
@@ -1083,6 +1093,10 @@ export interface DomainOpenAIMessage {
 
 export interface DomainOpenAIResponseFormat {
   type: string;
+}
+
+export interface DomainOpenAIStreamOptions {
+  include_usage?: boolean;
 }
 
 export interface DomainOpenAITool {
@@ -1180,6 +1194,19 @@ export interface DomainShareConversationMessage {
   content?: string;
   created_at?: string;
   role?: SchemaRoleType;
+}
+
+export interface DomainShareNodeDetailItem {
+  children?: DomainShareNodeDetailItem[];
+  emoji?: string;
+  id?: string;
+  meta?: DomainNodeMeta;
+  name?: string;
+  parent_id?: string;
+  permissions?: DomainNodePermissions;
+  position?: number;
+  type?: DomainNodeType;
+  updated_at?: string;
 }
 
 export interface DomainSimpleAuth {
@@ -1359,19 +1386,21 @@ export interface DomainWecomAIBotSettings {
 }
 
 export interface DomainWidgetBotSettings {
+  btn_id?: string;
   btn_logo?: string;
+  btn_position?: string;
+  btn_style?: string;
   btn_text?: string;
+  copyright_hide_enabled?: boolean;
+  copyright_info?: string;
+  disclaimer?: string;
   is_open?: boolean;
+  modal_position?: string;
+  placeholder?: string;
   recommend_node_ids?: string[];
   recommend_questions?: string[];
-  theme_mode?: string;
-  btn_style?: string;
-  btn_id?: string;
-  btn_position?: string;
-  modal_position?: string;
   search_mode?: string;
-  placeholder?: string;
-  disclaimer?: string;
+  theme_mode?: string;
 }
 
 export interface GithubComChaitinPandaWikiApiAuthV1AuthGetResp {
@@ -1676,6 +1705,7 @@ export interface V1ShareNodeDetailResp {
   editor_id?: string;
   id?: string;
   kb_id?: string;
+  list?: DomainShareNodeDetailItem[];
   meta?: DomainNodeMeta;
   name?: string;
   parent_id?: string;
@@ -1742,23 +1772,23 @@ export interface DeleteApiV1AuthDeleteParams {
 export interface GetApiV1AuthGetParams {
   kb_id?: string;
   source_type:
-  | "dingtalk"
-  | "feishu"
-  | "wecom"
-  | "oauth"
-  | "github"
-  | "cas"
-  | "ldap"
-  | "widget"
-  | "dingtalk_bot"
-  | "feishu_bot"
-  | "lark_bot"
-  | "wechat_bot"
-  | "wecom_ai_bot"
-  | "wechat_service_bot"
-  | "discord_bot"
-  | "wechat_official_account"
-  | "openai_api";
+    | "dingtalk"
+    | "feishu"
+    | "wecom"
+    | "oauth"
+    | "github"
+    | "cas"
+    | "ldap"
+    | "widget"
+    | "dingtalk_bot"
+    | "feishu_bot"
+    | "lark_bot"
+    | "wechat_bot"
+    | "wecom_ai_bot"
+    | "wechat_service_bot"
+    | "discord_bot"
+    | "wechat_official_account"
+    | "openai_api";
 }
 
 export interface GetApiV1CommentParams {

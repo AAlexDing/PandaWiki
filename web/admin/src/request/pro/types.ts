@@ -457,6 +457,11 @@ export type GithubComChaitinPandaWikiProApiShareV1AuthLDAPResp = Record<
   any
 >;
 
+export type GithubComChaitinPandaWikiProApiShareV1AuthLogoutResp = Record<
+  string,
+  any
+>;
+
 export interface GithubComChaitinPandaWikiProApiShareV1AuthOAuthReq {
   kb_id?: string;
   redirect_url?: string;

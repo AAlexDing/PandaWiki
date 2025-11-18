@@ -251,8 +251,22 @@ type ShareNodeListItemResp struct {
 	ParentID    string          `json:"parent_id"`
 	Position    float64         `json:"position"`
 	Emoji       string          `json:"emoji"`
+	Meta        NodeMeta        `json:"meta"`
 	UpdatedAt   time.Time       `json:"updated_at"`
 	Permissions NodePermissions `json:"permissions" gorm:"type:jsonb"`
+}
+
+type ShareNodeDetailItem struct {
+	ID          string                 `json:"id"`
+	Name        string                 `json:"name"`
+	Type        NodeType               `json:"type"`
+	ParentID    string                 `json:"parent_id"`
+	Position    float64                `json:"position"`
+	Emoji       string                 `json:"emoji"`
+	Meta        NodeMeta               `json:"meta"`
+	UpdatedAt   time.Time              `json:"updated_at"`
+	Permissions NodePermissions        `json:"permissions" gorm:"type:jsonb"`
+	Children    []*ShareNodeDetailItem `json:"children,omitempty"`
 }
 
 func (n *ShareNodeListItemResp) GetURL(baseURL string) string {

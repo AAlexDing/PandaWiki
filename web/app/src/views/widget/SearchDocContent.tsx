@@ -2,7 +2,7 @@
 import Logo from '@/assets/images/logo.png';
 import noDocImage from '@/assets/images/no-doc.png';
 import { useStore } from '@/provider';
-import { postShareV1WidgetSearch } from '@/request';
+import { postShareV1ChatWidgetSearch } from '@/request';
 import { DomainNodeContentChunkSSE } from '@/request/types';
 import { message } from '@ctzhian/ui';
 import {
@@ -148,7 +148,7 @@ const SearchDocContent: React.FC<SearchDocContentProps> = ({
       setIsSearching(false);
       return;
     }
-    postShareV1WidgetSearch({ message: input, captcha_token: token })
+    postShareV1ChatWidgetSearch({ message: input, captcha_token: token })
       .then(res => {
         setSearchResults(res.node_result || []);
         setHasSearch(true);

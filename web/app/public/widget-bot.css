@@ -6,34 +6,29 @@
   cursor: pointer;
   user-select: none;
   transition: all 0.2s ease-in-out;
-  color: #FFFFFF;
+  color: #646a73;
+  background-color: #FFFFFF;
   display: flex;
   align-items: center;
   justify-content: center;
   overflow: hidden;
   font-family: var(--font-gilory, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif);
   border: none;
+  outline: none;
   opacity: 0;
-  transform: translateY(20px);
   /* 优化拖拽性能 */
   will-change: transform;
   backface-visibility: hidden;
   -webkit-font-smoothing: antialiased;
+  transform-origin: center;
 }
 
-.widget-bot-button:hover:not(.dragging) {
-  transform: translateY(-1px);
-}
-
-.widget-bot-hover-ball:hover:not(.dragging) {
-  transform: scale(1.1) !important;
+.widget-bot-button:hover {
+  transform: scale(1.1);
 }
 
 .widget-bot-button.dragging {
   cursor: grabbing;
-  transition: none !important;
-  /* 拖拽时禁用过渡，提升性能 */
-  /* transform 由 JS 控制，包含 rotate 和 translate */
 }
 
 .widget-bot-button-content {
@@ -66,23 +61,28 @@
 /* 侧边吸附按钮样式 */
 .widget-bot-side-sticky {
   width: 48px;
-  padding: 6px 6px 12px 6px;
+  padding: 8px 8px 12px 8px;
   background: #FFFFFF;
-  box-shadow: 0px 6px 16px 0px rgba(33, 34, 45, 0.02), 0px 8px 40px 0px rgba(50, 73, 45, 0.12);
-  border-radius: 24px;
-  border: 1px solid #ECEEF1;
+  box-shadow: 0px 6px 30px 6px rgba(33, 34, 45, 0.03), 0px 4px 12px -6px rgba(33, 34, 45, 0.05), 0px 4px 12px 0px rgba(33, 34, 45, 0.03);
+  border-radius: 20px;
   min-height: auto;
 }
 
+/* 浅色主题样式 - 显式定义 */
+.widget-bot-side-sticky[data-theme="dark"] {
+  background: #202531;
+  color: #FFFFFF;
+}
+
 .widget-bot-side-sticky .widget-bot-icon {
-  width: 36px;
-  height: 36px;
+  width: 32px;
+  height: 32px;
   margin-bottom: 4px;
 }
 
 .widget-bot-side-sticky .widget-bot-text {
   font-size: 12px;
-  color: #646a73;
+  /* color: #646a73; */
   line-height: 16px;
 }
 
@@ -98,9 +98,14 @@
   min-height: auto;
 }
 
+/* 浅色主题样式 - 显式定义 */
+.widget-bot-hover-ball[data-theme="dark"] {
+  background: #202531;
+}
+
 .widget-bot-hover-ball .widget-bot-hover-ball-icon {
-  width: 48px;
-  height: 48px;
+  width: 32px;
+  height: 32px;
   margin-bottom: 0;
 }
 
@@ -201,45 +206,6 @@
 /* 防止页面滚动 */
 body.widget-bot-modal-open {
   overflow: hidden;
-}
-
-/* 暗色主题支持 - 基于data-theme属性 */
-.widget-bot-button[data-theme="dark"] {
-  box-shadow: 0 2px 4px rgba(110, 115, 254, 0.15);
-}
-
-.widget-bot-side-sticky[data-theme="dark"] {
-  background: #6E73FE;
-}
-
-.widget-bot-side-sticky[data-theme="dark"]:hover {
-  background: #5d68fd;
-  box-shadow: 0 4px 8px rgba(110, 115, 254, 0.2);
-}
-
-.widget-bot-side-sticky[data-theme="dark"].dragging {
-  box-shadow: 0 6px 12px rgba(110, 115, 254, 0.25);
-}
-
-.widget-bot-hover-ball[data-theme="dark"] {
-  background: #6E73FE;
-}
-
-.widget-bot-hover-ball[data-theme="dark"]:hover {
-  transform: scale(1.1) !important;
-}
-
-.widget-bot-hover-ball[data-theme="dark"].dragging {
-  box-shadow: 0 8px 20px rgba(110, 115, 254, 0.3);
-}
-
-.widget-bot-modal[data-theme="dark"] {
-  background: rgba(0, 0, 0, 0.7);
-}
-
-.widget-bot-modal[data-theme="dark"] .widget-bot-modal-content {
-  background: #202531;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
 }
 
 /* 移动端适配 - 统一处理 */
@@ -346,42 +312,4 @@ body.widget-bot-modal-open {
   .widget-bot-button.dragging {
     transform: none;
   }
-}
-
-/* 浅色主题样式 - 显式定义 */
-.widget-bot-side-sticky[data-theme="light"] {
-  background: #FFFFFF;
-  box-shadow: 0px 6px 16px 0px rgba(33, 34, 45, 0.02), 0px 8px 40px 0px rgba(50, 73, 45, 0.12);
-  border: 1px solid #ECEEF1;
-}
-
-.widget-bot-side-sticky[data-theme="light"]:hover {
-  background: #FFFFFF;
-}
-
-.widget-bot-side-sticky[data-theme="light"].dragging {
-  background: #FFFFFF;
-}
-
-.widget-bot-hover-ball[data-theme="light"] {
-  background: #FFFFFF;
-  box-shadow: 0px 6px 16px 0px rgba(33, 34, 45, 0.02), 0px 8px 40px 0px rgba(50, 73, 45, 0.12);
-  border: 1px solid #ECEEF1;
-}
-
-.widget-bot-hover-ball[data-theme="light"]:hover {
-  transform: scale(1.1) !important;
-}
-
-.widget-bot-hover-ball[data-theme="light"].dragging {
-  box-shadow: 0 8px 20px rgba(50, 72, 242, 0.3);
-}
-
-.widget-bot-modal[data-theme="light"] {
-  background: rgba(0, 0, 0, 0.5);
-}
-
-.widget-bot-modal[data-theme="light"] .widget-bot-modal-content {
-  background: #fff;
-  box-shadow: 0 8px 32px rgba(0, 0, 0, 0.12);
 }

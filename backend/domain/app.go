@@ -399,19 +399,21 @@ type FooterSettings struct {
 }
 
 type WidgetBotSettings struct {
-	IsOpen             bool     `json:"is_open,omitempty"`
-	ThemeMode          string   `json:"theme_mode,omitempty"`
-	BtnText            string   `json:"btn_text,omitempty"`
-	BtnLogo            string   `json:"btn_logo,omitempty"`
-	RecommendQuestions []string `json:"recommend_questions,omitempty"`
-	RecommendNodeIDs   []string `json:"recommend_node_ids,omitempty"`
-	BtnStyle           string   `json:"btn_style,omitempty"`
-	BtnID              string   `json:"btn_id,omitempty"`
-	BtnPosition        string   `json:"btn_position,omitempty"`
-	ModalPosition      string   `json:"modal_position,omitempty"`
-	SearchMode         string   `json:"search_mode,omitempty"`
-	Placeholder        string   `json:"placeholder,omitempty"`
-	Disclaimer         string   `json:"disclaimer,omitempty"`
+	IsOpen               bool     `json:"is_open,omitempty"`
+	ThemeMode            string   `json:"theme_mode,omitempty"`
+	BtnText              string   `json:"btn_text,omitempty"`
+	BtnLogo              string   `json:"btn_logo,omitempty"`
+	RecommendQuestions   []string `json:"recommend_questions,omitempty"`
+	RecommendNodeIDs     []string `json:"recommend_node_ids,omitempty"`
+	BtnStyle             string   `json:"btn_style,omitempty"`
+	BtnID                string   `json:"btn_id,omitempty"`
+	BtnPosition          string   `json:"btn_position,omitempty"`
+	ModalPosition        string   `json:"modal_position,omitempty"`
+	SearchMode           string   `json:"search_mode,omitempty"`
+	Placeholder          string   `json:"placeholder,omitempty"`
+	Disclaimer           string   `json:"disclaimer,omitempty"`
+	CopyrightInfo        string   `json:"copyright_info,omitempty"`
+	CopyrightHideEnabled bool     `json:"copyright_hide_enabled,omitempty"`
 }
 
 type BrandGroup struct {

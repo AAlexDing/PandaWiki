@@ -24,7 +24,10 @@ const LogoutButton = () => {
   const [open, setOpen] = useState(false);
   const handleLogout = () => {
     return postShareProV1AuthLogout().then(() => {
-      window.location.href = '/auth/login';
+      // 使用当前页面的协议（http 或 https）
+      const protocol = window.location.protocol;
+      const host = window.location.host;
+      window.location.href = `${protocol}//${host}/auth/login`;
     });
   };
   return (
@@ -37,6 +40,8 @@ const LogoutButton = () => {
           </Stack>
         }
         open={open}
+        okText='确定'
+        cancelText='取消'
         onCancel={() => setOpen(false)}
         onOk={handleLogout}
         closable={false}

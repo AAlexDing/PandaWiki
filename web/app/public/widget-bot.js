@@ -60,7 +60,7 @@
 
       const data = await response.json();
       widgetInfo = data.data.settings?.widget_bot_settings;
-
+      console.log(widgetInfo);
       // 验证返回的数据结构
       if (!widgetInfo || typeof widgetInfo !== 'object') {
         throw new Error('Invalid widget info response');
@@ -170,7 +170,11 @@
     // 添加文字
     const textDiv = document.createElement('div');
     textDiv.className = 'widget-bot-text';
-    textDiv.innerHTML = createTwoLineText(widgetInfo.btn_text || '在线客服');
+    textDiv.textContent = widgetInfo.btn_text || '在线客服';
+    // 设置固定宽度、自动换行和居中
+    textDiv.style.wordWrap = 'break-word';
+    textDiv.style.whiteSpace = 'normal';
+    textDiv.style.textAlign = 'center';
     buttonContent.appendChild(textDiv);
 
     widgetButton.appendChild(buttonContent);
@@ -263,7 +267,6 @@
     // 触发显示动画
     setTimeout(() => {
       widgetButton.style.opacity = '1';
-      widgetButton.style.transform = 'translateY(0)';
     }, 100);
   }
 
@@ -696,35 +699,41 @@
     dragStartPos.x = clientX;
     dragStartPos.y = clientY;
 
-    // 缓存按钮尺寸，避免拖拽过程中频繁读取
-    buttonSize.width = rect.width;
-    buttonSize.height = rect.height;
+    // 由于 transform-origin 是 center，scale 不会改变元素中心位置
+    // 但 getBoundingClientRect() 返回的尺寸是放大后的，需要计算原始尺寸
+    // 假设当前可能有 scale(1.1)，计算原始尺寸
+    const scale = 1.1; // hover 时的 scale 值
+    const originalWidth = rect.width / scale;
+    const originalHeight = rect.height / scale;
 
-    // 先清除 transform，确保获取真实的位置
-    widgetButton.style.transform = 'none';
+    // 缓存按钮原始尺寸（未缩放）
+    buttonSize.width = originalWidth;
+    buttonSize.height = originalHeight;
 
-    // 重新获取位置（清除 transform 后的真实位置）
-    const realRect = widgetButton.getBoundingClientRect();
+    // 由于 transform-origin 是 center，元素的左上角位置需要考虑 scale 的影响
+    // 中心点位置不变，但左上角会向左上移动
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+    const originalLeft = centerX - originalWidth / 2;
+    const originalTop = centerY - originalHeight / 2;
 
-    // 记录初始位置（基于清除 transform 后的真实位置）
-    initialPosition.left = realRect.left;
-    initialPosition.top = realRect.top;
+    initialPosition.left = originalLeft;
+    initialPosition.top = originalTop;
 
-    dragOffset.x = clientX - realRect.left;
-    dragOffset.y = clientY - realRect.top;
+    // 计算鼠标相对于原始尺寸（未缩放）按钮左上角的偏移
+    dragOffset.x = clientX - originalLeft;
+    dragOffset.y = clientY - originalTop;
 
-    // 确保使用 fixed 定位，使用真实位置
     widgetButton.style.position = 'fixed';
-    widgetButton.style.top = realRect.top + 'px';
-    widgetButton.style.left = realRect.left + 'px';
+    widgetButton.style.top = originalTop + 'px';
+    widgetButton.style.left = originalLeft + 'px';
     widgetButton.style.right = 'auto';
     widgetButton.style.bottom = 'auto';
+    // 保持 scale 效果
+    widgetButton.style.transform = 'scale(1.1)';
 
-    // 禁用过渡效果，提升拖拽性能
     widgetButton.style.transition = 'none';
-
-    // 提示浏览器优化（使用 left/top 定位）
-    widgetButton.style.willChange = 'left, top';
+    widgetButton.style.willChange = 'left, top, transform';
 
     document.addEventListener('mousemove', drag, { passive: false });
     document.addEventListener('mouseup', stopDrag);
@@ -771,13 +780,12 @@
     const maxLeft = windowWidth - buttonWidth;
     const constrainedLeft = Math.max(0, Math.min(newLeft, maxLeft));
 
-    // 直接使用 left/top 定位，实现无延迟的丝滑跟随
-    // 使用 transform: none 确保不会有任何 transform 干扰
     widgetButton.style.left = constrainedLeft + 'px';
     widgetButton.style.top = constrainedTop + 'px';
     widgetButton.style.right = 'auto';
     widgetButton.style.bottom = 'auto';
-    widgetButton.style.transform = 'none';
+    // 保持 scale 效果
+    widgetButton.style.transform = 'scale(1.1)';
   }
 
   // 停止拖拽
@@ -801,6 +809,8 @@
     // 恢复过渡效果
     widgetButton.style.transition = '';
     widgetButton.style.willChange = '';
+    // 移除 transform，让 CSS hover 效果可以正常工作
+    widgetButton.style.transform = '';
 
     // 根据按钮类型和当前位置进行最终定位
     requestAnimationFrame(() => {
@@ -838,9 +848,6 @@
 
       widgetButton.style.top = finalTop + 'px';
       widgetButton.style.bottom = 'auto';
-
-      // 清除 transform，使用 left/top 定位
-      widgetButton.style.transform = 'none';
 
       // 更新 border-radius（现在都是24px圆角）
       widgetButton.style.borderRadius = '24px';

@@ -120,6 +120,13 @@ func (u *AppUsecase) ValidateUpdateApp(ctx context.Context, id string, req *doma
 			return domain.ErrPermissionDenied
 		}
 	}
+
+	if !limitation.AllowCustomCopyright {
+		if app.Settings.WidgetBotSettings.CopyrightHideEnabled != req.Settings.WidgetBotSettings.CopyrightHideEnabled || app.Settings.WidgetBotSettings.CopyrightInfo != req.Settings.WidgetBotSettings.CopyrightInfo {
+			return domain.ErrPermissionDenied
+		}
+	}
+
 	return nil
 }
 
@@ -664,6 +671,12 @@ func (u *AppUsecase) GetWidgetAppInfo(ctx context.Context, kbID string) (*domain
 		}
 		appInfo.RecommendNodes = nodes
 	}
+
+	if !domain.GetBaseEditionLimitation(ctx).AllowCustomCopyright {
+		appInfo.Settings.WidgetBotSettings.CopyrightHideEnabled = false
+		appInfo.Settings.WidgetBotSettings.CopyrightInfo = domain.SettingCopyrightInfo
+	}
+
 	return appInfo, nil
 }
 

@@ -919,6 +919,8 @@ export interface DomainLink {
   url?: string;
 }
 
+export type DomainMessageContent = Record<string, any>;
+
 export interface DomainMetricsConfig {
   list?: {
     id?: string;
@@ -1038,6 +1040,7 @@ export interface DomainOpenAICompletionsRequest {
   response_format?: DomainOpenAIResponseFormat;
   stop?: string[];
   stream?: boolean;
+  stream_options?: DomainOpenAIStreamOptions;
   temperature?: number;
   tool_choice?: DomainOpenAIToolChoice;
   tools?: DomainOpenAITool[];
@@ -1081,7 +1084,7 @@ export interface DomainOpenAIFunctionChoice {
 }
 
 export interface DomainOpenAIMessage {
-  content?: string;
+  content?: DomainMessageContent;
   name?: string;
   role: string;
   tool_call_id?: string;
@@ -1090,6 +1093,10 @@ export interface DomainOpenAIMessage {
 
 export interface DomainOpenAIResponseFormat {
   type: string;
+}
+
+export interface DomainOpenAIStreamOptions {
+  include_usage?: boolean;
 }
 
 export interface DomainOpenAITool {
@@ -1187,6 +1194,19 @@ export interface DomainShareConversationMessage {
   content?: string;
   created_at?: string;
   role?: SchemaRoleType;
+}
+
+export interface DomainShareNodeDetailItem {
+  children?: DomainShareNodeDetailItem[];
+  emoji?: string;
+  id?: string;
+  meta?: DomainNodeMeta;
+  name?: string;
+  parent_id?: string;
+  permissions?: DomainNodePermissions;
+  position?: number;
+  type?: DomainNodeType;
+  updated_at?: string;
 }
 
 export interface DomainSimpleAuth {
@@ -1371,6 +1391,8 @@ export interface DomainWidgetBotSettings {
   btn_position?: string;
   btn_style?: string;
   btn_text?: string;
+  copyright_hide_enabled?: boolean;
+  copyright_info?: string;
   disclaimer?: string;
   is_open?: boolean;
   modal_position?: string;
@@ -1683,6 +1705,7 @@ export interface V1ShareNodeDetailResp {
   editor_id?: string;
   id?: string;
   kb_id?: string;
+  list?: DomainShareNodeDetailItem[];
   meta?: DomainNodeMeta;
   name?: string;
   parent_id?: string;

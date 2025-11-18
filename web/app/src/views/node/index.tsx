@@ -1,6 +1,7 @@
 'use client';
 
 import DocFab from '@/components/docFab';
+import { usePathname } from 'next/navigation';
 import ErrorComponent from '@/components/error';
 import { DocWidth } from '@/constant';
 import useCopy from '@/hooks/useCopy';
@@ -24,7 +25,7 @@ const Doc = ({
   const [loading, setLoading] = useState(true);
   const [headings, setHeadings] = useState<TocList>([]);
   const [characterCount, setCharacterCount] = useState(0);
-
+  const pathname = usePathname();
   const isMarkdown = useMemo(() => {
     return node?.meta?.content_type === 'md';
   }, [node?.meta?.content_type]);
@@ -97,6 +98,10 @@ const Doc = ({
     }
   }, [node]);
 
+  useEffect(() => {
+    document.querySelector('#scroll-container')?.scrollTo({ top: 0 });
+  }, [pathname]);
+
   return (
     <>
       {error ? (
@@ -156,25 +161,27 @@ const Doc = ({
                 height={20}
                 sx={{ mb: 4 }}
               />
-              <Box
-                sx={{
-                  mb: 6,
-                  border: '1px solid',
-                  borderColor: 'divider',
-                  borderRadius: '10px',
-                  bgcolor: 'background.paper3',
-                  p: '20px',
-                  fontSize: 14,
-                  lineHeight: '28px',
-                  backdropFilter: 'blur(5px)',
-                }}
-              >
-                <Box sx={{ fontWeight: 'bold', mb: 2, lineHeight: '22px' }}>
-                  内容摘要
+              {node.type === 2 && (
+                <Box
+                  sx={{
+                    mb: 6,
+                    border: '1px solid',
+                    borderColor: 'divider',
+                    borderRadius: '10px',
+                    bgcolor: 'background.paper3',
+                    p: '20px',
+                    fontSize: 14,
+                    lineHeight: '28px',
+                    backdropFilter: 'blur(5px)',
+                  }}
+                >
+                  <Box sx={{ fontWeight: 'bold', mb: 2, lineHeight: '22px' }}>
+                    内容摘要
+                  </Box>
+                  <Skeleton variant='rounded' height={16} sx={{ mb: 1 }} />
+                  <Skeleton variant='rounded' width={'30%'} height={16} />
                 </Box>
-                <Skeleton variant='rounded' height={16} sx={{ mb: 1 }} />
-                <Skeleton variant='rounded' width={'30%'} height={16} />
-              </Box>
+              )}
               <Skeleton
                 variant='rounded'
                 width={'20%'}

@@ -269,7 +269,9 @@ func (h *ShareChatHandler) ChatCompletions(c echo.Context) error {
 	var lastUserMessage string
 	for i := len(req.Messages) - 1; i >= 0; i-- {
 		if req.Messages[i].Role == "user" {
-			lastUserMessage = req.Messages[i].Content
+			if req.Messages[i].Content != nil {
+				lastUserMessage = req.Messages[i].Content.String()
+			}
 			break
 		}
 	}
@@ -346,11 +348,12 @@ func (h *ShareChatHandler) handleOpenAIStreamResponse(c echo.Context, eventCh <-
 						Index: 0,
 						Delta: domain.OpenAIMessage{
 							Role:    "assistant",
-							Content: event.Content,
+							Content: domain.NewStringContent(event.Content),
 						},
 					},
 				},
 			}
+
 			if err := h.writeOpenAIStreamEvent(c, streamResp); err != nil {
 				return err
 			}
@@ -398,7 +401,7 @@ func (h *ShareChatHandler) handleOpenAINonStreamResponse(c echo.Context, eventCh
 						Index: 0,
 						Message: domain.OpenAIMessage{
 							Role:    "assistant",
-							Content: content,
+							Content: domain.NewStringContent(content),
 						},
 						FinishReason: "stop",
 					},
@@ -495,7 +498,7 @@ func (h *ShareChatHandler) ChatSearch(c echo.Context) error {
 //	@Produce		json
 //	@Param			request	body		domain.ChatSearchReq	true	"Comment"
 //	@Success		200		{object}	domain.Response{data=domain.ChatSearchResp}
-//	@Router			/share/v1/widget/search [post]
+//	@Router			/share/v1/chat/widget/search [post]
 func (h *ShareChatHandler) WidgetSearch(c echo.Context) error {
 	var req domain.ChatSearchReq
 	if err := c.Bind(&req); err != nil {
