@@ -8,7 +8,7 @@ import {
 } from '@/request/Model';
 import { GithubComChaitinPandaWikiDomainModelListItem } from '@/request/types';
 import { addOpacityToColor } from '@/utils';
-import { Icon, message, Modal } from '@ctzhian/ui';
+import { message, Modal } from '@ctzhian/ui';
 import {
   Box,
   Button,
@@ -188,7 +188,7 @@ const ModelConfig = forwardRef<ModelConfigRef, ModelConfigProps>(
     const handleSave = async () => {
       setIsSaving(true);
       try {
-        let requestData: {
+        const requestData: {
           mode: 'auto' | 'manual';
           auto_mode_api_key?: string;
           chat_model?: string;
@@ -224,10 +224,36 @@ const ModelConfig = forwardRef<ModelConfigRef, ModelConfigProps>(
         );
         getModelList(); // 刷新模型列表
       } catch (err) {
+        console.error(err);
       } finally {
         setIsSaving(false);
       }
     };
+
+    const IconModel = chatModelData
+      ? ModelProvider[chatModelData.provider as keyof typeof ModelProvider].icon
+      : null;
+
+    const IconEmbeddingModel = embeddingModelData
+      ? ModelProvider[embeddingModelData.provider as keyof typeof ModelProvider]
+          .icon
+      : null;
+
+    const IconRerankModel = rerankModelData
+      ? ModelProvider[rerankModelData.provider as keyof typeof ModelProvider]
+          .icon
+      : null;
+
+    const IconAnalysisModel = analysisModelData
+      ? ModelProvider[analysisModelData.provider as keyof typeof ModelProvider]
+          .icon
+      : null;
+
+    const IconAnalysisVLModel = analysisVLModelData
+      ? ModelProvider[
+          analysisVLModelData.provider as keyof typeof ModelProvider
+        ].icon
+      : null;
 
     return (
       <Stack gap={0}>
@@ -331,14 +357,7 @@ const ModelConfig = forwardRef<ModelConfigRef, ModelConfigProps>(
                   >
                     {chatModelData ? (
                       <>
-                        <Icon
-                          type={
-                            ModelProvider[
-                              chatModelData.provider as keyof typeof ModelProvider
-                            ].icon
-                          }
-                          sx={{ fontSize: 18 }}
-                        />
+                        {IconModel && <IconModel sx={{ fontSize: 18 }} />}
                         <Box
                           sx={{
                             fontSize: 14,
@@ -540,14 +559,10 @@ const ModelConfig = forwardRef<ModelConfigRef, ModelConfigProps>(
                   >
                     {embeddingModelData ? (
                       <>
-                        <Icon
-                          type={
-                            ModelProvider[
-                              embeddingModelData.provider as keyof typeof ModelProvider
-                            ].icon
-                          }
-                          sx={{ fontSize: 18 }}
-                        />
+                        {IconEmbeddingModel && (
+                          <IconEmbeddingModel sx={{ fontSize: 18 }} />
+                        )}
+
                         <Box
                           sx={{
                             fontSize: 14,
@@ -754,14 +769,10 @@ const ModelConfig = forwardRef<ModelConfigRef, ModelConfigProps>(
                   >
                     {rerankModelData ? (
                       <>
-                        <Icon
-                          type={
-                            ModelProvider[
-                              rerankModelData.provider as keyof typeof ModelProvider
-                            ].icon
-                          }
-                          sx={{ fontSize: 18 }}
-                        />
+                        {IconRerankModel && (
+                          <IconRerankModel sx={{ fontSize: 18 }} />
+                        )}
+
                         <Box
                           sx={{
                             fontSize: 14,
@@ -963,14 +974,10 @@ const ModelConfig = forwardRef<ModelConfigRef, ModelConfigProps>(
                   >
                     {analysisModelData ? (
                       <>
-                        <Icon
-                          type={
-                            ModelProvider[
-                              analysisModelData.provider as keyof typeof ModelProvider
-                            ].icon
-                          }
-                          sx={{ fontSize: 18 }}
-                        />
+                        {IconAnalysisModel && (
+                          <IconAnalysisModel sx={{ fontSize: 18 }} />
+                        )}
+
                         <Box
                           sx={{
                             fontSize: 14,
@@ -1172,14 +1179,9 @@ const ModelConfig = forwardRef<ModelConfigRef, ModelConfigProps>(
                   >
                     {analysisVLModelData ? (
                       <>
-                        <Icon
-                          type={
-                            ModelProvider[
-                              analysisVLModelData.provider as keyof typeof ModelProvider
-                            ].icon
-                          }
-                          sx={{ fontSize: 18 }}
-                        />
+                        {IconAnalysisVLModel && (
+                          <IconAnalysisVLModel sx={{ fontSize: 18 }} />
+                        )}
                         <Box
                           sx={{
                             fontSize: 14,

@@ -4,12 +4,12 @@ import Logo from '@/assets/images/logo.png';
 import { ChunkResultItem } from '@/assets/type';
 import Feedback from '@/components/feedback';
 import {
-  IconCai,
-  IconCaied,
-  IconCopy,
-  IconZan,
-  IconZaned,
-} from '@/components/icons';
+  IconADiancaiWeixuanzhong2,
+  IconDiancaiWeixuanzhong,
+  IconDianzanXuanzhong1,
+  IconDianzanWeixuanzhong,
+} from '@panda-wiki/icons';
+import { IconCopy } from '@/components/icons';
 import MarkDown2 from '@/components/markdown2';
 import { useSmartScroll } from '@/hooks';
 import { useStore } from '@/provider';
@@ -902,10 +902,10 @@ const AiQaContent: React.FC<{
                       {isFeedbackEnabled && item.source === 'chat' && (
                         <>
                           {item.score === 1 && (
-                            <IconZaned sx={{ cursor: 'pointer' }} />
+                            <IconDianzanXuanzhong1 sx={{ cursor: 'pointer' }} />
                           )}
                           {item.score !== 1 && (
-                            <IconZan
+                            <IconDianzanWeixuanzhong
                               sx={{ cursor: 'pointer' }}
                               onClick={() => {
                                 if (item.score === 0)
@@ -914,7 +914,7 @@ const AiQaContent: React.FC<{
                             />
                           )}
                           {item.score !== -1 && (
-                            <IconCai
+                            <IconDiancaiWeixuanzhong
                               sx={{ cursor: 'pointer' }}
                               onClick={() => {
                                 if (item.score === 0) {
@@ -925,7 +925,9 @@ const AiQaContent: React.FC<{
                             />
                           )}
                           {item.score === -1 && (
-                            <IconCaied sx={{ cursor: 'pointer' }} />
+                            <IconADiancaiWeixuanzhong2
+                              sx={{ cursor: 'pointer' }}
+                            />
                           )}
                         </>
                       )}

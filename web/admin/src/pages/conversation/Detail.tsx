@@ -19,6 +19,7 @@ import {
 } from '@mui/material';
 import { Ellipsis, Icon, Modal } from '@ctzhian/ui';
 import { useEffect, useState } from 'react';
+import { IconDitu_diqiu } from '@panda-wiki/icons';
 
 const handleThinkingContent = (content: string) => {
   const thinkRegex = /<think>([\s\S]*?)(?:<\/think>|$)/g;
@@ -302,8 +303,7 @@ const Detail = ({
                       src={item.favicon}
                       sx={{ width: 18, height: 18 }}
                       errorIcon={
-                        <Icon
-                          type='icon-ditu_diqiu'
+                        <IconDitu_diqiu
                           sx={{ fontSize: 18, color: 'text.tertiary' }}
                         />
                       }

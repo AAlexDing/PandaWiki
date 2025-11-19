@@ -1,6 +1,6 @@
 'use client';
 
-import { IconFile, IconFolder } from '@/components/icons';
+import { IconWenjianjia, IconWenjian } from '@panda-wiki/icons';
 import { DomainShareNodeDetailItem } from '@/request/types';
 import { useStore } from '@/provider';
 import { ITreeItem } from '@/assets/type';
@@ -87,13 +87,13 @@ const StyledIconBox = styled(Box)({
   lineHeight: 1,
 });
 
-const StyledIconFolder = styled(IconFolder)({
+const StyledIconFolder = styled(IconWenjianjia)({
   flexShrink: 0,
   marginRight: 12,
   fontSize: 16,
 });
 
-const StyledIconFile = styled(IconFile)({
+const StyledIconFile = styled(IconWenjian)({
   flexShrink: 0,
   marginRight: 12,
   fontSize: 16,

@@ -11,7 +11,7 @@ import {
   useTiptap,
   UseTiptapReturn,
 } from '@ctzhian/tiptap';
-import { Icon, message } from '@ctzhian/ui';
+import { message } from '@ctzhian/ui';
 import { Box, Stack, TextField, Tooltip } from '@mui/material';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash-es';
@@ -30,6 +30,12 @@ import Summary from './Summary';
 import Toc from './Toc';
 import Toolbar from './Toolbar';
 import { BUSINESS_VERSION_PERMISSION } from '@/constant/version';
+import {
+  IconTianjiawendang,
+  IconAShijian2,
+  IconZiti,
+  IconDJzhinengzhaiyao,
+} from '@panda-wiki/icons';
 
 interface WrapProps {
   detail: V1NodeDetailResp;
@@ -379,7 +385,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
                   color: 'text.tertiary',
                 }}
               >
-                <Icon type='icon-tianjiawendang' sx={{ fontSize: 9 }} />
+                <IconTianjiawendang sx={{ fontSize: 9 }} />
                 {nodeDetail?.editor_account} 编辑
               </Stack>
             </Tooltip>
@@ -403,7 +409,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
                 }
               }}
             >
-              <Icon type='icon-a-shijian2' />
+              <IconAShijian2 sx={{ fontSize: 12 }} />
               {dayjs(defaultDetail.created_at).format(
                 'YYYY-MM-DD HH:mm:ss',
               )}{' '}
@@ -416,7 +422,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
             gap={0.5}
             sx={{ fontSize: 12, color: 'text.tertiary' }}
           >
-            <Icon type='icon-ziti' />
+            <IconZiti sx={{ fontSize: 12 }} />
             {characterCount} 字
           </Stack>
         </Stack>
@@ -463,7 +469,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
               },
             }}
           >
-            <Icon type='icon-DJzhinengzhaiyao' sx={{ fontSize: 12 }} />
+            <IconDJzhinengzhaiyao sx={{ fontSize: 12 }} />
             文档摘要
           </Stack>
           {nodeDetail?.meta?.summary ? (

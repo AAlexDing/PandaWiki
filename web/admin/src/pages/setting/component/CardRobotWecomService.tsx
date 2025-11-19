@@ -7,7 +7,8 @@ import {
   DomainKnowledgeBaseDetail,
 } from '@/request/types';
 import { useAppSelector } from '@/store';
-import { Icon, message } from '@ctzhian/ui';
+import { message } from '@ctzhian/ui';
+import { IconJinggao } from '@panda-wiki/icons';
 import {
   Box,
   FormControlLabel,
@@ -261,7 +262,7 @@ const CardRobotWecomService = ({
             gap={1}
             sx={{ fontSize: 14, fontWeight: 600, color: 'warning.main' }}
           >
-            <Icon type='icon-jinggao' sx={{ fontSize: 18 }} />
+            <IconJinggao sx={{ fontSize: 18 }} />
             人工客服转接配置：当用户触发以下场景时，会自动转接人工客服
           </Stack>
           <VersionMask permission={PROFESSION_VERSION_PERMISSION}>

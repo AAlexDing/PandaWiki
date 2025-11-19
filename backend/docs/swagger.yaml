@@ -1763,6 +1763,8 @@ definitions:
         $ref: '#/definitions/domain.NodePermissions'
       position:
         type: number
+      publisher_id:
+        type: string
       rag_info:
         $ref: '#/definitions/domain.RagInfo'
       status:

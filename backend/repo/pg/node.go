@@ -157,6 +157,32 @@ func (r *NodeRepository) GetLatestNodeReleaseByNodeIDs(ctx context.Context, kbID
 	return nodeReleases, nil
 }
 
+func (r *NodeRepository) GetNodeReleasePublisherMap(ctx context.Context, kbID string) (map[string]string, error) {
+	type Result struct {
+		NodeID      string `gorm:"column:node_id"`
+		PublisherID string `gorm:"column:publisher_id"`
+	}
+
+	var results []Result
+	if err := r.db.WithContext(ctx).
+		Model(&domain.NodeRelease{}).
+		Select("node_id, publisher_id").
+		Where("kb_id = ?", kbID).
+		Where("node_releases.doc_id != '' ").
+		Find(&results).Error; err != nil {
+		return nil, err
+	}
+
+	publisherMap := make(map[string]string)
+	for _, result := range results {
+		if result.PublisherID != "" {
+			publisherMap[result.NodeID] = result.PublisherID
+		}
+	}
+
+	return publisherMap, nil
+}
+
 func (r *NodeRepository) UpdateNodeContent(ctx context.Context, req *domain.UpdateNodeReq, userId string) error {
 	// Use transaction to ensure data consistency
 	err := r.db.WithContext(ctx).Transaction(func(tx *gorm.DB) error {

@@ -262,31 +262,6 @@ const CardAuth = ({ kb, refresh }: CardAuthProps) => {
         );
       },
     },
-
-    // {
-    //   title: '',
-    //   dataIndex: 'action',
-    //   width: 60,
-    //   render: (text: string, record) => {
-    //     return (
-    //       <IconButton
-    //         size='small'
-    //         sx={{ p: '2px' }}
-    //         onClick={() => {
-    //           onDeleteUser(record.id!);
-    //         }}
-    //       >
-    //         <Icon
-    //           type='icon-icon_tool_close'
-    //           sx={{
-    //             cursor: 'pointer',
-    //             color: 'error.main',
-    //           }}
-    //         />
-    //       </IconButton>
-    //     );
-    //   },
-    // },
   ];
 
   const githubForm = () => {

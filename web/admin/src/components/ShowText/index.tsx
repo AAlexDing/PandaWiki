@@ -1,13 +1,14 @@
 import { copyText } from '@/utils';
 import { Box, Stack } from '@mui/material';
-import { Ellipsis, Icon } from '@ctzhian/ui';
+import { Ellipsis } from '@ctzhian/ui';
+import { IconFuzhi } from '@panda-wiki/icons';
 
 interface ShowTextProps {
   text: string[];
   copyable?: boolean;
   showIcon?: boolean;
   noEllipsis?: boolean;
-  icon?: string;
+  icon?: React.ReactNode;
   onClick?: () => void;
 }
 
@@ -15,7 +16,9 @@ const ShowText = ({
   text,
   copyable = true,
   showIcon = true,
-  icon = 'icon-fuzhi',
+  icon = (
+    <IconFuzhi sx={{ fontSize: 16, color: 'text.disabled', flexShrink: 0 }} />
+  ),
   onClick,
   noEllipsis = false,
 }: ShowTextProps) => {
@@ -62,12 +65,7 @@ const ShowText = ({
           ),
         )}
       </Stack>
-      {showIcon && (
-        <Icon
-          type={icon}
-          sx={{ fontSize: 16, color: 'text.disabled', flexShrink: 0 }}
-        />
-      )}
+      {showIcon && icon}
     </Stack>
   );
 };

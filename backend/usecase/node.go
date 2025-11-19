@@ -86,6 +86,21 @@ func (u *NodeUsecase) GetList(ctx context.Context, req *domain.GetNodeListReq) (
 	if err != nil {
 		return nil, err
 	}
+	if len(nodes) == 0 {
+		return nodes, nil
+	}
+
+	publisherMap, err := u.nodeRepo.GetNodeReleasePublisherMap(ctx, req.KBID)
+	if err != nil {
+		return nil, err
+	}
+
+	for _, node := range nodes {
+		if publisherID, exists := publisherMap[node.ID]; exists {
+			node.PublisherId = publisherID
+		}
+	}
+
 	return nodes, nil
 }
 

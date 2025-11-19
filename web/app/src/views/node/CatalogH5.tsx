@@ -1,6 +1,7 @@
 'use client';
 
-import { IconArrowDown, IconNav } from '@/components/icons';
+import { IconNav } from '@/components/icons';
+import { IconXiajiantou } from '@panda-wiki/icons';
 import { filterTreeBySearch } from '@/utils';
 import { addExpandState } from '@/utils/drag';
 import { useParams } from 'next/navigation';
@@ -84,7 +85,7 @@ const CatalogH5 = () => {
             目录
           </Box>
         </Stack>
-        <IconArrowDown
+        <IconXiajiantou
           sx={{
             fontSize: 24,
             transform: open ? 'rotate(-180deg)' : 'rotate(0deg)',

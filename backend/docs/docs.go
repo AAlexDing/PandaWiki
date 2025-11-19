@@ -6582,6 +6582,9 @@ const docTemplate = `{
                 "position": {
                     "type": "number"
                 },
+                "publisher_id": {
+                    "type": "string"
+                },
                 "rag_info": {
                     "$ref": "#/definitions/domain.RagInfo"
                 },

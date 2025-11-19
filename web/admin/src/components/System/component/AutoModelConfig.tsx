@@ -1,8 +1,5 @@
-import Card from '@/components/Card';
-import { Icon, message } from '@ctzhian/ui';
 import {
   Box,
-  Button,
   Stack,
   TextField,
   Select,
@@ -10,6 +7,8 @@ import {
   InputAdornment,
   IconButton,
 } from '@mui/material';
+import InfoOutlineSharpIcon from '@mui/icons-material/InfoOutlineSharp';
+import KeySharpIcon from '@mui/icons-material/KeySharp';
 import Visibility from '@mui/icons-material/Visibility';
 import VisibilityOff from '@mui/icons-material/VisibilityOff';
 import { useState, useEffect, forwardRef, useImperativeHandle } from 'react';
@@ -107,8 +106,7 @@ const AutoModelConfig = forwardRef<AutoModelConfigRef, AutoModelConfigProps>(
                 border: '1px solid rgba(25, 118, 210, 0.2)',
               }}
             >
-              <Icon
-                type='icon-info-circle'
+              <InfoOutlineSharpIcon
                 sx={{
                   fontSize: 16,
                   color: 'primary.main',
@@ -170,7 +168,7 @@ const AutoModelConfig = forwardRef<AutoModelConfigRef, AutoModelConfigProps>(
                 gap: 0.5,
               }}
             >
-              <Icon type='icon-key' sx={{ fontSize: 14 }} />
+              <KeySharpIcon sx={{ fontSize: 14, color: 'primary.main' }} />
               获取百智云 API Key
             </Box>
           </Box>

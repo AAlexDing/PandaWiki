@@ -77,19 +77,6 @@ const CardWeb = ({ kb, refresh }: CardWebProps) => {
       <CardProxy kb={kb} refresh={refresh} />
       <CardBasicInfo kb={kb} refresh={refresh} />
       <CardAuth kb={kb} refresh={refresh} />
-      {/* <CardWebHeader
-        id={info.id}
-        data={info}
-        refresh={value => {
-          setInfo({
-            ...info,
-            settings: {
-              ...info.settings,
-              ...value,
-            },
-          });
-        }}
-      /> */}
       <CardCatalog
         id={info.id}
         data={info}
@@ -106,35 +93,7 @@ const CardWeb = ({ kb, refresh }: CardWebProps) => {
           });
         }}
       />
-      {/* <CardFooter
-        id={info.id}
-        data={info}
-        refresh={value => {
-          setInfo({
-            ...info,
-            settings: {
-              ...info.settings,
-              footer_settings: {
-                ...info.settings?.footer_settings,
-                ...value,
-              },
-            },
-          });
-        }}
-      /> */}
-      {/* <CardWebWelcome
-        id={info.id}
-        data={info}
-        refresh={value => {
-          setInfo({
-            ...info,
-            settings: {
-              ...info.settings,
-              ...value,
-            },
-          });
-        }}
-      /> */}
+
       <CardWebSEO
         id={info.id}
         data={info}

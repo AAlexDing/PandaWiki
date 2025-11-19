@@ -982,6 +982,7 @@ export interface DomainNodeListItemResp {
   editor_id?: string;
   emoji?: string;
   id?: string;
+  publisher_id?: string;
   name?: string;
   parent_id?: string;
   permissions?: DomainNodePermissions;
@@ -1772,23 +1773,23 @@ export interface DeleteApiV1AuthDeleteParams {
 export interface GetApiV1AuthGetParams {
   kb_id?: string;
   source_type:
-    | "dingtalk"
-    | "feishu"
-    | "wecom"
-    | "oauth"
-    | "github"
-    | "cas"
-    | "ldap"
-    | "widget"
-    | "dingtalk_bot"
-    | "feishu_bot"
-    | "lark_bot"
-    | "wechat_bot"
-    | "wecom_ai_bot"
-    | "wechat_service_bot"
-    | "discord_bot"
-    | "wechat_official_account"
-    | "openai_api";
+  | "dingtalk"
+  | "feishu"
+  | "wecom"
+  | "oauth"
+  | "github"
+  | "cas"
+  | "ldap"
+  | "widget"
+  | "dingtalk_bot"
+  | "feishu_bot"
+  | "lark_bot"
+  | "wechat_bot"
+  | "wecom_ai_bot"
+  | "wechat_service_bot"
+  | "discord_bot"
+  | "wechat_official_account"
+  | "openai_api";
 }
 
 export interface GetApiV1CommentParams {

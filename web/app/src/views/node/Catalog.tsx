@@ -1,5 +1,5 @@
 'use client';
-import { IconMulu } from '@/components/icons';
+import { IconMulu } from '@panda-wiki/icons';
 import { useStore } from '@/provider';
 import { addExpandState } from '@/utils/drag';
 import { Box, Stack, SxProps, Tooltip } from '@mui/material';

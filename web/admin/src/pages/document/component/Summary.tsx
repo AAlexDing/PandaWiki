@@ -1,8 +1,9 @@
 import { postApiV1NodeSummary, putApiV1NodeDetail } from '@/request/Node';
 import { DomainNodeListItemResp } from '@/request/types';
 import { Button, Stack, TextField } from '@mui/material';
-import { Icon, message, Modal } from '@ctzhian/ui';
+import { message, Modal } from '@ctzhian/ui';
 import { useEffect, useState } from 'react';
+import { IconShuaxin } from '@panda-wiki/icons';
 
 interface SummaryProps {
   kb_id: string;
@@ -63,13 +64,13 @@ const Summary = ({ open, data, kb_id, onClose, refresh }: SummaryProps) => {
             onClick={createSummary}
             disabled={loading}
             startIcon={
-              <Icon
-                type='icon-shuaxin'
-                sx={
-                  loading
+              <IconShuaxin
+                sx={{
+                  fontSize: '16px !important',
+                  ...(loading
                     ? { animation: 'loadingRotate 1s linear infinite' }
-                    : {}
-                }
+                    : {}),
+                }}
               />
             }
           >

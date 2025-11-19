@@ -14,13 +14,13 @@ import { handleThinkingContent } from './utils';
 import { useSmartScroll } from '@/hooks';
 import { useTheme } from '@mui/material';
 import { v4 as uuidv4 } from 'uuid';
+import { IconCopy } from '@/components/icons';
 import {
-  IconCai,
-  IconCaied,
-  IconCopy,
-  IconZan,
-  IconZaned,
-} from '@/components/icons';
+  IconADiancaiWeixuanzhong2,
+  IconDiancaiWeixuanzhong,
+  IconDianzanXuanzhong1,
+  IconDianzanWeixuanzhong,
+} from '@panda-wiki/icons';
 import MarkDown2 from '@/components/markdown2';
 import { postShareV1ChatFeedback } from '@/request/ShareChat';
 import { copyText } from '@/utils';
@@ -931,10 +931,10 @@ const AiQaContent: React.FC<{
                       {isFeedbackEnabled && item.source === 'chat' && (
                         <>
                           {item.score === 1 && (
-                            <IconZaned sx={{ cursor: 'pointer' }} />
+                            <IconDianzanXuanzhong1 sx={{ cursor: 'pointer' }} />
                           )}
                           {item.score !== 1 && (
-                            <IconZan
+                            <IconDianzanWeixuanzhong
                               sx={{ cursor: 'pointer' }}
                               onClick={() => {
                                 if (item.score === 0)
@@ -943,7 +943,7 @@ const AiQaContent: React.FC<{
                             />
                           )}
                           {item.score !== -1 && (
-                            <IconCai
+                            <IconDiancaiWeixuanzhong
                               sx={{ cursor: 'pointer' }}
                               onClick={() => {
                                 if (item.score === 0) {
@@ -954,7 +954,9 @@ const AiQaContent: React.FC<{
                             />
                           )}
                           {item.score === -1 && (
-                            <IconCaied sx={{ cursor: 'pointer' }} />
+                            <IconADiancaiWeixuanzhong2
+                              sx={{ cursor: 'pointer' }}
+                            />
                           )}
                         </>
                       )}

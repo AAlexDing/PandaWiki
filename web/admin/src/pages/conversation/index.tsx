@@ -34,15 +34,12 @@ const Conversation = () => {
       title: '问题',
       render: (text: string, record) => {
         const isGroupChat = record.info?.user_info?.from === 1;
+        const AppIcon =
+          AppType[record.app_type as keyof typeof AppType]?.icon || '';
         return (
           <>
             <Stack direction={'row'} alignItems={'center'} gap={1}>
-              <Icon
-                sx={{ fontSize: 12 }}
-                type={
-                  AppType[record.app_type as keyof typeof AppType]?.icon || ''
-                }
-              />
+              <AppIcon sx={{ fontSize: 12 }}></AppIcon>
               <Ellipsis
                 className='primary-color'
                 sx={{ cursor: 'pointer', flex: 1, width: 0 }}

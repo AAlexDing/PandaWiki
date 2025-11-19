@@ -10,7 +10,8 @@ import {
   DomainKnowledgeBaseDetail,
 } from '@/request/types';
 import { useAppSelector } from '@/store';
-import { Icon, message } from '@ctzhian/ui';
+import { message } from '@ctzhian/ui';
+import { IconJinggao } from '@panda-wiki/icons';
 import ExpandMoreIcon from '@mui/icons-material/ExpandMore';
 import {
   Box,
@@ -235,7 +236,7 @@ const CardRobotWebComponent = ({ kb }: CardRobotWebComponentProps) => {
                     bgcolor: 'warning.light',
                   }}
                 >
-                  <Icon type='icon-jinggao' />
+                  <IconJinggao sx={{ fontSize: 16 }} />
                   未配置域名，可在
                   <Box component={'span'} sx={{ fontWeight: 500 }}>
                     门户网站 / 服务监听方式

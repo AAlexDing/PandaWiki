@@ -9,12 +9,19 @@ import { DomainNodeListItemResp, V1NodeDetailResp } from '@/request/types';
 import { useAppSelector } from '@/store';
 import { addOpacityToColor } from '@/utils';
 import { convertToTree } from '@/utils/drag';
-import { Ellipsis, Icon } from '@ctzhian/ui';
+import { Ellipsis } from '@ctzhian/ui';
 import { alpha, Box, IconButton, Stack, useTheme } from '@mui/material';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useLocation, useNavigate, useParams } from 'react-router-dom';
 import DocAddByCustomText from '../../component/DocAddByCustomText';
 import KBSwitch from './KBSwitch';
+import {
+  IconIcon_tool_close,
+  IconWenjianjia,
+  IconWenjian,
+  IconMulushouqi,
+  IconXiajiantou,
+} from '@panda-wiki/icons';
 
 interface CatalogProps {
   curNode: V1NodeDetailResp;
@@ -123,9 +130,8 @@ const Catalog = ({ curNode, setCatalogOpen }: CatalogProps) => {
           }}
           context={
             <IconButton>
-              <Icon
+              <IconIcon_tool_close
                 className='catalog-folder-add-icon'
-                type='icon-icon_tool_close'
                 sx={{
                   fontSize: 16,
                   color: 'action.selected',
@@ -235,8 +241,7 @@ const Catalog = ({ curNode, setCatalogOpen }: CatalogProps) => {
                 top: 13,
               }}
             >
-              <Icon
-                type='icon-xiajiantou'
+              <IconXiajiantou
                 sx={{
                   fontSize: 16,
                   color: 'text.disabled',
@@ -251,10 +256,13 @@ const Catalog = ({ curNode, setCatalogOpen }: CatalogProps) => {
           )}
           {item.emoji ? (
             <Box sx={{ fontSize: 14, flexShrink: 0 }}>{item.emoji}</Box>
+          ) : item.type === 1 ? (
+            <IconWenjianjia
+              sx={{ color: '#2f80f7', flexShrink: 0, fontSize: 14 }}
+            />
           ) : (
-            <Icon
-              type={item.type === 1 ? 'icon-wenjianjia' : 'icon-wenjian'}
-              sx={{ color: '#2f80f7', flexShrink: 0 }}
+            <IconWenjian
+              sx={{ color: '#2f80f7', flexShrink: 0, fontSize: 14 }}
             />
           )}
           <Ellipsis>{item.name}</Ellipsis>
@@ -336,8 +344,7 @@ const Catalog = ({ curNode, setCatalogOpen }: CatalogProps) => {
             },
           }}
         >
-          <Icon
-            type='icon-mulushouqi'
+          <IconMulushouqi
             sx={{
               fontSize: 24,
             }}
