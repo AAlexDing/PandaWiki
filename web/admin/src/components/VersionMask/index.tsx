@@ -55,10 +55,12 @@ const VersionMask = ({
     ConstsLicenseEdition.LicenseEditionEnterprise,
   ],
   children,
+  wrapperSx,
   sx,
 }: {
   permission?: ConstsLicenseEdition[];
   children?: React.ReactNode;
+  wrapperSx?: SxProps;
   sx?: SxProps;
 }) => {
   const versionInfo = useVersionInfo();
@@ -67,7 +69,7 @@ const VersionMask = ({
   const nextVersionInfo = VersionInfoMap[permission[0]];
 
   return (
-    <StyledMaskWrapper>
+    <StyledMaskWrapper sx={wrapperSx}>
       {children}
       <StyledMask sx={sx}>
         <StyledMaskContent>

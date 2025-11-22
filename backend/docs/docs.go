@@ -4533,6 +4533,9 @@ const docTemplate = `{
                 "contribute_settings": {
                     "$ref": "#/definitions/domain.ContributeSettings"
                 },
+                "conversation_setting": {
+                    "$ref": "#/definitions/domain.ConversationSetting"
+                },
                 "copy_setting": {
                     "enum": [
                         "",
@@ -4811,6 +4814,9 @@ const docTemplate = `{
                 },
                 "contribute_settings": {
                     "$ref": "#/definitions/domain.ContributeSettings"
+                },
+                "conversation_setting": {
+                    "$ref": "#/definitions/domain.ConversationSetting"
                 },
                 "copy_setting": {
                     "$ref": "#/definitions/consts.CopySetting"
@@ -5748,6 +5754,17 @@ const docTemplate = `{
                     "type": "string"
                 },
                 "url": {
+                    "type": "string"
+                }
+            }
+        },
+        "domain.ConversationSetting": {
+            "type": "object",
+            "properties": {
+                "copyright_hide_enabled": {
+                    "type": "boolean"
+                },
+                "copyright_info": {
                     "type": "string"
                 }
             }

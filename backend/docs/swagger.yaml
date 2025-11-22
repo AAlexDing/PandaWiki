@@ -431,6 +431,8 @@ definitions:
         description: catalog settings
       contribute_settings:
         $ref: '#/definitions/domain.ContributeSettings'
+      conversation_setting:
+        $ref: '#/definitions/domain.ConversationSetting'
       copy_setting:
         allOf:
         - $ref: '#/definitions/consts.CopySetting'
@@ -606,6 +608,8 @@ definitions:
         description: catalog settings
       contribute_settings:
         $ref: '#/definitions/domain.ContributeSettings'
+      conversation_setting:
+        $ref: '#/definitions/domain.ConversationSetting'
       copy_setting:
         $ref: '#/definitions/consts.CopySetting'
       desc:
@@ -1216,6 +1220,13 @@ definitions:
       node_id:
         type: string
       url:
+        type: string
+    type: object
+  domain.ConversationSetting:
+    properties:
+      copyright_hide_enabled:
+        type: boolean
+      copyright_info:
         type: string
     type: object
   domain.CreateKBReleaseReq:

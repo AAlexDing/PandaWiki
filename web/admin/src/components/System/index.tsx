@@ -108,7 +108,6 @@ const System = () => {
           aria-label='system tabs'
           sx={{
             mb: 2,
-            ml: -2,
             borderBottom: 1,
             borderColor: 'divider',
             '& .MuiTabs-indicator': {
@@ -144,12 +143,12 @@ const System = () => {
           ))}
         </Tabs>
         {activeTab === 'user-management' && (
-          <Box sx={{ ml: -2 }}>
+          <Box>
             <Member />
           </Box>
         )}
         {activeTab === 'model-config' && (
-          <Box sx={{ ml: -2 }}>
+          <Box>
             <ModelConfig
               ref={modelConfigRef}
               onCloseModal={() => setOpen(false)}

@@ -534,6 +534,7 @@ const FooterConfig = ({ data, setIsEdit, isEdit }: FooterConfigProps) => {
           </Box>
           <VersionMask
             permission={PROFESSION_VERSION_PERMISSION}
+            wrapperSx={{ px: 2 }}
             sx={{ inset: '-8px 0' }}
           >
             <Controller

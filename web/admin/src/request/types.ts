@@ -304,6 +304,7 @@ export interface DomainAppSettings {
   /** catalog settings */
   catalog_settings?: DomainCatalogSettings;
   contribute_settings?: DomainContributeSettings;
+  conversation_setting?: DomainConversationSetting;
   copy_setting?: "" | "append" | "disabled";
   /** seo */
   desc?: string;
@@ -389,6 +390,7 @@ export interface DomainAppSettingsResp {
   /** catalog settings */
   catalog_settings?: DomainCatalogSettings;
   contribute_settings?: DomainContributeSettings;
+  conversation_setting?: DomainConversationSetting;
   copy_setting?: ConstsCopySetting;
   /** seo */
   desc?: string;
@@ -705,6 +707,11 @@ export interface DomainConversationReference {
   url?: string;
 }
 
+export interface DomainConversationSetting {
+  copyright_hide_enabled?: boolean;
+  copyright_info?: string;
+}
+
 export interface DomainCreateKBReleaseReq {
   kb_id: string;
   message: string;
@@ -982,11 +989,11 @@ export interface DomainNodeListItemResp {
   editor_id?: string;
   emoji?: string;
   id?: string;
-  publisher_id?: string;
   name?: string;
   parent_id?: string;
   permissions?: DomainNodePermissions;
   position?: number;
+  publisher_id?: string;
   rag_info?: DomainRagInfo;
   status?: DomainNodeStatus;
   summary?: string;
@@ -1773,23 +1780,23 @@ export interface DeleteApiV1AuthDeleteParams {
 export interface GetApiV1AuthGetParams {
   kb_id?: string;
   source_type:
-  | "dingtalk"
-  | "feishu"
-  | "wecom"
-  | "oauth"
-  | "github"
-  | "cas"
-  | "ldap"
-  | "widget"
-  | "dingtalk_bot"
-  | "feishu_bot"
-  | "lark_bot"
-  | "wechat_bot"
-  | "wecom_ai_bot"
-  | "wechat_service_bot"
-  | "discord_bot"
-  | "wechat_official_account"
-  | "openai_api";
+    | "dingtalk"
+    | "feishu"
+    | "wecom"
+    | "oauth"
+    | "github"
+    | "cas"
+    | "ldap"
+    | "widget"
+    | "dingtalk_bot"
+    | "feishu_bot"
+    | "lark_bot"
+    | "wechat_bot"
+    | "wecom_ai_bot"
+    | "wechat_service_bot"
+    | "discord_bot"
+    | "wechat_official_account"
+    | "openai_api";
 }
 
 export interface GetApiV1CommentParams {

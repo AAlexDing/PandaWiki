@@ -125,6 +125,12 @@ func (u *AppUsecase) ValidateUpdateApp(ctx context.Context, id string, req *doma
 		if app.Settings.WidgetBotSettings.CopyrightHideEnabled != req.Settings.WidgetBotSettings.CopyrightHideEnabled || app.Settings.WidgetBotSettings.CopyrightInfo != req.Settings.WidgetBotSettings.CopyrightInfo {
 			return domain.ErrPermissionDenied
 		}
+		if app.Settings.ConversationSetting.CopyrightHideEnabled != req.Settings.ConversationSetting.CopyrightHideEnabled {
+			return domain.ErrPermissionDenied
+		}
+		if req.Settings.ConversationSetting.CopyrightInfo != domain.SettingCopyrightInfo && app.Settings.ConversationSetting.CopyrightInfo != req.Settings.ConversationSetting.CopyrightInfo {
+			return domain.ErrPermissionDenied
+		}
 	}
 
 	return nil
@@ -513,14 +519,21 @@ func (u *AppUsecase) GetAppDetailByKBIDAndAppType(ctx context.Context, kbID stri
 		WebAppLandingConfigs: webAppLandingConfigs,
 		WebAppLandingTheme:   app.Settings.WebAppLandingTheme,
 
-		WatermarkContent:   app.Settings.WatermarkContent,
-		WatermarkSetting:   app.Settings.WatermarkSetting,
-		CopySetting:        app.Settings.CopySetting,
-		ContributeSettings: app.Settings.ContributeSettings,
-		HomePageSetting:    app.Settings.HomePageSetting,
+		WatermarkContent:    app.Settings.WatermarkContent,
+		WatermarkSetting:    app.Settings.WatermarkSetting,
+		CopySetting:         app.Settings.CopySetting,
+		ContributeSettings:  app.Settings.ContributeSettings,
+		HomePageSetting:     app.Settings.HomePageSetting,
+		ConversationSetting: app.Settings.ConversationSetting,
 
 		WecomAIBotSettings: app.Settings.WecomAIBotSettings,
 	}
+
+	if !domain.GetBaseEditionLimitation(ctx).AllowCustomCopyright {
+		appDetailResp.Settings.ConversationSetting.CopyrightHideEnabled = false
+		appDetailResp.Settings.ConversationSetting.CopyrightInfo = domain.SettingCopyrightInfo
+	}
+
 	// init ai feedback string
 	if app.Settings.AIFeedbackSettings.AIFeedbackType == nil {
 		appDetailResp.Settings.AIFeedbackSettings.AIFeedbackType = []string{"内容不准确", "没有帮助", "其他"}
@@ -613,11 +626,12 @@ func (u *AppUsecase) ShareGetWebAppInfo(ctx context.Context, kbID string, authId
 			WebAppLandingConfigs: webAppLandingConfigs,
 			WebAppLandingTheme:   app.Settings.WebAppLandingTheme,
 
-			WatermarkContent:   app.Settings.WatermarkContent,
-			WatermarkSetting:   app.Settings.WatermarkSetting,
-			CopySetting:        app.Settings.CopySetting,
-			ContributeSettings: app.Settings.ContributeSettings,
-			HomePageSetting:    app.Settings.HomePageSetting,
+			WatermarkContent:    app.Settings.WatermarkContent,
+			WatermarkSetting:    app.Settings.WatermarkSetting,
+			CopySetting:         app.Settings.CopySetting,
+			ContributeSettings:  app.Settings.ContributeSettings,
+			HomePageSetting:     app.Settings.HomePageSetting,
+			ConversationSetting: app.Settings.ConversationSetting,
 		},
 	}
 	// init ai feedback string
@@ -633,6 +647,8 @@ func (u *AppUsecase) ShareGetWebAppInfo(ctx context.Context, kbID string, authId
 	if !domain.GetBaseEditionLimitation(ctx).AllowCustomCopyright {
 		appInfo.Settings.WebAppCustomSettings.ShowBrandInfo = &showBrand
 		appInfo.Settings.DisclaimerSettings.Content = &defaultDisclaimer
+		appInfo.Settings.ConversationSetting.CopyrightHideEnabled = false
+		appInfo.Settings.ConversationSetting.CopyrightInfo = domain.SettingCopyrightInfo
 	} else {
 		if appInfo.Settings.DisclaimerSettings.Content == nil {
 			appInfo.Settings.DisclaimerSettings.Content = &defaultDisclaimer

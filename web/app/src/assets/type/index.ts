@@ -2,6 +2,7 @@ import {
   ConstsCopySetting,
   ConstsWatermarkSetting,
   DomainDisclaimerSettings,
+  DomainConversationSetting,
   DomainWebAppLandingConfig,
 } from '@/request/types';
 
@@ -58,6 +59,7 @@ export interface ThemeAndStyleSetting {
 export interface KBDetail {
   name: string;
   settings: {
+    conversation_setting: DomainConversationSetting;
     title: string;
     btns: NavBtn[];
     icon: string;
