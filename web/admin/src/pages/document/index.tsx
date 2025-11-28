@@ -17,17 +17,18 @@ import { useAppDispatch, useAppSelector } from '@/store';
 import { setIsRefreshDocList } from '@/store/slices/config';
 import { addOpacityToColor } from '@/utils';
 import { collapseAllFolders, convertToTree } from '@/utils/drag';
-import { Icon } from '@ctzhian/ui';
+import { message } from '@ctzhian/ui';
 import {
   Box,
   Button,
+  ButtonBase,
   Checkbox,
   IconButton,
   Stack,
   useTheme,
-  ButtonBase,
 } from '@mui/material';
-import { useCallback, useEffect, useRef, useState } from 'react';
+import { IconGengduo } from '@panda-wiki/icons';
+import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
 import VersionPublish from '../release/components/VersionPublish';
 import AddDocBtn from './component/AddDocBtn';
 import AddDocByType from './component/AddDocByType';
@@ -41,7 +42,9 @@ import RagErrorReStart from './component/RagErrorReStart';
 import Summary from './component/Summary';
 
 const Content = () => {
-  const { kb_id, isRefreshDocList } = useAppSelector(state => state.config);
+  const { kb_id, isRefreshDocList, kbList } = useAppSelector(
+    state => state.config,
+  );
   const dispatch = useAppDispatch();
   const theme = useTheme();
   const dragTreeRef = useRef<DragTreeHandle>(null);
@@ -49,6 +52,7 @@ const Content = () => {
   const [searchParams] = useURLSearchParams();
   const search = searchParams.get('search') || '';
   const [supportSelect, setBatchOpen] = useState(false);
+  const [wikiUrl, setWikiUrl] = useState<string>('');
 
   const [ragReStartCount, setRagStartCount] = useState(0);
   const [ragIds, setRagIds] = useState<string[]>([]);
@@ -137,6 +141,15 @@ const Content = () => {
     setPropertiesOpen(true);
     setOpraData(getOperationData(item));
     setIsBatch(false);
+  };
+
+  const handleFrontDoc = (id: string) => {
+    const currentNode = list.find(item => item.id === id);
+    if (currentNode?.status !== 2 && !currentNode?.publisher_id) {
+      message.warning('当前文档未发布，无法查看前台文档');
+      return;
+    }
+    window.open(`${wikiUrl}/node/${id}`, '_blank');
   };
 
   const menu = (opra: TreeMenuOptions): TreeMenuItem[] => {
@@ -292,6 +305,11 @@ const Content = () => {
               key: 'properties',
               onClick: () => handleProperties(item),
             },
+            {
+              label: '前台查看',
+              key: 'front_doc',
+              onClick: () => handleFrontDoc(item.id),
+            },
           ]
         : []),
       ...(!isEditing
@@ -367,6 +385,10 @@ const Content = () => {
     setData([...newData]);
   }, []);
 
+  const currentKb = useMemo(() => {
+    return kbList?.find(item => item.id === kb_id);
+  }, [kbList, kb_id]);
+
   useEffect(() => {
     const handleVisibilityChange = () => {
       if (document.visibilityState === 'visible' && kb_id) {
@@ -378,6 +400,25 @@ const Content = () => {
       document.removeEventListener('visibilitychange', handleVisibilityChange);
     };
   }, [getData, kb_id]);
+
+  useEffect(() => {
+    if (currentKb?.access_settings?.base_url) {
+      setWikiUrl(currentKb.access_settings.base_url);
+      return;
+    }
+    const host = currentKb?.access_settings?.hosts?.[0] || '';
+    if (host === '') return;
+    const { ssl_ports = [], ports = [] } = currentKb?.access_settings || {};
+
+    if (ssl_ports) {
+      if (ssl_ports.includes(443)) setWikiUrl(`https://${host}`);
+      else if (ssl_ports.length > 0)
+        setWikiUrl(`https://${host}:${ssl_ports[0]}`);
+    } else if (ports) {
+      if (ports.includes(80)) setWikiUrl(`http://${host}`);
+      else if (ports.length > 0) setWikiUrl(`http://${host}:${ports[0]}`);
+    }
+  }, [currentKb]);
 
   useEffect(() => {
     if (kb_id) getData();
@@ -529,7 +570,7 @@ const Content = () => {
               context={
                 <Box>
                   <IconButton size='small'>
-                    <Icon type='icon-gengduo' />
+                    <IconGengduo sx={{ fontSize: '16px' }} />
                   </IconButton>
                 </Box>
               }

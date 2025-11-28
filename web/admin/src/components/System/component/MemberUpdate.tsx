@@ -4,9 +4,10 @@ import Card from '@/components/Card';
 import { copyText, generatePassword } from '@/utils';
 import { CheckCircle } from '@mui/icons-material';
 import { Box, IconButton, Stack, TextField } from '@mui/material';
-import { Icon, Modal } from '@ctzhian/ui';
+import { Modal } from '@ctzhian/ui';
 import { useEffect, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
+import { IconShuaxin } from '@panda-wiki/icons';
 
 type UpdateMemberProps = {
   user: V1UserListItemResp;
@@ -163,7 +164,7 @@ const MemberUpdate = ({ user, refresh, type }: UpdateMemberProps) => {
             onClick={() => setValue('password', generatePassword())}
             sx={{ flexShrink: 0 }}
           >
-            <Icon type='icon-shuaxin' />
+            <IconShuaxin sx={{ fontSize: 16 }} />
           </IconButton>
         </Stack>
       </Modal>

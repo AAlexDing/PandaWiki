@@ -22,7 +22,9 @@ import {
 import { useAppSelector } from '@/store';
 import { setRefreshAdminRequest } from '@/store/slices/config';
 import { copyText } from '@/utils';
-import { Ellipsis, Icon, message, Modal } from '@ctzhian/ui';
+import { Ellipsis, message, Modal } from '@ctzhian/ui';
+import { IconIcon_tool_close, IconTianjiachengyuan } from '@panda-wiki/icons';
+import { IconFuzhi } from '@panda-wiki/icons';
 import InfoIcon from '@mui/icons-material/Info';
 import {
   Box,
@@ -210,8 +212,7 @@ const ApiToken = () => {
               }}
             >
               {maskString(it.token!)}
-              <Icon
-                type='icon-fuzhi'
+              <IconFuzhi
                 sx={{
                   cursor: 'pointer',
                   fontSize: 16,
@@ -275,9 +276,9 @@ const ApiToken = () => {
             </Stack>
 
             <Tooltip title={user.role !== 'admin' && ''} placement='top' arrow>
-              <Icon
-                type='icon-icon_tool_close'
+              <IconIcon_tool_close
                 sx={{
+                  fontSize: 16,
                   cursor:
                     !isBusiness ||
                     kbDetail?.perm !==
@@ -457,7 +458,7 @@ const CardKB = () => {
         extra={
           <Button
             size='small'
-            startIcon={<Icon type='icon-tianjiachengyuan' />}
+            startIcon={<IconTianjiachengyuan />}
             onClick={() => setAddOpen(true)}
             sx={{ color: 'primary.main' }}
           >
@@ -557,9 +558,9 @@ const CardKB = () => {
                 placement='top'
                 arrow
               >
-                <Icon
-                  type='icon-icon_tool_close'
+                <IconIcon_tool_close
                   sx={{
+                    fontSize: 16,
                     cursor: it.role === 'admin' ? 'not-allowed' : 'pointer',
                     color: it.role === 'admin' ? 'text.disabled' : 'error.main',
                   }}

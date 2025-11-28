@@ -4,7 +4,13 @@ import { useFeatureValue } from '@/hooks';
 import { ConstsUserRole } from '@/request/types';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setKbC, setKbId } from '@/store/slices/config';
-import { Ellipsis, Icon, message } from '@ctzhian/ui';
+import { Ellipsis, message } from '@ctzhian/ui';
+import {
+  IconXiala,
+  IconZuzhi,
+  IconTianjiawendang,
+  IconShanchu,
+} from '@panda-wiki/icons';
 import {
   Box,
   Button,
@@ -69,8 +75,7 @@ const KBSelect = () => {
           }}
           IconComponent={({ className, ...rest }) => {
             return (
-              <Icon
-                type='icon-xiala'
+              <IconXiala
                 className={className + ' icon-xiala'}
                 sx={{
                   position: 'absolute',
@@ -148,8 +153,7 @@ const KBSelect = () => {
                 gap={1.5}
                 sx={{ width: '100%' }}
               >
-                <Icon
-                  type='icon-zuzhi'
+                <IconZuzhi
                   sx={{ fontSize: 14, color: 'text.secondary', flexShrink: 0 }}
                 />
                 <Ellipsis>{item.name}</Ellipsis>
@@ -166,8 +170,7 @@ const KBSelect = () => {
                         setModifyOpen(true);
                       }}
                     >
-                      <Icon
-                        type='icon-tianjiawendang'
+                      <IconTianjiawendang
                         sx={{
                           fontSize: 14,
                           color: 'text.tertiary',
@@ -185,8 +188,7 @@ const KBSelect = () => {
                         setDeleteOpen(true);
                       }}
                     >
-                      <Icon
-                        type='icon-shanchu'
+                      <IconShanchu
                         sx={{
                           fontSize: 14,
                           color: 'text.tertiary',

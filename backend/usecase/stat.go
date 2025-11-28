@@ -472,3 +472,28 @@ func (u *StatUseCase) AggregateHourlyStats(ctx context.Context) error {
 func (u *StatUseCase) CleanupOldHourlyStats(ctx context.Context) error {
 	return u.repo.CleanupOldHourlyStats(ctx)
 }
+
+// MigrateYesterdayPVToNodeStats 将昨天的PV数据从stat_page迁移到node_stats
+func (u *StatUseCase) MigrateYesterdayPVToNodeStats(ctx context.Context) error {
+	// 获取昨天的PV数据，按node_id分组
+	pvMap, err := u.repo.GetYesterdayPVByNode(ctx)
+	if err != nil {
+		u.logger.Error("failed to get yesterday PV data", log.Error(err))
+		return err
+	}
+
+	// 遍历并插入/更新到node_stats表
+	for nodeID, pvCount := range pvMap {
+		if err := u.repo.UpsertNodeStats(ctx, nodeID, pvCount); err != nil {
+			u.logger.Error("failed to upsert node stats",
+				log.Error(err),
+				log.String("node_id", nodeID),
+				log.Int64("pv_count", pvCount))
+			return err
+		}
+	}
+
+	u.logger.Info("successfully migrated yesterday PV data to node_stats",
+		log.Int("node_count", len(pvMap)))
+	return nil
+}

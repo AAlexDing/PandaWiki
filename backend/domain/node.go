@@ -174,6 +174,7 @@ type NodeListItemResp struct {
 	EditorId    string          `json:"editor_id"`
 	Creator     string          `json:"creator"`
 	Editor      string          `json:"editor"`
+	PublisherId string          `json:"publisher_id" gorm:"-"`
 	Permissions NodePermissions `json:"permissions" gorm:"type:jsonb"`
 }
 

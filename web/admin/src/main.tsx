@@ -11,8 +11,6 @@ import { BrowserRouter } from 'react-router-dom';
 import App from './App';
 import store from './store';
 
-import '@/assets/fonts/iconfont';
-
 dayjs.extend(duration);
 dayjs.extend(relativeTime);
 dayjs.locale('zh-cn');

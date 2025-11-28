@@ -146,6 +146,7 @@ func (h *NodeHandler) GetNodeDetail(c echo.Context) error {
 
 	node, err := h.usecase.GetNodeByKBID(c.Request().Context(), req.ID, req.KbId, req.Format)
 	if err != nil {
+		h.logger.Error("get node by kb id failed", log.Error(err))
 		return h.NewResponseWithError(c, "get node detail failed", err)
 	}
 	return h.NewResponseWithData(c, node)

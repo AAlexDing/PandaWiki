@@ -25,4 +25,5 @@ type ShareNodeDetailResp struct {
 	EditorAccount    string                        `json:"editor_account"`
 	PublisherAccount string                        `json:"publisher_account"`
 	List             []*domain.ShareNodeDetailItem `json:"list" gorm:"-"`
+	PV               int64                         `json:"pv" gorm:"-"`
 }

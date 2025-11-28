@@ -1,8 +1,9 @@
 import { uploadFile } from '@/api';
 import { Box, IconButton, LinearProgress, Stack } from '@mui/material';
-import { Icon, message } from '@ctzhian/ui';
+import { message } from '@ctzhian/ui';
 import { useEffect, useRef, useState } from 'react';
 import CustomImage from '../CustomImage';
+import { IconShangchuan, IconIcon_tool_close } from '@panda-wiki/icons';
 
 interface UploadFileProps {
   type: 'url' | 'base64';
@@ -241,7 +242,7 @@ const UploadFile = ({
                 onChange('');
               }}
             >
-              <Icon type='icon-icon_tool_close' sx={{ color: '#fff' }} />
+              <IconIcon_tool_close sx={{ fontSize: 16, color: '#fff' }} />
             </IconButton>
           </>
         ) : (
@@ -253,8 +254,7 @@ const UploadFile = ({
               fontSize: width ? (width < 40 ? 8 : 12) : 12,
             }}
           >
-            <Icon
-              type='icon-shangchuan'
+            <IconShangchuan
               sx={{ fontSize: width ? (width < 40 ? 12 : 18) : 18 }}
             />
             <Box>{label}</Box>

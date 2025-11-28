@@ -1,11 +1,11 @@
 import { ITreeItem } from '@/assets/type';
-import { IconArrowDown, IconFile, IconFolder } from '@/components/icons';
+import { IconXiajiantou, IconWenjianjia, IconWenjian } from '@panda-wiki/icons';
 import { useStore } from '@/provider';
 import { addOpacityToColor } from '@/utils';
 import { Ellipsis } from '@ctzhian/ui';
 import { Box, Stack, useTheme, IconButton } from '@mui/material';
 import Link from 'next/link';
-import { useParams, useRouter } from 'next/navigation';
+import { useParams } from 'next/navigation';
 
 interface CatalogFolderProps {
   item: ITreeItem;
@@ -61,7 +61,7 @@ const CatalogFolder = ({
                   {item.emoji ? (
                     <Box sx={{ flexShrink: 0, fontSize: 14 }}>{item.emoji}</Box>
                   ) : (
-                    <IconFile sx={{ flexShrink: 0, fontSize: 12 }} />
+                    <IconWenjian sx={{ flexShrink: 0, fontSize: 12 }} />
                   )}
                   <Ellipsis sx={{ flex: 1, width: 0, pr: 1 }}>
                     {item.name}
@@ -91,9 +91,9 @@ const CatalogFolder = ({
                 {item.emoji ? (
                   <Box sx={{ flexShrink: 0, fontSize: 12 }}>{item.emoji}</Box>
                 ) : item.type === 1 ? (
-                  <IconFolder sx={{ flexShrink: 0, fontSize: 12 }} />
+                  <IconWenjianjia sx={{ flexShrink: 0, fontSize: 12 }} />
                 ) : (
-                  <IconFile sx={{ flexShrink: 0, fontSize: 12 }} />
+                  <IconWenjian sx={{ flexShrink: 0, fontSize: 12 }} />
                 )}
                 <Ellipsis sx={{ flex: 1, width: 0, pr: 1 }}>
                   {item.name}
@@ -116,7 +116,7 @@ const CatalogFolder = ({
                 }
               }}
             >
-              <IconArrowDown
+              <IconXiajiantou
                 sx={{
                   flexShrink: 0,
                   fontSize: 16,

@@ -1,5 +1,6 @@
 import { uploadFile } from '@/api';
 import Emoji from '@/components/Emoji';
+import { BUSINESS_VERSION_PERMISSION } from '@/constant/version';
 import { postApiV1CreationTabComplete, putApiV1NodeDetail } from '@/request';
 import { V1NodeDetailResp } from '@/request/types';
 import { useAppSelector } from '@/store';
@@ -11,8 +12,15 @@ import {
   useTiptap,
   UseTiptapReturn,
 } from '@ctzhian/tiptap';
-import { Icon, message } from '@ctzhian/ui';
+import { message } from '@ctzhian/ui';
 import { Box, Stack, TextField, Tooltip } from '@mui/material';
+import {
+  IconAShijian2,
+  IconDJzhinengzhaiyao,
+  IconTianjiawendang,
+  IconZiti,
+} from '@panda-wiki/icons';
+import IconPageview1 from '@panda-wiki/icons/IconPageview1';
 import dayjs from 'dayjs';
 import { debounce } from 'lodash-es';
 import { useCallback, useEffect, useMemo, useRef, useState } from 'react';
@@ -29,7 +37,6 @@ import Header from './Header';
 import Summary from './Summary';
 import Toc from './Toc';
 import Toolbar from './Toolbar';
-import { BUSINESS_VERSION_PERMISSION } from '@/constant/version';
 
 interface WrapProps {
   detail: V1NodeDetailResp;
@@ -196,23 +203,32 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
     onAiWritingGetSuggestion: handleAiWritingGetSuggestion,
   });
 
+  const exportFile = (value: string, type: string) => {
+    if (!value) return;
+    const content = completeIncompleteLinks(value);
+    const blob = new Blob([content], { type: `text/${type}` });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = `${nodeDetail?.name}.${type}`;
+    a.click();
+    URL.revokeObjectURL(url);
+    message.success('导出成功');
+  };
+
   const handleExport = useCallback(
     async (type: string) => {
-      if (editorRef) {
-        let value = nodeDetail?.content || '';
-        if (!isMarkdown) {
-          value = editorRef.getContent() || '';
+      if (type === 'html') {
+        const value = editorRef.getHTML() || '';
+        exportFile(value, type);
+      } else if (type === 'md') {
+        if (isMarkdown) {
+          let value = nodeDetail?.content || '';
+          exportFile(value, type);
+        } else if (editorRef) {
+          const value = editorRef.getMarkdown() || '';
+          exportFile(value, type);
         }
-        if (!value) return;
-        const content = completeIncompleteLinks(value);
-        const blob = new Blob([content], { type: `text/${type}` });
-        const url = URL.createObjectURL(blob);
-        const a = document.createElement('a');
-        a.href = url;
-        a.download = `${nodeDetail?.name}.${type}`;
-        a.click();
-        URL.revokeObjectURL(url);
-        message.success('导出成功');
       }
     },
     [editorRef, nodeDetail?.content, nodeDetail?.name, isMarkdown],
@@ -379,7 +395,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
                   color: 'text.tertiary',
                 }}
               >
-                <Icon type='icon-tianjiawendang' sx={{ fontSize: 9 }} />
+                <IconTianjiawendang sx={{ fontSize: 9 }} />
                 {nodeDetail?.editor_account} 编辑
               </Stack>
             </Tooltip>
@@ -403,7 +419,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
                 }
               }}
             >
-              <Icon type='icon-a-shijian2' />
+              <IconAShijian2 sx={{ fontSize: 12 }} />
               {dayjs(defaultDetail.created_at).format(
                 'YYYY-MM-DD HH:mm:ss',
               )}{' '}
@@ -416,8 +432,17 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
             gap={0.5}
             sx={{ fontSize: 12, color: 'text.tertiary' }}
           >
-            <Icon type='icon-ziti' />
+            <IconZiti sx={{ fontSize: 12 }} />
             {characterCount} 字
+          </Stack>
+          <Stack
+            direction={'row'}
+            alignItems={'center'}
+            gap={0.5}
+            sx={{ fontSize: 12, color: 'text.tertiary' }}
+          >
+            <IconPageview1 sx={{ fontSize: 12 }} />
+            浏览量 {nodeDetail?.pv}
           </Stack>
         </Stack>
         <Box
@@ -463,7 +488,7 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
               },
             }}
           >
-            <Icon type='icon-DJzhinengzhaiyao' sx={{ fontSize: 12 }} />
+            <IconDJzhinengzhaiyao sx={{ fontSize: 12 }} />
             文档摘要
           </Stack>
           {nodeDetail?.meta?.summary ? (
@@ -666,7 +691,19 @@ const Wrap = ({ detail: defaultDetail }: WrapProps) => {
       </Box>
       <Box
         sx={{ ...(fixedToc && { display: 'flex' }) }}
-        onKeyDown={event => event.stopPropagation()}
+        onKeyDown={event => {
+          if ((event.ctrlKey || event.metaKey) && event.key === 's') {
+            return;
+          }
+          if (
+            isMarkdown &&
+            (event.ctrlKey || event.metaKey) &&
+            event.key === 'b'
+          ) {
+            return;
+          }
+          event.stopPropagation();
+        }}
       >
         {isMarkdown ? (
           <Box

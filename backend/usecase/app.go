@@ -7,6 +7,7 @@ import (
 	"sync"
 	"time"
 
+	v1 "github.com/chaitin/panda-wiki/api/share/v1"
 	"github.com/chaitin/panda-wiki/config"
 	"github.com/chaitin/panda-wiki/consts"
 	"github.com/chaitin/panda-wiki/domain"
@@ -87,7 +88,7 @@ func NewAppUsecase(
 	return u
 }
 
-func (u *AppUsecase) ValidateUpdateApp(ctx context.Context, id string, req *domain.UpdateAppReq, edition consts.LicenseEdition) error {
+func (u *AppUsecase) ValidateUpdateApp(ctx context.Context, id string, req *domain.UpdateAppReq) error {
 	app, err := u.repo.GetAppDetail(ctx, id)
 	if err != nil {
 		return err
@@ -109,6 +110,18 @@ func (u *AppUsecase) ValidateUpdateApp(ctx context.Context, id string, req *doma
 			!slices.Equal(app.Settings.WechatServiceEqualKeywords, req.Settings.WechatServiceEqualKeywords) {
 			return domain.ErrPermissionDenied
 		}
+
+		if app.Settings.WeChatAppAdvancedSetting.FeedbackEnable != req.Settings.WeChatAppAdvancedSetting.FeedbackEnable ||
+			app.Settings.WeChatAppAdvancedSetting.TextResponseEnable != req.Settings.WeChatAppAdvancedSetting.TextResponseEnable ||
+			app.Settings.WeChatAppAdvancedSetting.Prompt != req.Settings.WeChatAppAdvancedSetting.Prompt ||
+			!slices.Equal(app.Settings.WeChatAppAdvancedSetting.FeedbackType, req.Settings.WeChatAppAdvancedSetting.FeedbackType) ||
+			app.Settings.WeChatAppAdvancedSetting.DisclaimerContent != req.Settings.WeChatAppAdvancedSetting.DisclaimerContent {
+			return domain.ErrPermissionDenied
+		}
+	} else {
+		if req.Settings.WeChatAppAdvancedSetting.Prompt == "" {
+			req.Settings.WeChatAppAdvancedSetting.Prompt = domain.SystemDefaultPrompt
+		}
 	}
 
 	if !limitation.AllowCommentAudit && app.Settings.WebAppCommentSettings.ModerationEnable != req.Settings.WebAppCommentSettings.ModerationEnable {
@@ -123,6 +136,18 @@ func (u *AppUsecase) ValidateUpdateApp(ctx context.Context, id string, req *doma
 
 	if !limitation.AllowCustomCopyright {
 		if app.Settings.WidgetBotSettings.CopyrightHideEnabled != req.Settings.WidgetBotSettings.CopyrightHideEnabled || app.Settings.WidgetBotSettings.CopyrightInfo != req.Settings.WidgetBotSettings.CopyrightInfo {
+			return domain.ErrPermissionDenied
+		}
+		if app.Settings.ConversationSetting.CopyrightHideEnabled != req.Settings.ConversationSetting.CopyrightHideEnabled {
+			return domain.ErrPermissionDenied
+		}
+		if req.Settings.ConversationSetting.CopyrightInfo != domain.SettingCopyrightInfo && app.Settings.ConversationSetting.CopyrightInfo != req.Settings.ConversationSetting.CopyrightInfo {
+			return domain.ErrPermissionDenied
+		}
+	}
+
+	if !limitation.AllowMCPServer {
+		if app.Settings.MCPServerSettings.IsEnabled != req.Settings.MCPServerSettings.IsEnabled {
 			return domain.ErrPermissionDenied
 		}
 	}
@@ -450,7 +475,6 @@ func (u *AppUsecase) GetAppDetailByKBIDAndAppType(ctx context.Context, kbID stri
 		RecommendNodeIDs:   app.Settings.RecommendNodeIDs,
 		Desc:               app.Settings.Desc,
 		Keyword:            app.Settings.Keyword,
-		AutoSitemap:        app.Settings.AutoSitemap,
 		HeadCode:           app.Settings.HeadCode,
 		BodyCode:           app.Settings.BodyCode,
 		// DingTalkBot
@@ -465,12 +489,13 @@ func (u *AppUsecase) GetAppDetailByKBIDAndAppType(ctx context.Context, kbID stri
 		// LarkBot
 		LarkBotSettings: app.Settings.LarkBotSettings,
 		// WechatBot
-		WeChatAppIsEnabled:      app.Settings.WeChatAppIsEnabled,
-		WeChatAppToken:          app.Settings.WeChatAppToken,
-		WeChatAppCorpID:         app.Settings.WeChatAppCorpID,
-		WeChatAppEncodingAESKey: app.Settings.WeChatAppEncodingAESKey,
-		WeChatAppSecret:         app.Settings.WeChatAppSecret,
-		WeChatAppAgentID:        app.Settings.WeChatAppAgentID,
+		WeChatAppIsEnabled:       app.Settings.WeChatAppIsEnabled,
+		WeChatAppToken:           app.Settings.WeChatAppToken,
+		WeChatAppCorpID:          app.Settings.WeChatAppCorpID,
+		WeChatAppEncodingAESKey:  app.Settings.WeChatAppEncodingAESKey,
+		WeChatAppSecret:          app.Settings.WeChatAppSecret,
+		WeChatAppAgentID:         app.Settings.WeChatAppAgentID,
+		WeChatAppAdvancedSetting: app.Settings.WeChatAppAdvancedSetting,
 		// WechatServiceBot
 		WeChatServiceIsEnabled:       app.Settings.WeChatServiceIsEnabled,
 		WeChatServiceToken:           app.Settings.WeChatServiceToken,
@@ -513,14 +538,24 @@ func (u *AppUsecase) GetAppDetailByKBIDAndAppType(ctx context.Context, kbID stri
 		WebAppLandingConfigs: webAppLandingConfigs,
 		WebAppLandingTheme:   app.Settings.WebAppLandingTheme,
 
-		WatermarkContent:   app.Settings.WatermarkContent,
-		WatermarkSetting:   app.Settings.WatermarkSetting,
-		CopySetting:        app.Settings.CopySetting,
-		ContributeSettings: app.Settings.ContributeSettings,
-		HomePageSetting:    app.Settings.HomePageSetting,
+		WatermarkContent:    app.Settings.WatermarkContent,
+		WatermarkSetting:    app.Settings.WatermarkSetting,
+		CopySetting:         app.Settings.CopySetting,
+		ContributeSettings:  app.Settings.ContributeSettings,
+		HomePageSetting:     app.Settings.HomePageSetting,
+		ConversationSetting: app.Settings.ConversationSetting,
 
 		WecomAIBotSettings: app.Settings.WecomAIBotSettings,
+
+		MCPServerSettings: app.Settings.MCPServerSettings,
+		StatsSetting:      app.Settings.StatsSetting,
 	}
+
+	if !domain.GetBaseEditionLimitation(ctx).AllowCustomCopyright {
+		appDetailResp.Settings.ConversationSetting.CopyrightHideEnabled = false
+		appDetailResp.Settings.ConversationSetting.CopyrightInfo = domain.SettingCopyrightInfo
+	}
+
 	// init ai feedback string
 	if app.Settings.AIFeedbackSettings.AIFeedbackType == nil {
 		appDetailResp.Settings.AIFeedbackSettings.AIFeedbackType = []string{"内容不准确", "没有帮助", "其他"}
@@ -541,6 +576,19 @@ func (u *AppUsecase) GetAppDetailByKBIDAndAppType(ctx context.Context, kbID stri
 		appDetailResp.RecommendNodes = nodes
 	}
 	return appDetailResp, nil
+}
+
+func (u *AppUsecase) GetMCPServerAppInfo(ctx context.Context, kbID string) (*domain.AppInfoResp, error) {
+	apiApp, err := u.repo.GetOrCreateAppByKBIDAndType(ctx, kbID, domain.AppTypeMcpServer)
+	if err != nil {
+		return nil, err
+	}
+	appInfo := &domain.AppInfoResp{
+		Settings: domain.AppSettingsResp{
+			MCPServerSettings: apiApp.Settings.MCPServerSettings,
+		},
+	}
+	return appInfo, nil
 }
 
 func (u *AppUsecase) ShareGetWebAppInfo(ctx context.Context, kbID string, authId uint) (*domain.AppInfoResp, error) {
@@ -589,7 +637,6 @@ func (u *AppUsecase) ShareGetWebAppInfo(ctx context.Context, kbID string, authId
 			RecommendNodeIDs:   app.Settings.RecommendNodeIDs,
 			Desc:               app.Settings.Desc,
 			Keyword:            app.Settings.Keyword,
-			AutoSitemap:        app.Settings.AutoSitemap,
 			HeadCode:           app.Settings.HeadCode,
 			BodyCode:           app.Settings.BodyCode,
 			// theme
@@ -613,11 +660,13 @@ func (u *AppUsecase) ShareGetWebAppInfo(ctx context.Context, kbID string, authId
 			WebAppLandingConfigs: webAppLandingConfigs,
 			WebAppLandingTheme:   app.Settings.WebAppLandingTheme,
 
-			WatermarkContent:   app.Settings.WatermarkContent,
-			WatermarkSetting:   app.Settings.WatermarkSetting,
-			CopySetting:        app.Settings.CopySetting,
-			ContributeSettings: app.Settings.ContributeSettings,
-			HomePageSetting:    app.Settings.HomePageSetting,
+			WatermarkContent:    app.Settings.WatermarkContent,
+			WatermarkSetting:    app.Settings.WatermarkSetting,
+			CopySetting:         app.Settings.CopySetting,
+			ContributeSettings:  app.Settings.ContributeSettings,
+			HomePageSetting:     app.Settings.HomePageSetting,
+			ConversationSetting: app.Settings.ConversationSetting,
+			StatsSetting:        app.Settings.StatsSetting,
 		},
 	}
 	// init ai feedback string
@@ -633,6 +682,8 @@ func (u *AppUsecase) ShareGetWebAppInfo(ctx context.Context, kbID string, authId
 	if !domain.GetBaseEditionLimitation(ctx).AllowCustomCopyright {
 		appInfo.Settings.WebAppCustomSettings.ShowBrandInfo = &showBrand
 		appInfo.Settings.DisclaimerSettings.Content = &defaultDisclaimer
+		appInfo.Settings.ConversationSetting.CopyrightHideEnabled = false
+		appInfo.Settings.ConversationSetting.CopyrightInfo = domain.SettingCopyrightInfo
 	} else {
 		if appInfo.Settings.DisclaimerSettings.Content == nil {
 			appInfo.Settings.DisclaimerSettings.Content = &defaultDisclaimer
@@ -678,6 +729,27 @@ func (u *AppUsecase) GetWidgetAppInfo(ctx context.Context, kbID string) (*domain
 	}
 
 	return appInfo, nil
+}
+
+func (u *AppUsecase) GetWechatAppInfo(ctx context.Context, kbID string) (*v1.WechatAppInfoResp, error) {
+	wechatApp, err := u.repo.GetOrCreateAppByKBIDAndType(ctx, kbID, domain.AppTypeWechatBot)
+	if err != nil {
+		return nil, err
+	}
+
+	resp := &v1.WechatAppInfoResp{}
+
+	if wechatApp.Settings.WeChatAppIsEnabled != nil {
+		resp.WeChatAppIsEnabled = *wechatApp.Settings.WeChatAppIsEnabled
+	}
+
+	if domain.GetBaseEditionLimitation(ctx).AllowAdvancedBot {
+		resp.FeedbackEnable = wechatApp.Settings.WeChatAppAdvancedSetting.FeedbackEnable
+		resp.FeedbackType = wechatApp.Settings.WeChatAppAdvancedSetting.FeedbackType
+		resp.DisclaimerContent = wechatApp.Settings.WeChatAppAdvancedSetting.DisclaimerContent
+	}
+
+	return resp, nil
 }
 
 func (u *AppUsecase) handleBotAuths(ctx context.Context, id string, newSettings *domain.AppSettings) error {

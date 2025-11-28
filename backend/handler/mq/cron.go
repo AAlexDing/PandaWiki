@@ -2,6 +2,7 @@ package mq
 
 import (
 	"context"
+	"time"
 
 	"github.com/robfig/cron/v3"
 
@@ -66,6 +67,16 @@ func NewStatCronHandler(logger *log.Logger, statRepo *pg.StatRepository, statUse
 
 func (h *CronHandler) RemoveOldStatData() {
 	h.logger.Info("remove old stat data start")
+
+	// 零点时同步数据至node_stats持久化
+	if time.Now().Hour() == 0 {
+		if err := h.statUseCase.MigrateYesterdayPVToNodeStats(context.Background()); err != nil {
+			h.logger.Error("migrate yesterday PV data to node_stats failed", log.Error(err))
+		} else {
+			h.logger.Info("migrate yesterday PV data to node_stats successful")
+		}
+	}
+
 	err := h.statRepo.RemoveOldData(context.Background())
 	if err != nil {
 		h.logger.Error("remove old stat data failed", log.Error(err))

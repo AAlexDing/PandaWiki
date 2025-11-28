@@ -1,22 +1,12 @@
-import ErrorJSON from '@/assets/json/error.json';
-import Card from '@/components/Card';
-import { ModelProvider } from '@/constant/enums';
 import { getApiV1ModelList } from '@/request/Model';
 import { GithubComChaitinPandaWikiDomainModelListItem } from '@/request/types';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setModelList, setModelStatus } from '@/store/slices/config';
-import { Icon, message, Modal } from '@ctzhian/ui';
-import {
-  Box,
-  Button,
-  Stack,
-  Tab,
-  Tabs,
-  Tooltip,
-  useTheme,
-} from '@mui/material';
+import { Modal } from '@ctzhian/ui';
+import { IconAChilunshezhisheding } from '@panda-wiki/icons';
+import { Box, Button, Tab, Tabs, useTheme } from '@mui/material';
 import { useEffect, useState, useRef } from 'react';
-import LottieIcon from '../LottieIcon';
+
 import Member from './component/Member';
 import ModelConfig, { ModelConfigRef } from './component/ModelConfig';
 
@@ -91,7 +81,7 @@ const System = () => {
           <Button
             size='small'
             variant='outlined'
-            startIcon={<Icon type='icon-a-chilunshezhisheding' />}
+            startIcon={<IconAChilunshezhisheding />}
             onClick={() => setOpen(true)}
           >
             系统配置
@@ -118,7 +108,6 @@ const System = () => {
           aria-label='system tabs'
           sx={{
             mb: 2,
-            ml: -2,
             borderBottom: 1,
             borderColor: 'divider',
             '& .MuiTabs-indicator': {
@@ -154,12 +143,12 @@ const System = () => {
           ))}
         </Tabs>
         {activeTab === 'user-management' && (
-          <Box sx={{ ml: -2 }}>
+          <Box>
             <Member />
           </Box>
         )}
         {activeTab === 'model-config' && (
-          <Box sx={{ ml: -2 }}>
+          <Box>
             <ModelConfig
               ref={modelConfigRef}
               onCloseModal={() => setOpen(false)}

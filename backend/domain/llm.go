@@ -6,7 +6,7 @@ import (
 	"strings"
 )
 
-var SystemPrompt = `
+var SystemDefaultPrompt = `
 你是一个专业的AI知识库问答助手，要按照以下步骤回答用户问题。
 
 请仔细阅读以下信息：

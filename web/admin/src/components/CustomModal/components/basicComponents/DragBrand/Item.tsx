@@ -1,5 +1,5 @@
 import { FooterSetting } from '@/api/type';
-import { Icon } from '@ctzhian/ui';
+import { IconShanchu2, IconDrag, IconTianjia } from '@panda-wiki/icons';
 import {
   closestCenter,
   DndContext,
@@ -100,7 +100,7 @@ const LinkItem = forwardRef<HTMLDivElement, LinkItemProps>(
               }}
               {...dragHandleProps}
             >
-              <Icon type='icon-drag' />
+              <IconDrag sx={{ fontSize: '18px' }} />
             </IconButton>
             <Box
               sx={{
@@ -123,7 +123,7 @@ const LinkItem = forwardRef<HTMLDivElement, LinkItemProps>(
                 ml: 'auto',
               }}
             >
-              <Icon type='icon-shanchu2' sx={{ fontSize: '12px' }} />
+              <IconShanchu2 sx={{ fontSize: '12px' }} />
             </IconButton>
           </Stack>
           <Controller
@@ -373,7 +373,7 @@ const Item = forwardRef<HTMLDivElement, ItemProps>(
                   }}
                   {...dragHandleProps}
                 >
-                  <Icon type='icon-drag' />
+                  <IconDrag sx={{ fontSize: '18px' }} />
                 </IconButton>
                 <Box
                   sx={{
@@ -396,7 +396,7 @@ const Item = forwardRef<HTMLDivElement, ItemProps>(
                     ml: 'auto',
                   }}
                 >
-                  <Icon type='icon-shanchu2' sx={{ fontSize: '12px' }} />
+                  <IconShanchu2 sx={{ fontSize: '12px' }} />
                 </IconButton>
               </Stack>
               <Controller
@@ -513,8 +513,7 @@ const Item = forwardRef<HTMLDivElement, ItemProps>(
               }}
               onClick={handleAddLink}
             >
-              <Icon
-                type='icon-tianjia'
+              <IconTianjia
                 sx={{ fontSize: '10px !important', color: '#5F58FE' }}
               />
               <Box

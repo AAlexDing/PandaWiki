@@ -4,9 +4,10 @@ import DragTree from '@/components/Drag/DragTree';
 import { useAppSelector } from '@/store';
 import { convertToTree } from '@/utils/drag';
 import { Box, Checkbox, Stack } from '@mui/material';
-import { Icon, Modal } from '@ctzhian/ui';
+import { Modal } from '@ctzhian/ui';
 import { useEffect, useState } from 'react';
 import { getApiV1NodeList } from '@/request/Node';
+import { IconWenjianjiaKai } from '@panda-wiki/icons';
 
 interface DocDeleteProps {
   open: boolean;
@@ -48,7 +49,7 @@ const DocModal = ({ open, onClose, onOk }: DocDeleteProps) => {
               setFolderIds(folderIds.includes('root') ? [] : ['root']);
             }}
           />
-          <Icon type={'icon-wenjianjia-kai'} />
+          <IconWenjianjiaKai sx={{ fontSize: 16 }} />
           <Box>根路径</Box>
         </Stack>
         <DragTree

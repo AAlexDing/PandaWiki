@@ -5,9 +5,10 @@ import { postApiV1NodeBatchMove } from '@/request/Node';
 import { DomainNodeListItemResp } from '@/request/types';
 import { useAppSelector } from '@/store';
 import { convertToTree } from '@/utils/drag';
-import { Icon, message, Modal } from '@ctzhian/ui';
+import { message, Modal } from '@ctzhian/ui';
 import { Box, Checkbox, Stack } from '@mui/material';
 import { useEffect, useState } from 'react';
+import { IconWenjianjiaKai } from '@panda-wiki/icons';
 
 interface DocDeleteProps {
   open: boolean;
@@ -83,7 +84,7 @@ const MoveDocs = ({
               setFolderIds(folderIds.includes('root') ? [] : ['root']);
             }}
           />
-          <Icon type={'icon-wenjianjia-kai'} />
+          <IconWenjianjiaKai sx={{ fontSize: 14 }} />
           <Box>根路径</Box>
         </Stack>
         <DragTree

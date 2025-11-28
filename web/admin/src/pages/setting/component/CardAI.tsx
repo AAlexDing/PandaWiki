@@ -2,7 +2,7 @@ import { getApiProV1Prompt, postApiProV1Prompt } from '@/request/pro/Prompt';
 import { DomainKnowledgeBaseDetail } from '@/request/types';
 import { PROFESSION_VERSION_PERMISSION } from '@/constant/version';
 import { useAppSelector } from '@/store';
-import { message } from '@ctzhian/ui';
+import { message, Modal } from '@ctzhian/ui';
 import { Box, Slider, TextField } from '@mui/material';
 import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
@@ -45,6 +45,23 @@ const CardAI = ({ kb }: CardAIProps) => {
     });
   }, [kb, isPro]);
 
+  const onResetPrompt = () => {
+    Modal.confirm({
+      title: '提示',
+      content: '确定要重置为默认提示词吗？',
+      onOk: () => {
+        postApiProV1Prompt({
+          kb_id: kb.id!,
+          content: '',
+        }).then(() => {
+          getApiProV1Prompt({ kb_id: kb.id! }).then(res => {
+            setValue('content', res.content || '');
+          });
+        });
+      },
+    });
+  };
+
   return (
     <Box
       sx={{
@@ -65,10 +82,7 @@ const CardAI = ({ kb }: CardAIProps) => {
                 display: 'block',
                 cursor: 'pointer',
               }}
-              onClick={() => {
-                setValue('content', '');
-                setIsEdit(true);
-              }}
+              onClick={onResetPrompt}
             >
               重置为默认提示词
             </Box>

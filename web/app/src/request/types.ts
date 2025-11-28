@@ -78,6 +78,7 @@ export enum DomainAppType {
   AppTypeOpenAIAPI = 9,
   AppTypeWecomAIBot = 10,
   AppTypeLarkBot = 11,
+  AppTypeMcpServer = 12,
 }
 
 export enum ConstsWatermarkSetting {
@@ -132,6 +133,7 @@ export enum ConstsSourceType {
   SourceTypeDiscordBot = "discord_bot",
   SourceTypeWechatOfficialAccount = "wechat_official_account",
   SourceTypeOpenAIAPI = "openai_api",
+  SourceTypeMcpServer = "mcp_server",
 }
 
 export enum ConstsNodeRagInfoStatus {
@@ -298,12 +300,12 @@ export interface DomainAppInfoResp {
 export interface DomainAppSettings {
   /** AI feedback */
   ai_feedback_settings?: DomainAIFeedbackSettings;
-  auto_sitemap?: boolean;
   body_code?: string;
   btns?: unknown[];
   /** catalog settings */
   catalog_settings?: DomainCatalogSettings;
   contribute_settings?: DomainContributeSettings;
+  conversation_setting?: DomainConversationSetting;
   copy_setting?: "" | "append" | "disabled";
   /** seo */
   desc?: string;
@@ -332,11 +334,14 @@ export interface DomainAppSettings {
   keyword?: string;
   /** LarkBot */
   lark_bot_settings?: DomainLarkBotSettings;
+  /** MCP Server Settings */
+  mcp_server_settings?: DomainMCPServerSettings;
   /** OpenAI API Bot settings */
   openai_api_bot_settings?: DomainOpenAIAPIBotSettings;
   recommend_node_ids?: string[];
   recommend_questions?: string[];
   search_placeholder?: string;
+  stats_setting?: DomainStatsSetting;
   theme_and_style?: DomainThemeAndStyle;
   /** theme */
   theme_mode?: string;
@@ -351,6 +356,7 @@ export interface DomainAppSettings {
   /** WebAppLandingConfigs */
   web_app_landing_configs?: DomainWebAppLandingConfig[];
   web_app_landing_theme?: DomainWebAppLandingTheme;
+  wechat_app_advanced_setting?: DomainWeChatAppAdvancedSetting;
   wechat_app_agent_id?: string;
   wechat_app_corpid?: string;
   wechat_app_encodingaeskey?: string;
@@ -383,12 +389,12 @@ export interface DomainAppSettings {
 export interface DomainAppSettingsResp {
   /** AI feedback */
   ai_feedback_settings?: DomainAIFeedbackSettings;
-  auto_sitemap?: boolean;
   body_code?: string;
   btns?: unknown[];
   /** catalog settings */
   catalog_settings?: DomainCatalogSettings;
   contribute_settings?: DomainContributeSettings;
+  conversation_setting?: DomainConversationSetting;
   copy_setting?: ConstsCopySetting;
   /** seo */
   desc?: string;
@@ -417,11 +423,14 @@ export interface DomainAppSettingsResp {
   keyword?: string;
   /** LarkBot */
   lark_bot_settings?: DomainLarkBotSettings;
+  /** MCP Server Settings */
+  mcp_server_settings?: DomainMCPServerSettings;
   /** OpenAI API settings */
   openai_api_bot_settings?: DomainOpenAIAPIBotSettings;
   recommend_node_ids?: string[];
   recommend_questions?: string[];
   search_placeholder?: string;
+  stats_setting?: DomainStatsSetting;
   theme_and_style?: DomainThemeAndStyle;
   /** theme */
   theme_mode?: string;
@@ -436,6 +445,7 @@ export interface DomainAppSettingsResp {
   /** WebApp Landing Settings */
   web_app_landing_configs?: DomainWebAppLandingConfigResp[];
   web_app_landing_theme?: DomainWebAppLandingTheme;
+  wechat_app_advanced_setting?: DomainWeChatAppAdvancedSetting;
   wechat_app_agent_id?: string;
   wechat_app_corpid?: string;
   wechat_app_encodingaeskey?: string;
@@ -705,6 +715,11 @@ export interface DomainConversationReference {
   url?: string;
 }
 
+export interface DomainConversationSetting {
+  copyright_hide_enabled?: boolean;
+  copyright_info?: string;
+}
+
 export interface DomainCreateKBReleaseReq {
   kb_id: string;
   message: string;
@@ -919,6 +934,17 @@ export interface DomainLink {
   url?: string;
 }
 
+export interface DomainMCPServerSettings {
+  docs_tool_settings?: DomainMCPToolSettings;
+  is_enabled?: boolean;
+  sample_auth?: DomainSimpleAuth;
+}
+
+export interface DomainMCPToolSettings {
+  desc?: string;
+  name?: string;
+}
+
 export type DomainMessageContent = Record<string, any>;
 
 export interface DomainMetricsConfig {
@@ -986,6 +1012,7 @@ export interface DomainNodeListItemResp {
   parent_id?: string;
   permissions?: DomainNodePermissions;
   position?: number;
+  publisher_id?: string;
   rag_info?: DomainRagInfo;
   status?: DomainNodeStatus;
   summary?: string;
@@ -1233,6 +1260,10 @@ export interface DomainStatPageReq {
   scene: 1 | 2 | 3 | 4;
 }
 
+export interface DomainStatsSetting {
+  pv_enable?: boolean;
+}
+
 export interface DomainSwitchModeReq {
   /** 百智云 API Key */
   auto_mode_api_key?: string;
@@ -1317,6 +1348,14 @@ export interface DomainUserInfo {
   name?: string;
   real_name?: string;
   user_id?: string;
+}
+
+export interface DomainWeChatAppAdvancedSetting {
+  disclaimer_content?: string;
+  feedback_enable?: boolean;
+  feedback_type?: string[];
+  prompt?: string;
+  text_response_enable?: boolean;
 }
 
 export interface DomainWebAppCommentSettings {
@@ -1652,6 +1691,7 @@ export interface V1NodeDetailResp {
   permissions?: DomainNodePermissions;
   publisher_account?: string;
   publisher_id?: string;
+  pv?: number;
   status?: DomainNodeStatus;
   type?: DomainNodeType;
   updated_at?: string;
@@ -1712,6 +1752,7 @@ export interface V1ShareNodeDetailResp {
   permissions?: DomainNodePermissions;
   publisher_account?: string;
   publisher_id?: string;
+  pv?: number;
   status?: DomainNodeStatus;
   type?: DomainNodeType;
   updated_at?: string;
@@ -1743,6 +1784,13 @@ export interface V1UserListItemResp {
 
 export interface V1UserListResp {
   users?: V1UserListItemResp[];
+}
+
+export interface V1WechatAppInfoResp {
+  disclaimer_content?: string;
+  feedback_enable?: boolean;
+  feedback_type?: string[];
+  wechat_app_is_enabled?: boolean;
 }
 
 export interface PutApiV1AppParams {
@@ -1788,7 +1836,8 @@ export interface GetApiV1AuthGetParams {
     | "wechat_service_bot"
     | "discord_bot"
     | "wechat_official_account"
-    | "openai_api";
+    | "openai_api"
+    | "mcp_server";
 }
 
 export interface GetApiV1CommentParams {

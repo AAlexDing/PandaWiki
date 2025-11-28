@@ -18,7 +18,34 @@ import {
   DomainOpenAICompletionsResponse,
   DomainResponse,
   PostShareV1ChatMessageParams,
+  V1WechatAppInfoResp,
 } from "./types";
+
+/**
+ * @description WechatAppInfo
+ *
+ * @tags share_chat
+ * @name GetShareV1AppWechatInfo
+ * @summary WechatAppInfo
+ * @request GET:/share/v1/app/wechat/info
+ * @response `200` `(DomainResponse & {
+    data?: V1WechatAppInfoResp,
+
+})` OK
+ */
+
+export const getShareV1AppWechatInfo = (params: RequestParams = {}) =>
+  httpRequest<
+    DomainResponse & {
+      data?: V1WechatAppInfoResp;
+    }
+  >({
+    path: `/share/v1/app/wechat/info`,
+    method: "GET",
+    type: ContentType.Json,
+    format: "json",
+    ...params,
+  });
 
 /**
  * @description OpenAI API compatible chat completions endpoint

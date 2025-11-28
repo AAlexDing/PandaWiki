@@ -263,3 +263,27 @@ func (r *ConversationRepository) GetConversationDistributionByHour(ctx context.C
 
 	return counts, nil
 }
+
+func (r *ConversationRepository) GetConversationCountByAppType(ctx context.Context) (map[domain.AppType]int64, error) {
+	type row struct {
+		AppType int   `gorm:"column:app_type"`
+		Count   int64 `gorm:"column:count"`
+	}
+	var rows []row
+	if err := r.db.WithContext(ctx).
+		Model(&domain.Conversation{}).
+		Joins("JOIN apps ON conversations.app_id = apps.id").
+		Select("apps.type as app_type, COUNT(*) as count").
+		Group("apps.type").
+		Find(&rows).Error; err != nil {
+		return nil, err
+	}
+	result := make(map[domain.AppType]int64)
+	for _, t := range domain.AppTypes {
+		result[t] = 0
+	}
+	for _, rrow := range rows {
+		result[domain.AppType(rrow.AppType)] = rrow.Count
+	}
+	return result, nil
+}

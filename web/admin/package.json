@@ -8,7 +8,6 @@
     "build:dev": "vite build --m development",
     "build": "tsc -b && vite build",
     "build:analyze": "tsc -b && vite build -- --analyze",
-    "icon": "node ./scripts/downLoadIcon.cjs",
     "api": "cx-swagger-api"
   },
   "dependencies": {

@@ -2,13 +2,18 @@ package utils
 
 import (
 	"net"
+	"net/http"
 	"strings"
 
 	"github.com/labstack/echo/v4"
 )
 
 func GetClientIPFromRemoteAddr(c echo.Context) string {
-	addr := c.Request().RemoteAddr
+	return ExtractHostFromRemoteAddr(c.Request())
+}
+
+func ExtractHostFromRemoteAddr(r *http.Request) string {
+	addr := r.RemoteAddr
 	if addr == "" {
 		return ""
 	}

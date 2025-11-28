@@ -30,6 +30,7 @@ type NodeDetailResp struct {
 	CreatorAccount   string                 `json:"creator_account"`
 	EditorAccount    string                 `json:"editor_account"`
 	PublisherAccount string                 `json:"publisher_account" gorm:"-"`
+	PV               int64                  `json:"pv" gorm:"-"`
 }
 
 type NodePermissionReq struct {

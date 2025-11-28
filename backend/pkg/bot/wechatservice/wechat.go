@@ -297,7 +297,7 @@ func (cfg *WechatServiceConfig) GetAccessToken() (string, error) {
 	defer tokenCache.Mutex.Unlock()
 
 	if tokenCache.AccessToken != "" && time.Now().Before(tokenCache.TokenExpire) {
-		cfg.logger.Info("access token has existed and is valid")
+		cfg.logger.Debug("access token has existed and is valid")
 		return tokenCache.AccessToken, nil
 	}
 

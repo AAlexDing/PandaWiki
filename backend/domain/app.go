@@ -24,6 +24,7 @@ const (
 	AppTypeOpenAIAPI
 	AppTypeWecomAIBot
 	AppTypeLarkBot
+	AppTypeMcpServer
 )
 
 var AppTypes = []AppType{
@@ -38,6 +39,7 @@ var AppTypes = []AppType{
 	AppTypeOpenAIAPI,
 	AppTypeWecomAIBot,
 	AppTypeLarkBot,
+	AppTypeMcpServer,
 }
 
 func (t AppType) ToSourceType() consts.SourceType {
@@ -92,9 +94,8 @@ type AppSettings struct {
 	RecommendQuestions []string `json:"recommend_questions,omitempty"`
 	RecommendNodeIDs   []string `json:"recommend_node_ids,omitempty"`
 	// seo
-	Desc        string `json:"desc,omitempty"`
-	Keyword     string `json:"keyword,omitempty"`
-	AutoSitemap bool   `json:"auto_sitemap,omitempty"`
+	Desc    string `json:"desc,omitempty"`
+	Keyword string `json:"keyword,omitempty"`
 	// inject code
 	HeadCode string `json:"head_code,omitempty"`
 	BodyCode string `json:"body_code,omitempty"`
@@ -110,12 +111,13 @@ type AppSettings struct {
 	// LarkBot
 	LarkBotSettings LarkBotSettings `json:"lark_bot_settings,omitempty"`
 	// WechatAppBot 企业微信机器人
-	WeChatAppIsEnabled      *bool  `json:"wechat_app_is_enabled,omitempty"`
-	WeChatAppToken          string `json:"wechat_app_token,omitempty"`
-	WeChatAppEncodingAESKey string `json:"wechat_app_encodingaeskey,omitempty"`
-	WeChatAppCorpID         string `json:"wechat_app_corpid,omitempty"`
-	WeChatAppSecret         string `json:"wechat_app_secret,omitempty"`
-	WeChatAppAgentID        string `json:"wechat_app_agent_id,omitempty"`
+	WeChatAppIsEnabled       *bool                    `json:"wechat_app_is_enabled,omitempty"`
+	WeChatAppToken           string                   `json:"wechat_app_token,omitempty"`
+	WeChatAppEncodingAESKey  string                   `json:"wechat_app_encodingaeskey,omitempty"`
+	WeChatAppCorpID          string                   `json:"wechat_app_corpid,omitempty"`
+	WeChatAppSecret          string                   `json:"wechat_app_secret,omitempty"`
+	WeChatAppAgentID         string                   `json:"wechat_app_agent_id,omitempty"`
+	WeChatAppAdvancedSetting WeChatAppAdvancedSetting `json:"wechat_app_advanced_setting"`
 	// WecomAIBotSettings 企业微信智能机器人
 	WecomAIBotSettings WecomAIBotSettings `json:"wecom_ai_bot_settings"`
 	// WechatServiceBot
@@ -161,15 +163,47 @@ type AppSettings struct {
 	WebAppLandingConfigs []WebAppLandingConfig `json:"web_app_landing_configs,omitempty"`
 	WebAppLandingTheme   WebAppLandingTheme    `json:"web_app_landing_theme"`
 
-	WatermarkContent   string                  `json:"watermark_content"`
-	WatermarkSetting   consts.WatermarkSetting `json:"watermark_setting" validate:"omitempty,oneof='' hidden visible"`
-	CopySetting        consts.CopySetting      `json:"copy_setting" validate:"omitempty,oneof='' append disabled"`
-	ContributeSettings ContributeSettings      `json:"contribute_settings"`
-	HomePageSetting    consts.HomePageSetting  `json:"home_page_setting"`
+	WatermarkContent    string                  `json:"watermark_content"`
+	WatermarkSetting    consts.WatermarkSetting `json:"watermark_setting" validate:"omitempty,oneof='' hidden visible"`
+	CopySetting         consts.CopySetting      `json:"copy_setting" validate:"omitempty,oneof='' append disabled"`
+	ContributeSettings  ContributeSettings      `json:"contribute_settings"`
+	HomePageSetting     consts.HomePageSetting  `json:"home_page_setting"`
+	ConversationSetting ConversationSetting     `json:"conversation_setting"`
+	// MCP Server Settings
+	MCPServerSettings MCPServerSettings `json:"mcp_server_settings,omitempty"`
+	StatsSetting      StatsSetting      `json:"stats_setting"`
+}
+
+type WeChatAppAdvancedSetting struct {
+	TextResponseEnable bool     `json:"text_response_enable,omitempty"`
+	FeedbackEnable     bool     `json:"feedback_enable,omitempty"`
+	FeedbackType       []string `json:"feedback_type,omitempty"`
+	DisclaimerContent  string   `json:"disclaimer_content,omitempty"`
+	Prompt             string   `json:"prompt,omitempty"`
+}
+
+type StatsSetting struct {
+	PVEnable bool `json:"pv_enable"`
+}
+
+type ConversationSetting struct {
+	CopyrightInfo        string `json:"copyright_info"`
+	CopyrightHideEnabled bool   `json:"copyright_hide_enabled"`
 }
 
 type WebAppLandingTheme struct {
 	Name string `json:"name"`
+}
+
+type MCPServerSettings struct {
+	IsEnabled        bool            `json:"is_enabled"`
+	DocsToolSettings MCPToolSettings `json:"docs_tool_settings"`
+	SampleAuth       SimpleAuth      `json:"sample_auth"`
+}
+
+type MCPToolSettings struct {
+	Name string `json:"name"`
+	Desc string `json:"desc"`
 }
 
 type LarkBotSettings struct {
@@ -461,9 +495,8 @@ type AppSettingsResp struct {
 	RecommendQuestions []string `json:"recommend_questions,omitempty"`
 	RecommendNodeIDs   []string `json:"recommend_node_ids,omitempty"`
 	// seo
-	Desc        string `json:"desc,omitempty"`
-	Keyword     string `json:"keyword,omitempty"`
-	AutoSitemap bool   `json:"auto_sitemap,omitempty"`
+	Desc    string `json:"desc,omitempty"`
+	Keyword string `json:"keyword,omitempty"`
 	// inject code
 	HeadCode string `json:"head_code,omitempty"`
 	BodyCode string `json:"body_code,omitempty"`
@@ -479,12 +512,13 @@ type AppSettingsResp struct {
 	// LarkBot
 	LarkBotSettings LarkBotSettings `json:"lark_bot_settings,omitempty"`
 	// WechatAppBot
-	WeChatAppIsEnabled      *bool  `json:"wechat_app_is_enabled,omitempty"`
-	WeChatAppToken          string `json:"wechat_app_token,omitempty"`
-	WeChatAppEncodingAESKey string `json:"wechat_app_encodingaeskey,omitempty"`
-	WeChatAppCorpID         string `json:"wechat_app_corpid,omitempty"`
-	WeChatAppSecret         string `json:"wechat_app_secret,omitempty"`
-	WeChatAppAgentID        string `json:"wechat_app_agent_id,omitempty"`
+	WeChatAppIsEnabled       *bool                    `json:"wechat_app_is_enabled,omitempty"`
+	WeChatAppToken           string                   `json:"wechat_app_token,omitempty"`
+	WeChatAppEncodingAESKey  string                   `json:"wechat_app_encodingaeskey,omitempty"`
+	WeChatAppCorpID          string                   `json:"wechat_app_corpid,omitempty"`
+	WeChatAppSecret          string                   `json:"wechat_app_secret,omitempty"`
+	WeChatAppAgentID         string                   `json:"wechat_app_agent_id,omitempty"`
+	WeChatAppAdvancedSetting WeChatAppAdvancedSetting `json:"wechat_app_advanced_setting"`
 	// WechatServiceBot
 	WeChatServiceIsEnabled       *bool    `json:"wechat_service_is_enabled,omitempty"`
 	WeChatServiceToken           string   `json:"wechat_service_token,omitempty"`
@@ -537,6 +571,10 @@ type AppSettingsResp struct {
 	WebAppLandingConfigs []WebAppLandingConfigResp `json:"web_app_landing_configs,omitempty"`
 	WebAppLandingTheme   WebAppLandingTheme        `json:"web_app_landing_theme"`
 	HomePageSetting      consts.HomePageSetting    `json:"home_page_setting"`
+	ConversationSetting  ConversationSetting       `json:"conversation_setting"`
+	// MCP Server Settings
+	MCPServerSettings MCPServerSettings `json:"mcp_server_settings,omitempty"`
+	StatsSetting      StatsSetting      `json:"stats_setting"`
 }
 
 type WebAppLandingConfigResp struct {

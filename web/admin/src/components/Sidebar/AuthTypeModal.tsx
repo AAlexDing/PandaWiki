@@ -12,7 +12,8 @@ import { useVersionInfo } from '@/hooks';
 import { useAppDispatch, useAppSelector } from '@/store';
 import { setLicense } from '@/store/slices/config';
 import { Box, Button, IconButton, Stack, TextField } from '@mui/material';
-import { CusTabs, Icon, message, Modal } from '@ctzhian/ui';
+import { CusTabs, message, Modal } from '@ctzhian/ui';
+import { IconWenjian, IconIcon_tool_close } from '@panda-wiki/icons';
 import dayjs from 'dayjs';
 import { useState } from 'react';
 import LottieIcon from '../LottieIcon';
@@ -312,11 +313,11 @@ const AuthTypeModal = ({
                 }}
               >
                 <Stack direction={'row'} alignItems={'center'} gap={1}>
-                  <Icon type='icon-wenjian' />
+                  <IconWenjian sx={{ fontSize: 16 }} />
                   {file.name}
                 </Stack>
                 <IconButton onClick={() => setFile(undefined)}>
-                  <Icon type='icon-icon_tool_close' sx={{ fontSize: 16 }} />
+                  <IconIcon_tool_close sx={{ fontSize: 16 }} />
                 </IconButton>
               </Stack>
             )}

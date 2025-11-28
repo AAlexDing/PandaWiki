@@ -62,6 +62,7 @@ func (u *LLMUsecase) FormatConversationMessages(
 	conversationID string,
 	kbID string,
 	groupIDs []int,
+	systemPrompt string,
 ) ([]*schema.Message, []*domain.RankedNodeChunks, error) {
 	messages := make([]*schema.Message, 0)
 	rankedNodes := make([]*domain.RankedNodeChunks, 0)
@@ -85,12 +86,15 @@ func (u *LLMUsecase) FormatConversationMessages(
 		if len(historyMessages) > 0 {
 			question := historyMessages[len(historyMessages)-1].Content
 
-			systemPrompt := domain.SystemPrompt
-			if prompt, err := u.promptRepo.GetPrompt(ctx, kbID); err != nil {
-				u.logger.Error("get prompt from settings failed", log.Error(err))
-			} else {
-				if prompt != "" {
-					systemPrompt = prompt
+			if systemPrompt == "" {
+				if settingPrompt, err := u.promptRepo.GetPrompt(ctx, kbID); err != nil {
+					u.logger.Error("get prompt from settings failed", log.Error(err))
+				} else {
+					if settingPrompt != "" {
+						systemPrompt = settingPrompt
+					} else {
+						systemPrompt = domain.SystemDefaultPrompt
+					}
 				}
 			}
 

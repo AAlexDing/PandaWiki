@@ -192,12 +192,29 @@ func (h *UserHandler) ResetPassword(c echo.Context) error {
 	if err != nil {
 		return h.NewResponseWithError(c, "failed to get user", err)
 	}
-	if user.Account == "admin" && authInfo.UserId == req.ID {
-		return h.NewResponseWithError(c, "请修改安装目录下 .env 文件中的 ADMIN_PASSWORD，并重启 panda-wiki-api 容器使更改生效。", nil)
+
+	// 非超级管理员没有改密码权限
+	if user.Role != consts.UserRoleAdmin {
+		return h.NewResponseWithErrCode(c, domain.ErrCodePermissionDenied)
 	}
-	if user.Account != "admin" && authInfo.UserId != req.ID {
-		return h.NewResponseWithError(c, "只有管理员可以重置其他用户密码", nil)
+
+	if user.Account == "admin" {
+		// admin 改不了自己的密码
+		if authInfo.UserId == req.ID {
+			return h.NewResponseWithError(c, "请修改安装目录下 .env 文件中的 ADMIN_PASSWORD，并重启 panda-wiki-api 容器使更改生效。", nil)
+		}
+	} else {
+		targetUser, err := h.usecase.GetUser(ctx, req.ID)
+		if err != nil {
+			return h.NewResponseWithError(c, "failed to get target user", err)
+		}
+
+		// 超级管理员不能改其他超级管理员密码
+		if targetUser.Role == consts.UserRoleAdmin && targetUser.ID != authInfo.UserId {
+			return h.NewResponseWithError(c, "无法修改其他超级管理员密码", nil)
+		}
 	}
+
 	err = h.usecase.ResetPassword(c.Request().Context(), &req)
 	if err != nil {
 		return h.NewResponseWithError(c, "failed to reset password", err)

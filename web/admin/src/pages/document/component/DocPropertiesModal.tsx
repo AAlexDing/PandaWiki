@@ -33,6 +33,7 @@ import { useEffect, useMemo, useState } from 'react';
 import { Controller, useForm } from 'react-hook-form';
 import { BUSINESS_VERSION_PERMISSION } from '@/constant/version';
 import { VersionCanUse } from '@/components/VersionMask';
+import { IconShuaxin } from '@panda-wiki/icons';
 
 interface DocPropertiesModalProps {
   open: boolean;
@@ -472,13 +473,13 @@ const DocPropertiesModal = ({
                     onClick={onGenerateSummary}
                     disabled={loading}
                     startIcon={
-                      <Icon
-                        type='icon-shuaxin'
-                        sx={
-                          loading
+                      <IconShuaxin
+                        sx={{
+                          fontSize: '16px !important',
+                          ...(loading
                             ? { animation: 'loadingRotate 1s linear infinite' }
-                            : {}
-                        }
+                            : {}),
+                        }}
                       />
                     }
                   >

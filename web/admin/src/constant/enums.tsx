@@ -1,3 +1,54 @@
+import {
+  IconAWebyingyong,
+  IconWangyeguajian,
+  IconDingdingjiqiren,
+  IconWendajiqiren,
+  IconFeishujiqiren,
+  IconQiyeweixinjiqiren,
+  IconQiyeweixinkefu,
+  IconADiscordjiqiren,
+  IconWeixingongzhonghaoDaiyanse,
+  IconBaizhiyunlogo,
+  IconZhipuqingyan,
+  IconDeepseek,
+  IconTengxunhunyuan,
+  IconAliyunbailian,
+  IconHuoshanyinqing,
+  IconAzure,
+  IconGemini,
+  IconQiniuyun,
+  IconOllama,
+  IconAZiyuan2,
+  IconKim,
+  IconXinference,
+  IconGpustack,
+  IconLingyiwanwu,
+  IconChatgpt,
+  IconAAIshezhi,
+  IconHyperbolic,
+  IconPerplexity,
+  IconTianyiyun,
+  IconTengxunyun,
+  IconBaiduyun,
+  IconModaGPT,
+  IconInfini,
+  IconStep,
+  IconLanyun,
+  IconAlayanew,
+  IconPpio,
+  IconAihubmix,
+  IconOcoolai,
+  IconDMXAPI,
+  IconBurncloud,
+  IconYingweida,
+  IconTokenflux,
+  IconA302ai,
+  IconCephalon,
+  IconFireworks,
+  IconMistral,
+  IconOpenrouter,
+} from '@panda-wiki/icons';
+
 export const PageStatus = {
   1: {
     label: '正在处理',
@@ -30,47 +81,47 @@ export const IconMap = {
 export const AppType = {
   1: {
     label: 'Wiki 网站',
-    icon: 'icon-a-Webyingyong',
+    icon: IconAWebyingyong,
   },
   2: {
     label: '网页挂件',
-    icon: 'icon-wangyeguajian',
+    icon: IconWangyeguajian,
   },
   3: {
     label: '钉钉机器人',
-    icon: 'icon-dingdingjiqiren',
+    icon: IconDingdingjiqiren,
   },
   4: {
     label: '飞书机器人',
-    icon: 'icon-feishujiqiren',
+    icon: IconFeishujiqiren,
   },
   5: {
     label: '企业微信机器人',
-    icon: 'icon-qiyeweixinjiqiren',
+    icon: IconQiyeweixinjiqiren,
   },
   6: {
     label: '企业微信客服',
-    icon: 'icon-qiyeweixinkefu',
+    icon: IconQiyeweixinkefu,
   },
   7: {
     label: 'Discord 机器人',
-    icon: 'icon-a-discordjiqiren',
+    icon: IconADiscordjiqiren,
   },
   8: {
     label: '微信公众号',
-    icon: 'icon-weixingongzhonghao-daiyanse',
+    icon: IconWeixingongzhonghaoDaiyanse,
   },
   9: {
     label: '问答机器人 API',
-    icon: 'icon-Wendajiqiren',
+    icon: IconWendajiqiren,
   },
   10: {
     label: '企业微信智能机器人',
-    icon: 'icon-qiyeweixinjiqiren',
+    icon: IconQiyeweixinjiqiren,
   },
   11: {
     label: 'Lark 机器人',
-    icon: 'icon-feishujiqiren',
+    icon: IconFeishujiqiren,
   },
 };
 
@@ -115,7 +166,7 @@ export const ModelProvider = {
   BaiZhiCloud: {
     label: 'BaiZhiCloud',
     cn: '百智云',
-    icon: 'icon-baizhiyunlogo',
+    icon: IconBaizhiyunlogo,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -129,7 +180,7 @@ export const ModelProvider = {
   ZhiPu: {
     label: 'ZhiPu',
     cn: '智谱',
-    icon: 'icon-zhipuqingyan', // 需要添加对应的图标
+    icon: IconZhipuqingyan, // 需要添加对应的图标
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -143,7 +194,7 @@ export const ModelProvider = {
   DeepSeek: {
     label: 'DeepSeek',
     cn: 'DeepSeek',
-    icon: 'icon-deepseek',
+    icon: IconDeepseek,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -157,7 +208,7 @@ export const ModelProvider = {
   Hunyuan: {
     label: 'Hunyuan',
     cn: '腾讯混元',
-    icon: 'icon-tengxunhunyuan',
+    icon: IconTengxunhunyuan,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -171,7 +222,7 @@ export const ModelProvider = {
   BaiLian: {
     label: 'BaiLian',
     cn: '阿里云百炼',
-    icon: 'icon-aliyunbailian',
+    icon: IconAliyunbailian,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -186,7 +237,7 @@ export const ModelProvider = {
   Volcengine: {
     label: 'Volcengine',
     cn: '火山引擎',
-    icon: 'icon-huoshanyinqing',
+    icon: IconHuoshanyinqing,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -200,7 +251,7 @@ export const ModelProvider = {
   OpenAI: {
     label: 'OpenAI',
     cn: 'OpenAI',
-    icon: 'icon-chatgpt',
+    icon: IconChatgpt,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -214,7 +265,7 @@ export const ModelProvider = {
   Ollama: {
     label: 'Ollama',
     cn: 'Ollama',
-    icon: 'icon-ollama',
+    icon: IconOllama,
     urlWrite: true,
     secretRequired: false,
     customHeader: true,
@@ -228,7 +279,7 @@ export const ModelProvider = {
   SiliconFlow: {
     label: 'SiliconFlow',
     cn: '硅基流动',
-    icon: 'icon-a-ziyuan2',
+    icon: IconAZiyuan2,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -242,7 +293,7 @@ export const ModelProvider = {
   Moonshot: {
     label: 'Moonshot',
     cn: '月之暗面',
-    icon: 'icon-Kim',
+    icon: IconKim,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -256,7 +307,7 @@ export const ModelProvider = {
   AzureOpenAI: {
     label: 'AzureOpenAI',
     cn: 'Azure OpenAI',
-    icon: 'icon-azure',
+    icon: IconAzure,
     urlWrite: true,
     secretRequired: true,
     customHeader: false,
@@ -271,7 +322,7 @@ export const ModelProvider = {
   Gemini: {
     label: 'Gemini',
     cn: 'Gemini',
-    icon: 'icon-gemini',
+    icon: IconGemini,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -285,7 +336,7 @@ export const ModelProvider = {
   Qiniu: {
     label: 'Qiniu',
     cn: '七牛云',
-    icon: 'icon-qiniuyun',
+    icon: IconQiniuyun,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -339,7 +390,7 @@ export const ModelProvider = {
   Xinference: {
     label: 'Xinference',
     cn: 'Xinference',
-    icon: 'icon-Xinference',
+    icon: IconXinference,
     urlWrite: true,
     secretRequired: false,
     customHeader: false,
@@ -355,7 +406,7 @@ export const ModelProvider = {
   gpustack: {
     label: 'gpustack',
     cn: 'GPUStack',
-    icon: 'icon-gpustack',
+    icon: IconGpustack,
     urlWrite: true,
     secretRequired: true,
     customHeader: false,
@@ -370,7 +421,7 @@ export const ModelProvider = {
   Yi: {
     label: 'Yi',
     cn: '零一万物',
-    icon: 'icon-lingyiwanwu',
+    icon: IconLingyiwanwu,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -445,7 +496,7 @@ export const ModelProvider = {
   CTYun: {
     label: 'CTYun',
     cn: '天翼云息壤',
-    icon: 'icon-tianyiyun',
+    icon: IconTianyiyun,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -459,7 +510,7 @@ export const ModelProvider = {
   TencentTI: {
     label: 'TencentTI',
     cn: '腾讯云TI',
-    icon: 'icon-tengxunyun',
+    icon: IconTengxunyun,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -473,7 +524,7 @@ export const ModelProvider = {
   BaiDuQianFan: {
     label: 'BaiDuQianFan',
     cn: '百度云千帆',
-    icon: 'icon-baiduyun',
+    icon: IconBaiduyun,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -487,7 +538,7 @@ export const ModelProvider = {
   ModelScope: {
     label: 'ModelScope',
     cn: '魔搭社区',
-    icon: 'icon-modaGPT',
+    icon: IconModaGPT,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -502,7 +553,7 @@ export const ModelProvider = {
   Infini: {
     label: 'Infini',
     cn: '无问芯穹',
-    icon: 'icon-infini',
+    icon: IconInfini,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -517,7 +568,7 @@ export const ModelProvider = {
   StepFun: {
     label: 'StepFun',
     cn: '阶跃星辰',
-    icon: 'icon-step',
+    icon: IconStep,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -531,7 +582,7 @@ export const ModelProvider = {
   LanYun: {
     label: 'LanYun',
     cn: '蓝耘科技',
-    icon: 'icon-lanyun',
+    icon: IconLanyun,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -545,7 +596,7 @@ export const ModelProvider = {
   AlayaNew: {
     label: 'AlayaNew',
     cn: '九章智算云',
-    icon: 'icon-alayanew',
+    icon: IconAlayanew,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -560,7 +611,7 @@ export const ModelProvider = {
   PPIO: {
     label: 'PPIO',
     cn: '欧派云',
-    icon: 'icon-ppio',
+    icon: IconPpio,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -575,7 +626,7 @@ export const ModelProvider = {
   AiHubMix: {
     label: 'AiHubMix',
     cn: 'AiHubMix',
-    icon: 'icon-aihubmix',
+    icon: IconAihubmix,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -589,7 +640,7 @@ export const ModelProvider = {
   OcoolAI: {
     label: 'OcoolAI',
     cn: 'OcoolAI',
-    icon: 'icon-ocoolai',
+    icon: IconOcoolai,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -603,7 +654,7 @@ export const ModelProvider = {
   DMXAPI: {
     label: 'DMXAPI',
     cn: 'DMXAPI',
-    icon: 'icon-DMXAPI',
+    icon: IconDMXAPI,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -617,7 +668,7 @@ export const ModelProvider = {
   BurnCloud: {
     label: 'BurnCloud',
     cn: 'BurnCloud',
-    icon: 'icon-burncloud',
+    icon: IconBurncloud,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -641,7 +692,7 @@ export const ModelProvider = {
   Nvidia: {
     label: 'Nvidia',
     cn: '英伟达',
-    icon: 'icon-yingweida',
+    icon: IconYingweida,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -655,7 +706,7 @@ export const ModelProvider = {
   TokenFlux: {
     label: 'TokenFlux',
     cn: 'TokenFlux',
-    icon: 'icon-tokenflux',
+    icon: IconTokenflux,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -669,7 +720,7 @@ export const ModelProvider = {
   AI302: {
     label: 'AI302',
     cn: '302.AI',
-    icon: 'icon-a-302ai',
+    icon: IconA302ai,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -683,7 +734,7 @@ export const ModelProvider = {
   Cephalon: {
     label: 'Cephalon',
     cn: 'Cephalon',
-    icon: 'icon-cephalon',
+    icon: IconCephalon,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -697,7 +748,7 @@ export const ModelProvider = {
   OpenRouter: {
     label: 'OpenRouter',
     cn: 'OpenRouter',
-    icon: 'icon-openrouter',
+    icon: IconOpenrouter,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -711,7 +762,7 @@ export const ModelProvider = {
   Fireworks: {
     label: 'Fireworks',
     cn: 'Fireworks',
-    icon: 'icon-fireworks',
+    icon: IconFireworks,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -725,7 +776,7 @@ export const ModelProvider = {
   Mistral: {
     label: 'Mistral',
     cn: 'Mistral',
-    icon: 'icon-Mistral',
+    icon: IconMistral,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -739,7 +790,7 @@ export const ModelProvider = {
   Perplexity: {
     label: 'Perplexity',
     cn: 'Perplexity',
-    icon: 'icon-perplexity',
+    icon: IconPerplexity,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -753,7 +804,7 @@ export const ModelProvider = {
   Hyperbolic: {
     label: 'Hyperbolic',
     cn: 'Hyperbolic',
-    icon: 'icon-hyperbolic',
+    icon: IconHyperbolic,
     urlWrite: false,
     secretRequired: true,
     customHeader: false,
@@ -767,7 +818,7 @@ export const ModelProvider = {
   Other: {
     label: 'Other',
     cn: '其他',
-    icon: 'icon-a-AIshezhi',
+    icon: IconAAIshezhi,
     urlWrite: true,
     secretRequired: true,
     customHeader: false,

@@ -152,7 +152,11 @@ export const WelcomeHeader = () => {
       onSearch={handleSearch}
       onQaClick={() => setQaModalOpen?.(true)}
     >
-      <Box sx={{ ml: 2 }}>{!!authInfo && <LogoutButton />}</Box>
+      {!!authInfo && (
+        <Box sx={{ ml: 2 }}>
+          <LogoutButton />
+        </Box>
+      )}
       <QaModal />
     </WelcomeHeaderComponent>
   );

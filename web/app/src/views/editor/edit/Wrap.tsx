@@ -22,6 +22,7 @@ import ConfirmModal from './ConfirmModal';
 import Header from './Header';
 import Toc from './Toc';
 import Toolbar from './Toolbar';
+import IconPageview1 from '@panda-wiki/icons/IconPageview1';
 
 interface WrapProps {
   detail: V1NodeDetailResp;
@@ -294,6 +295,15 @@ const Wrap = ({ detail: defaultDetail = {} }: WrapProps) => {
             >
               <IconZiti />
               {characterCount} 字
+            </Stack>
+            <Stack
+              direction={'row'}
+              alignItems={'center'}
+              gap={0.5}
+              sx={{ fontSize: 12, color: 'text.tertiary' }}
+            >
+              <IconPageview1 sx={{ fontSize: 12 }} />
+              浏览量 {nodeDetail?.pv}
             </Stack>
           </Stack>
           {editorRef.editor && (

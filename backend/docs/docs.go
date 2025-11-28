@@ -240,7 +240,8 @@ const docTemplate = `{
                             "wechat_service_bot",
                             "discord_bot",
                             "wechat_official_account",
-                            "openai_api"
+                            "openai_api",
+                            "mcp_server"
                         ],
                         "type": "string",
                         "x-enum-varnames": [
@@ -260,7 +261,8 @@ const docTemplate = `{
                             "SourceTypeWechatServiceBot",
                             "SourceTypeDiscordBot",
                             "SourceTypeWechatOfficialAccount",
-                            "SourceTypeOpenAIAPI"
+                            "SourceTypeOpenAIAPI",
+                            "SourceTypeMcpServer"
                         ],
                         "name": "source_type",
                         "in": "query",
@@ -3022,6 +3024,50 @@ const docTemplate = `{
                 }
             }
         },
+        "/share/v1/app/wechat/info": {
+            "get": {
+                "description": "WechatAppInfo",
+                "consumes": [
+                    "application/json"
+                ],
+                "produces": [
+                    "application/json"
+                ],
+                "tags": [
+                    "share_chat"
+                ],
+                "summary": "WechatAppInfo",
+                "parameters": [
+                    {
+                        "type": "string",
+                        "description": "kb id",
+                        "name": "X-KB-ID",
+                        "in": "header",
+                        "required": true
+                    }
+                ],
+                "responses": {
+                    "200": {
+                        "description": "OK",
+                        "schema": {
+                            "allOf": [
+                                {
+                                    "$ref": "#/definitions/domain.Response"
+                                },
+                                {
+                                    "type": "object",
+                                    "properties": {
+                                        "data": {
+                                            "$ref": "#/definitions/v1.WechatAppInfoResp"
+                                        }
+                                    }
+                                }
+                            ]
+                        }
+                    }
+                }
+            }
+        },
         "/share/v1/app/wechat/service/answer": {
             "get": {
                 "description": "GetWechatAnswer",
@@ -4268,7 +4314,8 @@ const docTemplate = `{
                 "wechat_service_bot",
                 "discord_bot",
                 "wechat_official_account",
-                "openai_api"
+                "openai_api",
+                "mcp_server"
             ],
             "x-enum-varnames": [
                 "SourceTypeDingTalk",
@@ -4287,7 +4334,8 @@ const docTemplate = `{
                 "SourceTypeWechatServiceBot",
                 "SourceTypeDiscordBot",
                 "SourceTypeWechatOfficialAccount",
-                "SourceTypeOpenAIAPI"
+                "SourceTypeOpenAIAPI",
+                "SourceTypeMcpServer"
             ]
         },
         "consts.StatDay": {
@@ -4512,9 +4560,6 @@ const docTemplate = `{
                         }
                     ]
                 },
-                "auto_sitemap": {
-                    "type": "boolean"
-                },
                 "body_code": {
                     "type": "string"
                 },
@@ -4532,6 +4577,9 @@ const docTemplate = `{
                 },
                 "contribute_settings": {
                     "$ref": "#/definitions/domain.ContributeSettings"
+                },
+                "conversation_setting": {
+                    "$ref": "#/definitions/domain.ConversationSetting"
                 },
                 "copy_setting": {
                     "enum": [
@@ -4620,6 +4668,14 @@ const docTemplate = `{
                         }
                     ]
                 },
+                "mcp_server_settings": {
+                    "description": "MCP Server Settings",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/domain.MCPServerSettings"
+                        }
+                    ]
+                },
                 "openai_api_bot_settings": {
                     "description": "OpenAI API Bot settings",
                     "allOf": [
@@ -4642,6 +4698,9 @@ const docTemplate = `{
                 },
                 "search_placeholder": {
                     "type": "string"
+                },
+                "stats_setting": {
+                    "$ref": "#/definitions/domain.StatsSetting"
                 },
                 "theme_and_style": {
                     "$ref": "#/definitions/domain.ThemeAndStyle"
@@ -4694,6 +4753,9 @@ const docTemplate = `{
                 },
                 "web_app_landing_theme": {
                     "$ref": "#/definitions/domain.WebAppLandingTheme"
+                },
+                "wechat_app_advanced_setting": {
+                    "$ref": "#/definitions/domain.WeChatAppAdvancedSetting"
                 },
                 "wechat_app_agent_id": {
                     "type": "string"
@@ -4791,9 +4853,6 @@ const docTemplate = `{
                         }
                     ]
                 },
-                "auto_sitemap": {
-                    "type": "boolean"
-                },
                 "body_code": {
                     "type": "string"
                 },
@@ -4811,6 +4870,9 @@ const docTemplate = `{
                 },
                 "contribute_settings": {
                     "$ref": "#/definitions/domain.ContributeSettings"
+                },
+                "conversation_setting": {
+                    "$ref": "#/definitions/domain.ConversationSetting"
                 },
                 "copy_setting": {
                     "$ref": "#/definitions/consts.CopySetting"
@@ -4890,6 +4952,14 @@ const docTemplate = `{
                         }
                     ]
                 },
+                "mcp_server_settings": {
+                    "description": "MCP Server Settings",
+                    "allOf": [
+                        {
+                            "$ref": "#/definitions/domain.MCPServerSettings"
+                        }
+                    ]
+                },
                 "openai_api_bot_settings": {
                     "description": "OpenAI API settings",
                     "allOf": [
@@ -4912,6 +4982,9 @@ const docTemplate = `{
                 },
                 "search_placeholder": {
                     "type": "string"
+                },
+                "stats_setting": {
+                    "$ref": "#/definitions/domain.StatsSetting"
                 },
                 "theme_and_style": {
                     "$ref": "#/definitions/domain.ThemeAndStyle"
@@ -4955,6 +5028,9 @@ const docTemplate = `{
                 },
                 "web_app_landing_theme": {
                     "$ref": "#/definitions/domain.WebAppLandingTheme"
+                },
+                "wechat_app_advanced_setting": {
+                    "$ref": "#/definitions/domain.WeChatAppAdvancedSetting"
                 },
                 "wechat_app_agent_id": {
                     "type": "string"
@@ -5050,7 +5126,8 @@ const docTemplate = `{
                 8,
                 9,
                 10,
-                11
+                11,
+                12
             ],
             "x-enum-varnames": [
                 "AppTypeWeb",
@@ -5063,7 +5140,8 @@ const docTemplate = `{
                 "AppTypeWechatOfficialAccount",
                 "AppTypeOpenAIAPI",
                 "AppTypeWecomAIBot",
-                "AppTypeLarkBot"
+                "AppTypeLarkBot",
+                "AppTypeMcpServer"
             ]
         },
         "domain.AuthUserInfo": {
@@ -5752,6 +5830,17 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.ConversationSetting": {
+            "type": "object",
+            "properties": {
+                "copyright_hide_enabled": {
+                    "type": "boolean"
+                },
+                "copyright_info": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.CreateKBReleaseReq": {
             "type": "object",
             "required": [
@@ -6361,6 +6450,31 @@ const docTemplate = `{
                 }
             }
         },
+        "domain.MCPServerSettings": {
+            "type": "object",
+            "properties": {
+                "docs_tool_settings": {
+                    "$ref": "#/definitions/domain.MCPToolSettings"
+                },
+                "is_enabled": {
+                    "type": "boolean"
+                },
+                "sample_auth": {
+                    "$ref": "#/definitions/domain.SimpleAuth"
+                }
+            }
+        },
+        "domain.MCPToolSettings": {
+            "type": "object",
+            "properties": {
+                "desc": {
+                    "type": "string"
+                },
+                "name": {
+                    "type": "string"
+                }
+            }
+        },
         "domain.MessageContent": {
             "type": "object"
         },
@@ -6581,6 +6695,9 @@ const docTemplate = `{
                 },
                 "position": {
                     "type": "number"
+                },
+                "publisher_id": {
+                    "type": "string"
                 },
                 "rag_info": {
                     "$ref": "#/definitions/domain.RagInfo"
@@ -7316,6 +7433,14 @@ const docTemplate = `{
                 "StatPageSceneLogin"
             ]
         },
+        "domain.StatsSetting": {
+            "type": "object",
+            "properties": {
+                "pv_enable": {
+                    "type": "boolean"
+                }
+            }
+        },
         "domain.SwitchModeReq": {
             "type": "object",
             "required": [
@@ -7551,6 +7676,29 @@ const docTemplate = `{
                 },
                 "user_id": {
                     "type": "string"
+                }
+            }
+        },
+        "domain.WeChatAppAdvancedSetting": {
+            "type": "object",
+            "properties": {
+                "disclaimer_content": {
+                    "type": "string"
+                },
+                "feedback_enable": {
+                    "type": "boolean"
+                },
+                "feedback_type": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "prompt": {
+                    "type": "string"
+                },
+                "text_response_enable": {
+                    "type": "boolean"
                 }
             }
         },
@@ -8512,6 +8660,9 @@ const docTemplate = `{
                 "publisher_id": {
                     "type": "string"
                 },
+                "pv": {
+                    "type": "integer"
+                },
                 "status": {
                     "$ref": "#/definitions/domain.NodeStatus"
                 },
@@ -8689,6 +8840,9 @@ const docTemplate = `{
                 "publisher_id": {
                     "type": "string"
                 },
+                "pv": {
+                    "type": "integer"
+                },
                 "status": {
                     "$ref": "#/definitions/domain.NodeStatus"
                 },
@@ -8768,6 +8922,26 @@ const docTemplate = `{
                     "items": {
                         "$ref": "#/definitions/v1.UserListItemResp"
                     }
+                }
+            }
+        },
+        "v1.WechatAppInfoResp": {
+            "type": "object",
+            "properties": {
+                "disclaimer_content": {
+                    "type": "string"
+                },
+                "feedback_enable": {
+                    "type": "boolean"
+                },
+                "feedback_type": {
+                    "type": "array",
+                    "items": {
+                        "type": "string"
+                    }
+                },
+                "wechat_app_is_enabled": {
+                    "type": "boolean"
                 }
             }
         }

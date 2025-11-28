@@ -645,13 +645,15 @@
       positionModalFollow(modalContent);
     }
 
-    // 添加ESC键关闭功能
+    // 添加ESC键关闭功能（先移除避免重复绑定）
+    document.removeEventListener('keydown', handleEscKey);
     document.addEventListener('keydown', handleEscKey);
   }
 
   // ESC键处理
   function handleEscKey(e) {
-    if (e.key === 'Escape') {
+    // 只在弹框显示时响应 ESC 键
+    if (e.key === 'Escape' && widgetModal && widgetModal.style.display === 'flex') {
       hideModal();
     }
   }

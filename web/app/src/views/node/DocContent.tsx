@@ -4,7 +4,7 @@ import CommentInput, {
   CommentInputRef,
   ImageItem,
 } from '@/components/commentInput';
-import { IconFile, IconFolder } from '@/components/icons';
+import { IconWenjianjia, IconWenjian } from '@panda-wiki/icons';
 import FolderList from './folderList';
 import { DocWidth } from '@/constant';
 import { useStore } from '@/provider';
@@ -195,9 +195,9 @@ const DocContent = ({
         {info?.meta?.emoji ? (
           <Box sx={{ flexShrink: 0 }}>{info?.meta?.emoji}</Box>
         ) : info?.type === 1 ? (
-          <IconFolder sx={{ flexShrink: 0, mt: 0.5 }} />
+          <IconWenjianjia sx={{ flexShrink: 0, mt: 0.5 }} />
         ) : (
-          <IconFile sx={{ flexShrink: 0, mt: 0.5 }} />
+          <IconWenjian sx={{ flexShrink: 0, mt: 0.5 }} />
         )}
         {info?.name}
       </Stack>
@@ -234,6 +234,12 @@ const DocContent = ({
           <>
             <Box>·</Box>
             <Box>{characterCount} 字</Box>
+          </>
+        )}
+        {(info.pv ?? 0) > 0 && (
+          <>
+            <Box>·</Box>
+            <Box>浏览量 {info.pv}</Box>
           </>
         )}
       </Stack>

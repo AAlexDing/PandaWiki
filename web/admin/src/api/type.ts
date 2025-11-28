@@ -323,7 +323,6 @@ export type WelcomeSetting = {
 export type SEOSetting = {
   keyword: string;
   desc: string;
-  auto_sitemap: boolean;
 };
 
 export type CustomCodeSetting = {

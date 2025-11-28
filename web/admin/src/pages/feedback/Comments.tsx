@@ -27,7 +27,8 @@ import {
   alpha,
   ButtonBase,
 } from '@mui/material';
-import { Ellipsis, Table, Modal, Icon, message } from '@ctzhian/ui';
+import { Ellipsis, Table, Modal, message } from '@ctzhian/ui';
+import { IconGengduo } from '@panda-wiki/icons';
 import { PROFESSION_VERSION_PERMISSION } from '@/constant/version';
 import dayjs from 'dayjs';
 import { useEffect, useState, useMemo } from 'react';
@@ -129,7 +130,7 @@ const ActionMenu = ({
   return (
     <>
       <IconButton size='small' onClick={handleClick}>
-        <Icon type='icon-gengduo' />
+        <IconGengduo sx={{ fontSize: 16 }} />
       </IconButton>
       <Menu anchorEl={anchorEl} open={open} onClose={handleClose}>
         {record.status! !== 1 && (

@@ -1,8 +1,8 @@
 'use client';
 import { V1NodeDetailResp } from '@/request/types';
-import { Ellipsis, Icon } from '@ctzhian/ui';
+import { Ellipsis } from '@ctzhian/ui';
 import { Box, Button, Skeleton, Stack } from '@mui/material';
-import { IconBaocun } from '@panda-wiki/icons';
+import { IconBaocun, IconMuluzhankai } from '@panda-wiki/icons';
 import dayjs from 'dayjs';
 import { useEffect, useRef } from 'react';
 import { useWrapContext } from '..';
@@ -44,8 +44,7 @@ const Header = ({ detail, handleSave }: HeaderProps) => {
               },
             }}
           >
-            <Icon
-              type='icon-muluzhankai'
+            <IconMuluzhankai
               sx={{
                 fontSize: 24,
               }}

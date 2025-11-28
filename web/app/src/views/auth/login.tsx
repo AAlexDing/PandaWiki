@@ -17,18 +17,17 @@ import {
 import { getShareV1NodeList } from '@/request/ShareNode';
 import { clearCookie } from '@/utils/cookie';
 
+import {
+  IconKoulingrenzheng,
+  IconLDAP,
+  IconMima,
+  IconZhanghao,
+  IconFeishu,
+} from '@panda-wiki/icons';
+
 import Logo from '@/assets/images/logo.png';
 import { FooterProvider } from '@/components/footer';
-import {
-  IconCAS,
-  IconDingDing,
-  IconFeishu,
-  IconLDAP,
-  IconLock,
-  IconPassword,
-  IconQiyeweixin,
-  IconUser,
-} from '@/components/icons';
+import { IconCAS, IconDingDing, IconQiyeweixin } from '@/components/icons';
 import { IconGitHub1 } from '@panda-wiki/icons';
 import { useStore } from '@/provider';
 import {
@@ -269,7 +268,7 @@ export default function Login() {
                     input: {
                       startAdornment: (
                         <InputAdornment position='start'>
-                          <IconLock
+                          <IconKoulingrenzheng
                             sx={{ fontSize: 16, width: 24, height: 16 }}
                           />
                         </InputAdornment>
@@ -390,7 +389,7 @@ export default function Login() {
                               input: {
                                 startAdornment: (
                                   <InputAdornment position='start'>
-                                    <IconUser
+                                    <IconZhanghao
                                       sx={{
                                         fontSize: 16,
                                         width: 24,
@@ -415,7 +414,7 @@ export default function Login() {
                               input: {
                                 startAdornment: (
                                   <InputAdornment position='start'>
-                                    <IconPassword
+                                    <IconMima
                                       sx={{
                                         fontSize: 16,
                                         width: 24,

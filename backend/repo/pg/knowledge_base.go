@@ -169,7 +169,7 @@ func (r *KnowledgeBaseRepository) SyncKBAccessSettingsToCaddy(ctx context.Contex
 							{
 								"match": []map[string]any{
 									{
-										"path": []string{"/share/v1/chat/completions", "/share/v1/app/wechat/app", "/share/v1/app/wechat/service", "/sitemap.xml", "/share/v1/app/wechat/official_account", "/share/v1/app/wechat/service/answer"},
+										"path": []string{"/share/v1/chat/completions", "/share/v1/app/wechat/app", "/share/v1/app/wechat/service", "/sitemap.xml", "/share/v1/app/wechat/official_account", "/share/v1/app/wechat/service/answer", "/mcp"},
 									},
 								},
 								"handle": []map[string]any{
@@ -341,12 +341,11 @@ func (r *KnowledgeBaseRepository) CreateKnowledgeBase(ctx context.Context, maxKB
 			Name: kb.Name,
 			Type: domain.AppTypeWeb,
 			Settings: domain.AppSettings{
-				Title:       kb.Name,
-				Desc:        kb.Name,
-				Keyword:     kb.Name,
-				AutoSitemap: true,
-				Icon:        domain.DefaultPandaWikiIconB64,
-				WelcomeStr:  fmt.Sprintf("欢迎使用%s", kb.Name),
+				Title:      kb.Name,
+				Desc:       kb.Name,
+				Keyword:    kb.Name,
+				Icon:       domain.DefaultPandaWikiIconB64,
+				WelcomeStr: fmt.Sprintf("欢迎使用%s", kb.Name),
 				Btns: []any{
 					AppBtn{
 						ID:       uuid.New().String(),

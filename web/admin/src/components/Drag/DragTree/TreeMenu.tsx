@@ -1,8 +1,8 @@
 import { ITreeItem } from '@/api';
 import Cascader from '@/components/Cascader';
 import { addOpacityToColor } from '@/utils';
-import { Icon } from '@ctzhian/ui';
 import { Box, IconButton, Stack, useTheme } from '@mui/material';
+import { IconXiala, IconGengduo } from '@panda-wiki/icons';
 
 export type TreeMenuItem = {
   key: string;
@@ -96,10 +96,7 @@ const TreeMenu = ({
             >
               {value.label}
               {value.children && (
-                <Icon
-                  type='icon-xiala'
-                  sx={{ fontSize: 20, transform: 'rotate(-90deg)' }}
-                />
+                <IconXiala sx={{ fontSize: 20, transform: 'rotate(-90deg)' }} />
               )}
             </Stack>
             {value.key === 'next-line' && (
@@ -119,7 +116,7 @@ const TreeMenu = ({
       context={
         context || (
           <IconButton size='small'>
-            <Icon type='icon-gengduo' />
+            <IconGengduo sx={{ fontSize: '14px' }} />
           </IconButton>
         )
       }

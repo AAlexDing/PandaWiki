@@ -65,6 +65,7 @@ const Step1Model: React.FC<Step1ModelProps> = ({ ref }) => {
   }, [modelList]);
 
   const onSubmit = async () => {
+    await modelConfigRef.current?.onSubmit?.();
     // 检查模型模式设置
     try {
       const modeSetting = await getApiV1ModelModeSetting();
@@ -112,6 +113,7 @@ const Step1Model: React.FC<Step1ModelProps> = ({ ref }) => {
         getModelList={getModelList}
         hideDocumentationHint={true}
         showTip={true}
+        showSaveBtn={false}
       />
     </Box>
   );

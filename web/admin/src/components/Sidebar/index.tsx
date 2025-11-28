@@ -3,19 +3,31 @@ import Qrcode from '@/assets/images/qrcode.png';
 
 import { Box, Button, Stack, Typography, useTheme } from '@mui/material';
 import { ConstsUserKBPermission } from '@/request/types';
-import { Icon, Modal } from '@ctzhian/ui';
+import { Modal } from '@ctzhian/ui';
 import { useState, useMemo, useEffect } from 'react';
 import { NavLink, useLocation, useNavigate } from 'react-router-dom';
 import Avatar from '../Avatar';
 import Version from './Version';
 import { useAppSelector } from '@/store';
+import {
+  IconBangzhuwendang1,
+  IconNeirongguanli,
+  IconTongjifenxi1,
+  IconJushou,
+  IconGongxian,
+  IconPaperFull,
+  IconDuihualishi1,
+  IconChilun,
+  IconGroup,
+  IconGithub,
+} from '@panda-wiki/icons';
 
 const MENUS = [
   {
     label: '文档',
     value: '/',
     pathname: 'document',
-    icon: 'icon-neirongguanli',
+    icon: IconNeirongguanli,
     show: true,
     perms: [
       ConstsUserKBPermission.UserKBPermissionFullControl,
@@ -26,7 +38,7 @@ const MENUS = [
     label: '统计',
     value: '/stat',
     pathname: 'stat',
-    icon: 'icon-tongjifenxi1',
+    icon: IconTongjifenxi1,
     show: true,
     perms: [
       ConstsUserKBPermission.UserKBPermissionFullControl,
@@ -37,7 +49,7 @@ const MENUS = [
     label: '贡献',
     value: '/contribution',
     pathname: 'contribution',
-    icon: 'icon-gongxian',
+    icon: IconGongxian,
     show: true,
     perms: [ConstsUserKBPermission.UserKBPermissionFullControl],
   },
@@ -45,7 +57,7 @@ const MENUS = [
     label: '问答',
     value: '/conversation',
     pathname: 'conversation',
-    icon: 'icon-duihualishi1',
+    icon: IconDuihualishi1,
     show: true,
     perms: [
       ConstsUserKBPermission.UserKBPermissionFullControl,
@@ -56,7 +68,7 @@ const MENUS = [
     label: '反馈',
     value: '/feedback',
     pathname: 'feedback',
-    icon: 'icon-jushou',
+    icon: IconJushou,
     show: true,
     perms: [
       ConstsUserKBPermission.UserKBPermissionFullControl,
@@ -67,7 +79,7 @@ const MENUS = [
     label: '发布',
     value: '/release',
     pathname: 'release',
-    icon: 'icon-paper-full',
+    icon: IconPaperFull,
     show: true,
     perms: [
       ConstsUserKBPermission.UserKBPermissionFullControl,
@@ -78,7 +90,7 @@ const MENUS = [
     label: '设置',
     value: '/setting',
     pathname: 'application-setting',
-    icon: 'icon-chilun',
+    icon: IconChilun,
     show: true,
     perms: [ConstsUserKBPermission.UserKBPermissionFullControl],
   },
@@ -161,6 +173,7 @@ const Sidebar = () => {
             isActive = pathname.includes(it.value);
           }
           if (!it.show) return null;
+          const IconMenu = it.icon;
           return (
             <NavLink
               key={it.pathname}
@@ -189,8 +202,7 @@ const Sidebar = () => {
                   },
                 }}
               >
-                <Icon
-                  type={it.icon}
+                <IconMenu
                   sx={{
                     fontSize: 14,
                     mr: 1,
@@ -224,7 +236,7 @@ const Sidebar = () => {
             },
           }}
           startIcon={
-            <Icon type='icon-bangzhuwendang1' sx={{ width: 14, height: 14 }} />
+            <IconBangzhuwendang1 sx={{ fontSize: '14px !important' }} />
           }
           onClick={() =>
             window.open('https://pandawiki.docs.baizhi.cloud/', '_blank')
@@ -252,7 +264,7 @@ const Sidebar = () => {
               color: 'primary.main',
             },
           }}
-          startIcon={<Icon type='icon-GitHub' sx={{ width: 14, height: 14 }} />}
+          startIcon={<IconGithub sx={{ fontSize: '14px !important' }} />}
           onClick={() =>
             window.open('https://github.com/chaitin/PandaWiki', '_blank')
           }
@@ -279,7 +291,7 @@ const Sidebar = () => {
             },
           }}
           onClick={() => setShowQrcode(true)}
-          startIcon={<Icon type='icon-group' sx={{ width: 14, height: 14 }} />}
+          startIcon={<IconGroup sx={{ fontSize: '14px !important' }} />}
         >
           在线支持
         </Button>

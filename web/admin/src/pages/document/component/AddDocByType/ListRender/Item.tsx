@@ -1,6 +1,6 @@
 import { ConstsCrawlerSource, postApiV1CrawlerParse } from '@/request';
 import { useAppSelector } from '@/store';
-import { Ellipsis, Icon } from '@ctzhian/ui';
+import { Ellipsis } from '@ctzhian/ui';
 import {
   alpha,
   Box,
@@ -20,6 +20,7 @@ import { ListDataItem } from '..';
 import StatusBackground from '../components/StatusBackground';
 import StatusBadge from '../components/StatusBadge';
 import { flattenCrawlerParseResponse } from '../util';
+import { IconWenjianjia, IconWenjian } from '@panda-wiki/icons';
 
 interface ListRenderItemProps {
   depth: number;
@@ -182,15 +183,9 @@ const ListRenderItem = ({
           )}
           <Box sx={{ ml: depth * 3 }}>
             {!data.file ? (
-              <Icon
-                type='icon-wenjianjia'
-                sx={{ fontSize: 14, width: 20, ml: '10px' }}
-              />
+              <IconWenjianjia sx={{ fontSize: 14, width: 20, ml: '10px' }} />
             ) : (
-              <Icon
-                type='icon-wenjian'
-                sx={{ fontSize: 14, width: 20, ml: '10px' }}
-              />
+              <IconWenjian sx={{ fontSize: 14, width: 20, ml: '10px' }} />
             )}
           </Box>
         </ListItemIcon>

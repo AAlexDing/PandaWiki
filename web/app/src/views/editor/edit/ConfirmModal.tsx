@@ -2,7 +2,7 @@
 import React, { useEffect, useState } from 'react';
 import { Modal, message } from '@ctzhian/ui';
 import { Box, TextField, Typography, styled, FormLabel } from '@mui/material';
-import { IconErrorCorrection } from '@/components/icons';
+import { IconCorrection } from '@panda-wiki/icons';
 
 interface ConfirmModalProps {
   open: boolean;
@@ -99,7 +99,7 @@ const ConfirmModal = ({ open, onCancel, onOk }: ConfirmModalProps) => {
     >
       <StyledInfoBox>
         <StyledIconBox>
-          <IconErrorCorrection sx={{ fontSize: 20 }} />
+          <IconCorrection sx={{ fontSize: 20 }} />
         </StyledIconBox>
         <StyledContentBox>
           <Typography className='title'>文档贡献流程</Typography>
